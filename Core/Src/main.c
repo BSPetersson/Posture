@@ -73,7 +73,6 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -98,13 +97,52 @@ int main(void)
   MX_TIM16_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-
+  HAL_Delay(100);  // Give time for the accelerometer to boot up
+  haptic_feedback_controller_initialize();
+  accelerometer_controller_initialize();
+  led_controller_initialize();
+  button_controller_initialize();
+  state_machine_initialize();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+//    state_machine_update();
+
+    accel_data_t accel;
+    if (accelerometer_read_mps2(&accel) == HAL_OK) {
+      if (accel.x_mps2 > 0.5) {
+        led_execute_sequence(LED_SEQ_THREE_BLINKS);
+      }
+        // Use accel.x_mps2, accel.y_mps2, accel.z_mps2
+    }
+    
+    button_process(); // Call periodically
+    
+    button_event_t ev = button_get_event();
+    if(ev != BUTTON_EVENT_NONE)
+    {
+        switch(ev)
+        {
+            case BUTTON_EVENT_SINGLE_PRESS:
+                led_execute_sequence(LED_SEQ_THREE_BLINKS);
+                break;
+            case BUTTON_EVENT_DOUBLE_PRESS:
+                led_execute_sequence(LED_SEQ_DOUBLE_BLINK);
+                break;
+            case BUTTON_EVENT_TRIPLE_PRESS:
+                led_execute_sequence(LED_SEQ_FADE_IN_OUT);
+                break;
+            case BUTTON_EVENT_LONG_PRESS:
+                led_on(100);
+                break;
+            default:
+                break;
+        }
+    }
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -334,8 +372,8 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin : PB5 */
   GPIO_InitStruct.Pin = GPIO_PIN_5;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
@@ -350,6 +388,29 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+    // 1) Check if it's the Button line (PB5)
+    if (GPIO_Pin == GPIO_PIN_5)
+    {
+        // Call the button driver's function
+        button_handle_exti(GPIO_Pin);
+    }
+
+    // 2) Check if it's the Accelerometer lines
+    // else if (GPIO_Pin == GPIO_PIN_0)
+    // {
+    //     // PA0 => accelerometer INT2
+    //     accelerometer_handle_int2();
+    // }
+    // else if (GPIO_Pin == GPIO_PIN_1)
+    // {
+    //     // PA1 => accelerometer INT1
+    //     accelerometer_handle_int1();
+    // }
+
+    // You can handle more EXTI pins if needed
+}
 
 /* USER CODE END 4 */
 
