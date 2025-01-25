@@ -1,4 +1,4 @@
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc28bsFQ.s 			page 1
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccCzYyp.s 			page 1
 
 
    1              		.cpu cortex-m0
@@ -58,7 +58,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc28bsFQ.s 			page 1
   30:Core/Src/stm32f0xx_it.c **** /* USER CODE END TD */
   31:Core/Src/stm32f0xx_it.c **** 
   32:Core/Src/stm32f0xx_it.c **** /* Private define ------------------------------------------------------------*/
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc28bsFQ.s 			page 2
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccCzYyp.s 			page 2
 
 
   33:Core/Src/stm32f0xx_it.c **** /* USER CODE BEGIN PD */
@@ -118,7 +118,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc28bsFQ.s 			page 1
   75:Core/Src/stm32f0xx_it.c ****   {
   36              		.loc 1 75 10 view .LVU3
   37 0000 FEE7     		b	.L2
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc28bsFQ.s 			page 3
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccCzYyp.s 			page 3
 
 
   38              		.cfi_endproc
@@ -178,7 +178,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc28bsFQ.s 			page 1
  100:Core/Src/stm32f0xx_it.c **** {
   73              		.loc 1 100 1 view -0
   74              		.cfi_startproc
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc28bsFQ.s 			page 4
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccCzYyp.s 			page 4
 
 
   75              		@ args = 0, pretend = 0, frame = 0
@@ -238,7 +238,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc28bsFQ.s 			page 1
  121:Core/Src/stm32f0xx_it.c **** 
  122:Core/Src/stm32f0xx_it.c **** /**
  123:Core/Src/stm32f0xx_it.c ****   * @brief This function handles System tick timer.
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc28bsFQ.s 			page 5
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccCzYyp.s 			page 5
 
 
  124:Core/Src/stm32f0xx_it.c ****   */
@@ -269,24 +269,130 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc28bsFQ.s 			page 1
  127 0006 10BD     		pop	{r4, pc}
  128              		.cfi_endproc
  129              	.LFE44:
- 131              		.text
- 132              	.Letext0:
- 133              		.file 2 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h"
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc28bsFQ.s 			page 6
+ 131              		.section	.text.EXTI0_1_IRQHandler,"ax",%progbits
+ 132              		.align	1
+ 133              		.global	EXTI0_1_IRQHandler
+ 134              		.syntax unified
+ 135              		.code	16
+ 136              		.thumb_func
+ 138              	EXTI0_1_IRQHandler:
+ 139              	.LFB45:
+ 135:Core/Src/stm32f0xx_it.c **** 
+ 136:Core/Src/stm32f0xx_it.c **** /******************************************************************************/
+ 137:Core/Src/stm32f0xx_it.c **** /* STM32F0xx Peripheral Interrupt Handlers                                    */
+ 138:Core/Src/stm32f0xx_it.c **** /* Add here the Interrupt Handlers for the used peripherals.                  */
+ 139:Core/Src/stm32f0xx_it.c **** /* For the available peripheral interrupt handler names,                      */
+ 140:Core/Src/stm32f0xx_it.c **** /* please refer to the startup file (startup_stm32f0xx.s).                    */
+ 141:Core/Src/stm32f0xx_it.c **** /******************************************************************************/
+ 142:Core/Src/stm32f0xx_it.c **** 
+ 143:Core/Src/stm32f0xx_it.c **** /**
+ 144:Core/Src/stm32f0xx_it.c ****   * @brief This function handles EXTI line 0 and 1 interrupts.
+ 145:Core/Src/stm32f0xx_it.c ****   */
+ 146:Core/Src/stm32f0xx_it.c **** void EXTI0_1_IRQHandler(void)
+ 147:Core/Src/stm32f0xx_it.c **** {
+ 140              		.loc 1 147 1 is_stmt 1 view -0
+ 141              		.cfi_startproc
+ 142              		@ args = 0, pretend = 0, frame = 0
+ 143              		@ frame_needed = 0, uses_anonymous_args = 0
+ 144 0000 10B5     		push	{r4, lr}
+ 145              	.LCFI1:
+ 146              		.cfi_def_cfa_offset 8
+ 147              		.cfi_offset 4, -8
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccCzYyp.s 			page 6
+
+
+ 148              		.cfi_offset 14, -4
+ 148:Core/Src/stm32f0xx_it.c ****   /* USER CODE BEGIN EXTI0_1_IRQn 0 */
+ 149:Core/Src/stm32f0xx_it.c **** 
+ 150:Core/Src/stm32f0xx_it.c ****   /* USER CODE END EXTI0_1_IRQn 0 */
+ 151:Core/Src/stm32f0xx_it.c ****   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_0);
+ 149              		.loc 1 151 3 view .LVU16
+ 150 0002 0120     		movs	r0, #1
+ 151 0004 FFF7FEFF 		bl	HAL_GPIO_EXTI_IRQHandler
+ 152              	.LVL1:
+ 152:Core/Src/stm32f0xx_it.c ****   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_1);
+ 153              		.loc 1 152 3 view .LVU17
+ 154 0008 0220     		movs	r0, #2
+ 155 000a FFF7FEFF 		bl	HAL_GPIO_EXTI_IRQHandler
+ 156              	.LVL2:
+ 153:Core/Src/stm32f0xx_it.c ****   /* USER CODE BEGIN EXTI0_1_IRQn 1 */
+ 154:Core/Src/stm32f0xx_it.c **** 
+ 155:Core/Src/stm32f0xx_it.c ****   /* USER CODE END EXTI0_1_IRQn 1 */
+ 156:Core/Src/stm32f0xx_it.c **** }
+ 157              		.loc 1 156 1 is_stmt 0 view .LVU18
+ 158              		@ sp needed
+ 159 000e 10BD     		pop	{r4, pc}
+ 160              		.cfi_endproc
+ 161              	.LFE45:
+ 163              		.section	.text.EXTI4_15_IRQHandler,"ax",%progbits
+ 164              		.align	1
+ 165              		.global	EXTI4_15_IRQHandler
+ 166              		.syntax unified
+ 167              		.code	16
+ 168              		.thumb_func
+ 170              	EXTI4_15_IRQHandler:
+ 171              	.LFB46:
+ 157:Core/Src/stm32f0xx_it.c **** 
+ 158:Core/Src/stm32f0xx_it.c **** /**
+ 159:Core/Src/stm32f0xx_it.c ****   * @brief This function handles EXTI line 4 to 15 interrupts.
+ 160:Core/Src/stm32f0xx_it.c ****   */
+ 161:Core/Src/stm32f0xx_it.c **** void EXTI4_15_IRQHandler(void)
+ 162:Core/Src/stm32f0xx_it.c **** {
+ 172              		.loc 1 162 1 is_stmt 1 view -0
+ 173              		.cfi_startproc
+ 174              		@ args = 0, pretend = 0, frame = 0
+ 175              		@ frame_needed = 0, uses_anonymous_args = 0
+ 176 0000 10B5     		push	{r4, lr}
+ 177              	.LCFI2:
+ 178              		.cfi_def_cfa_offset 8
+ 179              		.cfi_offset 4, -8
+ 180              		.cfi_offset 14, -4
+ 163:Core/Src/stm32f0xx_it.c ****   /* USER CODE BEGIN EXTI4_15_IRQn 0 */
+ 164:Core/Src/stm32f0xx_it.c **** 
+ 165:Core/Src/stm32f0xx_it.c ****   /* USER CODE END EXTI4_15_IRQn 0 */
+ 166:Core/Src/stm32f0xx_it.c ****   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_5);
+ 181              		.loc 1 166 3 view .LVU20
+ 182 0002 2020     		movs	r0, #32
+ 183 0004 FFF7FEFF 		bl	HAL_GPIO_EXTI_IRQHandler
+ 184              	.LVL3:
+ 167:Core/Src/stm32f0xx_it.c ****   /* USER CODE BEGIN EXTI4_15_IRQn 1 */
+ 168:Core/Src/stm32f0xx_it.c **** 
+ 169:Core/Src/stm32f0xx_it.c ****   /* USER CODE END EXTI4_15_IRQn 1 */
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccCzYyp.s 			page 7
+
+
+ 170:Core/Src/stm32f0xx_it.c **** }
+ 185              		.loc 1 170 1 is_stmt 0 view .LVU21
+ 186              		@ sp needed
+ 187 0008 10BD     		pop	{r4, pc}
+ 188              		.cfi_endproc
+ 189              	.LFE46:
+ 191              		.text
+ 192              	.Letext0:
+ 193              		.file 2 "/Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/arm-none-eabi/include/machine/_defa
+ 194              		.file 3 "/Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/arm-none-eabi/include/sys/_stdint.h
+ 195              		.file 4 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_gpio.h"
+ 196              		.file 5 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h"
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccCzYyp.s 			page 8
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 stm32f0xx_it.c
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc28bsFQ.s:19     .text.NMI_Handler:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc28bsFQ.s:25     .text.NMI_Handler:00000000 NMI_Handler
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc28bsFQ.s:42     .text.HardFault_Handler:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc28bsFQ.s:48     .text.HardFault_Handler:00000000 HardFault_Handler
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc28bsFQ.s:65     .text.SVC_Handler:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc28bsFQ.s:71     .text.SVC_Handler:00000000 SVC_Handler
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc28bsFQ.s:85     .text.PendSV_Handler:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc28bsFQ.s:91     .text.PendSV_Handler:00000000 PendSV_Handler
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc28bsFQ.s:105    .text.SysTick_Handler:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc28bsFQ.s:111    .text.SysTick_Handler:00000000 SysTick_Handler
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccCzYyp.s:19     .text.NMI_Handler:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccCzYyp.s:25     .text.NMI_Handler:00000000 NMI_Handler
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccCzYyp.s:42     .text.HardFault_Handler:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccCzYyp.s:48     .text.HardFault_Handler:00000000 HardFault_Handler
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccCzYyp.s:65     .text.SVC_Handler:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccCzYyp.s:71     .text.SVC_Handler:00000000 SVC_Handler
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccCzYyp.s:85     .text.PendSV_Handler:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccCzYyp.s:91     .text.PendSV_Handler:00000000 PendSV_Handler
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccCzYyp.s:105    .text.SysTick_Handler:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccCzYyp.s:111    .text.SysTick_Handler:00000000 SysTick_Handler
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccCzYyp.s:132    .text.EXTI0_1_IRQHandler:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccCzYyp.s:138    .text.EXTI0_1_IRQHandler:00000000 EXTI0_1_IRQHandler
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccCzYyp.s:164    .text.EXTI4_15_IRQHandler:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccCzYyp.s:170    .text.EXTI4_15_IRQHandler:00000000 EXTI4_15_IRQHandler
 
 UNDEFINED SYMBOLS
 HAL_IncTick
+HAL_GPIO_EXTI_IRQHandler
