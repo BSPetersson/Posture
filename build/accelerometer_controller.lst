@@ -1,4 +1,4 @@
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s 			page 1
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccoFLDt.s 			page 1
 
 
    1              		.cpu cortex-m0
@@ -18,1364 +18,1002 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s 			page 1
   15              	.Ltext0:
   16              		.cfi_sections	.debug_frame
   17              		.file 1 "Core/Src/accelerometer_controller.c"
-  18              		.section	.text.mg_to_threshold_code,"ax",%progbits
+  18              		.section	.text.accelerometer_read_reg,"ax",%progbits
   19              		.align	1
   20              		.syntax unified
   21              		.code	16
   22              		.thumb_func
-  24              	mg_to_threshold_code:
+  24              	accelerometer_read_reg:
   25              	.LVL0:
-  26              	.LFB45:
-   1:Core/Src/accelerometer_controller.c **** #include "accelerometer_controller.h"
-   2:Core/Src/accelerometer_controller.c **** #include "peripherals.h"       // for hi2c1, etc.
-   3:Core/Src/accelerometer_controller.c **** #include "led_controller.h"    // example LED function calls
+  26              	.LFB41:
+   1:Core/Src/accelerometer_controller.c **** // TODO:
+   2:Core/Src/accelerometer_controller.c **** // use MMA8451Q_REG_STATUS
+   3:Core/Src/accelerometer_controller.c **** 
    4:Core/Src/accelerometer_controller.c **** 
-   5:Core/Src/accelerometer_controller.c **** /* -------------------------------------------------------------------------
-   6:Core/Src/accelerometer_controller.c ****  * Internal helpers for Mem-Read / Mem-Write
-   7:Core/Src/accelerometer_controller.c ****  * ------------------------------------------------------------------------- */
-   8:Core/Src/accelerometer_controller.c **** static HAL_StatusTypeDef accel_write_reg(uint8_t reg, uint8_t value)
-   9:Core/Src/accelerometer_controller.c **** {
-  10:Core/Src/accelerometer_controller.c ****     return HAL_I2C_Mem_Write(&hi2c1,
-  11:Core/Src/accelerometer_controller.c ****                              MMA8451Q_I2C_ADDR,
-  12:Core/Src/accelerometer_controller.c ****                              reg,
-  13:Core/Src/accelerometer_controller.c ****                              I2C_MEMADD_SIZE_8BIT,
-  14:Core/Src/accelerometer_controller.c ****                              &value,
-  15:Core/Src/accelerometer_controller.c ****                              1,
-  16:Core/Src/accelerometer_controller.c ****                              HAL_MAX_DELAY);
-  17:Core/Src/accelerometer_controller.c **** }
-  18:Core/Src/accelerometer_controller.c **** 
-  19:Core/Src/accelerometer_controller.c **** static HAL_StatusTypeDef accel_read_reg(uint8_t reg, uint8_t *value)
-  20:Core/Src/accelerometer_controller.c **** {
-  21:Core/Src/accelerometer_controller.c ****     return HAL_I2C_Mem_Read(&hi2c1,
-  22:Core/Src/accelerometer_controller.c ****                             MMA8451Q_I2C_ADDR,
-  23:Core/Src/accelerometer_controller.c ****                             reg,
-  24:Core/Src/accelerometer_controller.c ****                             I2C_MEMADD_SIZE_8BIT,
-  25:Core/Src/accelerometer_controller.c ****                             value,
-  26:Core/Src/accelerometer_controller.c ****                             1,
-  27:Core/Src/accelerometer_controller.c ****                             HAL_MAX_DELAY);
-  28:Core/Src/accelerometer_controller.c **** }
-  29:Core/Src/accelerometer_controller.c **** 
-  30:Core/Src/accelerometer_controller.c **** static HAL_StatusTypeDef accel_read_regs(uint8_t start_reg, uint8_t *rxbuf, uint8_t len)
-  31:Core/Src/accelerometer_controller.c **** {
-  32:Core/Src/accelerometer_controller.c ****     return HAL_I2C_Mem_Read(&hi2c1,
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s 			page 2
-
-
-  33:Core/Src/accelerometer_controller.c ****                             MMA8451Q_I2C_ADDR,
-  34:Core/Src/accelerometer_controller.c ****                             start_reg,
-  35:Core/Src/accelerometer_controller.c ****                             I2C_MEMADD_SIZE_8BIT,
-  36:Core/Src/accelerometer_controller.c ****                             rxbuf,
-  37:Core/Src/accelerometer_controller.c ****                             len,
-  38:Core/Src/accelerometer_controller.c ****                             HAL_MAX_DELAY);
-  39:Core/Src/accelerometer_controller.c **** }
-  40:Core/Src/accelerometer_controller.c **** 
-  41:Core/Src/accelerometer_controller.c **** /* Put device into standby (clear ACTIVE in CTRL_REG1) */
-  42:Core/Src/accelerometer_controller.c **** static HAL_StatusTypeDef accel_goto_standby(void)
-  43:Core/Src/accelerometer_controller.c **** {
-  44:Core/Src/accelerometer_controller.c ****     uint8_t value;
-  45:Core/Src/accelerometer_controller.c ****     HAL_StatusTypeDef status = accel_read_reg(REG_CTRL_REG1, &value);
-  46:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
-  47:Core/Src/accelerometer_controller.c **** 
-  48:Core/Src/accelerometer_controller.c ****     value &= ~CTRL_REG1_ACTIVE;  // clear ACTIVE bit
-  49:Core/Src/accelerometer_controller.c ****     return accel_write_reg(REG_CTRL_REG1, value);
-  50:Core/Src/accelerometer_controller.c **** }
-  51:Core/Src/accelerometer_controller.c **** 
-  52:Core/Src/accelerometer_controller.c **** /* Put device into active (set ACTIVE in CTRL_REG1) */
-  53:Core/Src/accelerometer_controller.c **** static HAL_StatusTypeDef accel_goto_active(void)
-  54:Core/Src/accelerometer_controller.c **** {
-  55:Core/Src/accelerometer_controller.c ****     uint8_t value;
-  56:Core/Src/accelerometer_controller.c ****     HAL_StatusTypeDef status = accel_read_reg(REG_CTRL_REG1, &value);
-  57:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
-  58:Core/Src/accelerometer_controller.c **** 
-  59:Core/Src/accelerometer_controller.c ****     value |= CTRL_REG1_ACTIVE;  // set ACTIVE bit
-  60:Core/Src/accelerometer_controller.c ****     return accel_write_reg(REG_CTRL_REG1, value);
-  61:Core/Src/accelerometer_controller.c **** }
-  62:Core/Src/accelerometer_controller.c **** 
-  63:Core/Src/accelerometer_controller.c **** /* Convert mg to motion/tap threshold code:
-  64:Core/Src/accelerometer_controller.c ****  * Each LSB ~ 0.063g in motion/tap config for ±2g.
-  65:Core/Src/accelerometer_controller.c ****  */
-  66:Core/Src/accelerometer_controller.c **** static uint8_t mg_to_threshold_code(uint16_t mg)
-  67:Core/Src/accelerometer_controller.c **** {
-  27              		.loc 1 67 1 view -0
+   5:Core/Src/accelerometer_controller.c **** #include "accelerometer_controller.h"
+   6:Core/Src/accelerometer_controller.c **** #include "peripherals.h"
+   7:Core/Src/accelerometer_controller.c **** #include "led_controller.h"
+   8:Core/Src/accelerometer_controller.c **** 
+   9:Core/Src/accelerometer_controller.c **** static HAL_StatusTypeDef accelerometer_write_reg(uint8_t reg, uint8_t value)
+  10:Core/Src/accelerometer_controller.c **** {
+  11:Core/Src/accelerometer_controller.c ****     return HAL_I2C_Mem_Write(&hi2c1,
+  12:Core/Src/accelerometer_controller.c ****                              MMA8451Q_I2C_ADDR,
+  13:Core/Src/accelerometer_controller.c ****                              reg,
+  14:Core/Src/accelerometer_controller.c ****                              I2C_MEMADD_SIZE_8BIT,
+  15:Core/Src/accelerometer_controller.c ****                              &value,
+  16:Core/Src/accelerometer_controller.c ****                              1,
+  17:Core/Src/accelerometer_controller.c ****                              HAL_MAX_DELAY);
+  18:Core/Src/accelerometer_controller.c **** }
+  19:Core/Src/accelerometer_controller.c **** 
+  20:Core/Src/accelerometer_controller.c **** static HAL_StatusTypeDef accelerometer_read_reg(uint8_t reg, uint8_t *value)
+  21:Core/Src/accelerometer_controller.c **** {
+  27              		.loc 1 21 1 view -0
   28              		.cfi_startproc
   29              		@ args = 0, pretend = 0, frame = 0
   30              		@ frame_needed = 0, uses_anonymous_args = 0
-  31              		.loc 1 67 1 is_stmt 0 view .LVU1
+  31              		.loc 1 21 1 is_stmt 0 view .LVU1
   32 0000 10B5     		push	{r4, lr}
   33              	.LCFI0:
   34              		.cfi_def_cfa_offset 8
   35              		.cfi_offset 4, -8
   36              		.cfi_offset 14, -4
-  68:Core/Src/accelerometer_controller.c ****     float counts = (float)mg / 63.0f;  // 63 mg per LSB
-  37              		.loc 1 68 5 is_stmt 1 view .LVU2
-  38              		.loc 1 68 20 is_stmt 0 view .LVU3
-  39 0002 FFF7FEFF 		bl	__aeabi_ui2f
-  40              	.LVL1:
-  41              		.loc 1 68 11 view .LVU4
-  42 0006 0949     		ldr	r1, .L4
-  43 0008 FFF7FEFF 		bl	__aeabi_fdiv
-  44              	.LVL2:
-  45 000c 041C     		adds	r4, r0, #0
-  46              	.LVL3:
-  69:Core/Src/accelerometer_controller.c ****     if (counts > 127.0f) counts = 127.0f;
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s 			page 3
+  37 0002 84B0     		sub	sp, sp, #16
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccoFLDt.s 			page 2
 
 
-  47              		.loc 1 69 5 is_stmt 1 view .LVU5
-  48              		.loc 1 69 8 is_stmt 0 view .LVU6
-  49 000e 0849     		ldr	r1, .L4+4
-  50 0010 FFF7FEFF 		bl	__aeabi_fcmpgt
-  51              	.LVL4:
-  52              		.loc 1 69 8 view .LVU7
-  53 0014 0028     		cmp	r0, #0
-  54 0016 00D0     		beq	.L2
-  55              		.loc 1 69 33 discriminator 1 view .LVU8
-  56 0018 054C     		ldr	r4, .L4+4
-  57              	.LVL5:
-  58              	.L2:
-  70:Core/Src/accelerometer_controller.c ****     return (uint8_t)(counts + 0.5f);
-  59              		.loc 1 70 5 is_stmt 1 view .LVU9
-  60              		.loc 1 70 29 is_stmt 0 view .LVU10
-  61 001a FC21     		movs	r1, #252
-  62 001c 8905     		lsls	r1, r1, #22
-  63 001e 201C     		adds	r0, r4, #0
-  64 0020 FFF7FEFF 		bl	__aeabi_fadd
-  65              	.LVL6:
-  66              		.loc 1 70 12 view .LVU11
-  67 0024 FFF7FEFF 		bl	__aeabi_f2uiz
-  68              	.LVL7:
-  69              		.loc 1 70 12 discriminator 1 view .LVU12
-  70 0028 C0B2     		uxtb	r0, r0
-  71:Core/Src/accelerometer_controller.c **** }
-  71              		.loc 1 71 1 view .LVU13
-  72              		@ sp needed
-  73              	.LVL8:
-  74              		.loc 1 71 1 view .LVU14
-  75 002a 10BD     		pop	{r4, pc}
-  76              	.L5:
-  77              		.align	2
-  78              	.L4:
-  79 002c 00007C42 		.word	1115422720
-  80 0030 0000FE42 		.word	1123942400
-  81              		.cfi_endproc
-  82              	.LFE45:
-  84              		.section	.text.accel_read_reg,"ax",%progbits
-  85              		.align	1
-  86              		.syntax unified
-  87              		.code	16
-  88              		.thumb_func
-  90              	accel_read_reg:
-  91              	.LVL9:
-  92              	.LFB41:
-  20:Core/Src/accelerometer_controller.c ****     return HAL_I2C_Mem_Read(&hi2c1,
-  93              		.loc 1 20 1 is_stmt 1 view -0
-  94              		.cfi_startproc
-  95              		@ args = 0, pretend = 0, frame = 0
-  96              		@ frame_needed = 0, uses_anonymous_args = 0
-  20:Core/Src/accelerometer_controller.c ****     return HAL_I2C_Mem_Read(&hi2c1,
-  97              		.loc 1 20 1 is_stmt 0 view .LVU16
-  98 0000 10B5     		push	{r4, lr}
-  99              	.LCFI1:
- 100              		.cfi_def_cfa_offset 8
- 101              		.cfi_offset 4, -8
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s 			page 4
+  38              	.LCFI1:
+  39              		.cfi_def_cfa_offset 24
+  40 0004 0200     		movs	r2, r0
+  22:Core/Src/accelerometer_controller.c ****     return HAL_I2C_Mem_Read(&hi2c1,
+  41              		.loc 1 22 5 is_stmt 1 view .LVU2
+  42              		.loc 1 22 12 is_stmt 0 view .LVU3
+  43 0006 064C     		ldr	r4, .L2
+  44 0008 0123     		movs	r3, #1
+  45 000a 5B42     		rsbs	r3, r3, #0
+  46 000c 0293     		str	r3, [sp, #8]
+  47 000e 0233     		adds	r3, r3, #2
+  48 0010 0193     		str	r3, [sp, #4]
+  49 0012 0091     		str	r1, [sp]
+  50 0014 3821     		movs	r1, #56
+  51              	.LVL1:
+  52              		.loc 1 22 12 view .LVU4
+  53 0016 2000     		movs	r0, r4
+  54              	.LVL2:
+  55              		.loc 1 22 12 view .LVU5
+  56 0018 FFF7FEFF 		bl	HAL_I2C_Mem_Read
+  57              	.LVL3:
+  23:Core/Src/accelerometer_controller.c ****                             MMA8451Q_I2C_ADDR,
+  24:Core/Src/accelerometer_controller.c ****                             reg,
+  25:Core/Src/accelerometer_controller.c ****                             I2C_MEMADD_SIZE_8BIT,
+  26:Core/Src/accelerometer_controller.c ****                             value,
+  27:Core/Src/accelerometer_controller.c ****                             1,
+  28:Core/Src/accelerometer_controller.c ****                             HAL_MAX_DELAY);
+  29:Core/Src/accelerometer_controller.c **** }
+  58              		.loc 1 29 1 view .LVU6
+  59 001c 04B0     		add	sp, sp, #16
+  60              		@ sp needed
+  61 001e 10BD     		pop	{r4, pc}
+  62              	.L3:
+  63              		.align	2
+  64              	.L2:
+  65 0020 00000000 		.word	hi2c1
+  66              		.cfi_endproc
+  67              	.LFE41:
+  69              		.section	.text.accelerometer_read_regs,"ax",%progbits
+  70              		.align	1
+  71              		.syntax unified
+  72              		.code	16
+  73              		.thumb_func
+  75              	accelerometer_read_regs:
+  76              	.LVL4:
+  77              	.LFB42:
+  30:Core/Src/accelerometer_controller.c **** 
+  31:Core/Src/accelerometer_controller.c **** static HAL_StatusTypeDef accelerometer_read_regs(uint8_t start_reg, uint8_t *buffer, uint8_t len)
+  32:Core/Src/accelerometer_controller.c **** {
+  78              		.loc 1 32 1 is_stmt 1 view -0
+  79              		.cfi_startproc
+  80              		@ args = 0, pretend = 0, frame = 0
+  81              		@ frame_needed = 0, uses_anonymous_args = 0
+  82              		.loc 1 32 1 is_stmt 0 view .LVU8
+  83 0000 10B5     		push	{r4, lr}
+  84              	.LCFI2:
+  85              		.cfi_def_cfa_offset 8
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccoFLDt.s 			page 3
 
 
- 102              		.cfi_offset 14, -4
- 103 0002 84B0     		sub	sp, sp, #16
- 104              	.LCFI2:
- 105              		.cfi_def_cfa_offset 24
- 106 0004 0200     		movs	r2, r0
-  21:Core/Src/accelerometer_controller.c ****                             MMA8451Q_I2C_ADDR,
- 107              		.loc 1 21 5 is_stmt 1 view .LVU17
-  21:Core/Src/accelerometer_controller.c ****                             MMA8451Q_I2C_ADDR,
- 108              		.loc 1 21 12 is_stmt 0 view .LVU18
- 109 0006 064C     		ldr	r4, .L7
- 110 0008 0123     		movs	r3, #1
- 111 000a 5B42     		rsbs	r3, r3, #0
- 112 000c 0293     		str	r3, [sp, #8]
- 113 000e 0233     		adds	r3, r3, #2
- 114 0010 0193     		str	r3, [sp, #4]
- 115 0012 0091     		str	r1, [sp]
- 116 0014 3821     		movs	r1, #56
- 117              	.LVL10:
-  21:Core/Src/accelerometer_controller.c ****                             MMA8451Q_I2C_ADDR,
- 118              		.loc 1 21 12 view .LVU19
- 119 0016 2000     		movs	r0, r4
- 120              	.LVL11:
-  21:Core/Src/accelerometer_controller.c ****                             MMA8451Q_I2C_ADDR,
- 121              		.loc 1 21 12 view .LVU20
- 122 0018 FFF7FEFF 		bl	HAL_I2C_Mem_Read
- 123              	.LVL12:
-  28:Core/Src/accelerometer_controller.c **** 
- 124              		.loc 1 28 1 view .LVU21
- 125 001c 04B0     		add	sp, sp, #16
- 126              		@ sp needed
- 127 001e 10BD     		pop	{r4, pc}
- 128              	.L8:
- 129              		.align	2
- 130              	.L7:
- 131 0020 00000000 		.word	hi2c1
- 132              		.cfi_endproc
- 133              	.LFE41:
- 135              		.section	.text.accel_read_regs,"ax",%progbits
- 136              		.align	1
- 137              		.syntax unified
- 138              		.code	16
- 139              		.thumb_func
- 141              	accel_read_regs:
- 142              	.LVL13:
- 143              	.LFB42:
-  31:Core/Src/accelerometer_controller.c ****     return HAL_I2C_Mem_Read(&hi2c1,
- 144              		.loc 1 31 1 is_stmt 1 view -0
- 145              		.cfi_startproc
- 146              		@ args = 0, pretend = 0, frame = 0
- 147              		@ frame_needed = 0, uses_anonymous_args = 0
-  31:Core/Src/accelerometer_controller.c ****     return HAL_I2C_Mem_Read(&hi2c1,
- 148              		.loc 1 31 1 is_stmt 0 view .LVU23
- 149 0000 10B5     		push	{r4, lr}
- 150              	.LCFI3:
- 151              		.cfi_def_cfa_offset 8
- 152              		.cfi_offset 4, -8
- 153              		.cfi_offset 14, -4
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s 			page 5
+  86              		.cfi_offset 4, -8
+  87              		.cfi_offset 14, -4
+  88 0002 84B0     		sub	sp, sp, #16
+  89              	.LCFI3:
+  90              		.cfi_def_cfa_offset 24
+  33:Core/Src/accelerometer_controller.c ****     return HAL_I2C_Mem_Read(&hi2c1,
+  91              		.loc 1 33 5 is_stmt 1 view .LVU9
+  92              		.loc 1 33 12 is_stmt 0 view .LVU10
+  93 0004 064C     		ldr	r4, .L5
+  94 0006 0123     		movs	r3, #1
+  95 0008 5B42     		rsbs	r3, r3, #0
+  96 000a 0293     		str	r3, [sp, #8]
+  97 000c 0192     		str	r2, [sp, #4]
+  98 000e 0091     		str	r1, [sp]
+  99 0010 0233     		adds	r3, r3, #2
+ 100 0012 0200     		movs	r2, r0
+ 101              	.LVL5:
+ 102              		.loc 1 33 12 view .LVU11
+ 103 0014 3821     		movs	r1, #56
+ 104              	.LVL6:
+ 105              		.loc 1 33 12 view .LVU12
+ 106 0016 2000     		movs	r0, r4
+ 107              	.LVL7:
+ 108              		.loc 1 33 12 view .LVU13
+ 109 0018 FFF7FEFF 		bl	HAL_I2C_Mem_Read
+ 110              	.LVL8:
+  34:Core/Src/accelerometer_controller.c ****                             MMA8451Q_I2C_ADDR,
+  35:Core/Src/accelerometer_controller.c ****                             start_reg,
+  36:Core/Src/accelerometer_controller.c ****                             I2C_MEMADD_SIZE_8BIT,
+  37:Core/Src/accelerometer_controller.c ****                             buffer,
+  38:Core/Src/accelerometer_controller.c ****                             len,
+  39:Core/Src/accelerometer_controller.c ****                             HAL_MAX_DELAY);
+  40:Core/Src/accelerometer_controller.c **** }
+ 111              		.loc 1 40 1 view .LVU14
+ 112 001c 04B0     		add	sp, sp, #16
+ 113              		@ sp needed
+ 114 001e 10BD     		pop	{r4, pc}
+ 115              	.L6:
+ 116              		.align	2
+ 117              	.L5:
+ 118 0020 00000000 		.word	hi2c1
+ 119              		.cfi_endproc
+ 120              	.LFE42:
+ 122              		.section	.text.accelerometer_write_reg,"ax",%progbits
+ 123              		.align	1
+ 124              		.syntax unified
+ 125              		.code	16
+ 126              		.thumb_func
+ 128              	accelerometer_write_reg:
+ 129              	.LVL9:
+ 130              	.LFB40:
+  10:Core/Src/accelerometer_controller.c ****     return HAL_I2C_Mem_Write(&hi2c1,
+ 131              		.loc 1 10 1 is_stmt 1 view -0
+ 132              		.cfi_startproc
+ 133              		@ args = 0, pretend = 0, frame = 8
+ 134              		@ frame_needed = 0, uses_anonymous_args = 0
+  10:Core/Src/accelerometer_controller.c ****     return HAL_I2C_Mem_Write(&hi2c1,
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccoFLDt.s 			page 4
 
 
- 154 0002 84B0     		sub	sp, sp, #16
- 155              	.LCFI4:
- 156              		.cfi_def_cfa_offset 24
-  32:Core/Src/accelerometer_controller.c ****                             MMA8451Q_I2C_ADDR,
- 157              		.loc 1 32 5 is_stmt 1 view .LVU24
-  32:Core/Src/accelerometer_controller.c ****                             MMA8451Q_I2C_ADDR,
- 158              		.loc 1 32 12 is_stmt 0 view .LVU25
- 159 0004 064C     		ldr	r4, .L10
- 160 0006 0123     		movs	r3, #1
- 161 0008 5B42     		rsbs	r3, r3, #0
- 162 000a 0293     		str	r3, [sp, #8]
- 163 000c 0192     		str	r2, [sp, #4]
- 164 000e 0091     		str	r1, [sp]
- 165 0010 0233     		adds	r3, r3, #2
- 166 0012 0200     		movs	r2, r0
- 167              	.LVL14:
-  32:Core/Src/accelerometer_controller.c ****                             MMA8451Q_I2C_ADDR,
- 168              		.loc 1 32 12 view .LVU26
- 169 0014 3821     		movs	r1, #56
- 170              	.LVL15:
-  32:Core/Src/accelerometer_controller.c ****                             MMA8451Q_I2C_ADDR,
- 171              		.loc 1 32 12 view .LVU27
- 172 0016 2000     		movs	r0, r4
- 173              	.LVL16:
-  32:Core/Src/accelerometer_controller.c ****                             MMA8451Q_I2C_ADDR,
- 174              		.loc 1 32 12 view .LVU28
- 175 0018 FFF7FEFF 		bl	HAL_I2C_Mem_Read
- 176              	.LVL17:
-  39:Core/Src/accelerometer_controller.c **** 
- 177              		.loc 1 39 1 view .LVU29
- 178 001c 04B0     		add	sp, sp, #16
- 179              		@ sp needed
- 180 001e 10BD     		pop	{r4, pc}
- 181              	.L11:
- 182              		.align	2
- 183              	.L10:
- 184 0020 00000000 		.word	hi2c1
- 185              		.cfi_endproc
- 186              	.LFE42:
- 188              		.section	.text.accel_write_reg,"ax",%progbits
- 189              		.align	1
- 190              		.syntax unified
- 191              		.code	16
- 192              		.thumb_func
- 194              	accel_write_reg:
- 195              	.LVL18:
- 196              	.LFB40:
-   9:Core/Src/accelerometer_controller.c ****     return HAL_I2C_Mem_Write(&hi2c1,
- 197              		.loc 1 9 1 is_stmt 1 view -0
- 198              		.cfi_startproc
- 199              		@ args = 0, pretend = 0, frame = 8
- 200              		@ frame_needed = 0, uses_anonymous_args = 0
-   9:Core/Src/accelerometer_controller.c ****     return HAL_I2C_Mem_Write(&hi2c1,
- 201              		.loc 1 9 1 is_stmt 0 view .LVU31
- 202 0000 10B5     		push	{r4, lr}
- 203              	.LCFI5:
- 204              		.cfi_def_cfa_offset 8
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s 			page 6
+ 135              		.loc 1 10 1 is_stmt 0 view .LVU16
+ 136 0000 10B5     		push	{r4, lr}
+ 137              	.LCFI4:
+ 138              		.cfi_def_cfa_offset 8
+ 139              		.cfi_offset 4, -8
+ 140              		.cfi_offset 14, -4
+ 141 0002 86B0     		sub	sp, sp, #24
+ 142              	.LCFI5:
+ 143              		.cfi_def_cfa_offset 32
+ 144 0004 0200     		movs	r2, r0
+ 145 0006 1723     		movs	r3, #23
+ 146 0008 6B44     		add	r3, r3, sp
+ 147 000a 1970     		strb	r1, [r3]
+  11:Core/Src/accelerometer_controller.c ****                              MMA8451Q_I2C_ADDR,
+ 148              		.loc 1 11 5 is_stmt 1 view .LVU17
+  11:Core/Src/accelerometer_controller.c ****                              MMA8451Q_I2C_ADDR,
+ 149              		.loc 1 11 12 is_stmt 0 view .LVU18
+ 150 000c 064C     		ldr	r4, .L8
+ 151 000e 0121     		movs	r1, #1
+ 152              	.LVL10:
+  11:Core/Src/accelerometer_controller.c ****                              MMA8451Q_I2C_ADDR,
+ 153              		.loc 1 11 12 view .LVU19
+ 154 0010 4942     		rsbs	r1, r1, #0
+ 155 0012 0291     		str	r1, [sp, #8]
+ 156              	.LVL11:
+  11:Core/Src/accelerometer_controller.c ****                              MMA8451Q_I2C_ADDR,
+ 157              		.loc 1 11 12 view .LVU20
+ 158 0014 0231     		adds	r1, r1, #2
+ 159 0016 0191     		str	r1, [sp, #4]
+ 160 0018 0093     		str	r3, [sp]
+ 161 001a 0123     		movs	r3, #1
+ 162 001c 3731     		adds	r1, r1, #55
+ 163 001e 2000     		movs	r0, r4
+ 164              	.LVL12:
+  11:Core/Src/accelerometer_controller.c ****                              MMA8451Q_I2C_ADDR,
+ 165              		.loc 1 11 12 view .LVU21
+ 166 0020 FFF7FEFF 		bl	HAL_I2C_Mem_Write
+ 167              	.LVL13:
+  18:Core/Src/accelerometer_controller.c **** 
+ 168              		.loc 1 18 1 view .LVU22
+ 169 0024 06B0     		add	sp, sp, #24
+ 170              		@ sp needed
+ 171 0026 10BD     		pop	{r4, pc}
+ 172              	.L9:
+ 173              		.align	2
+ 174              	.L8:
+ 175 0028 00000000 		.word	hi2c1
+ 176              		.cfi_endproc
+ 177              	.LFE40:
+ 179              		.section	.text.accel_goto_standby,"ax",%progbits
+ 180              		.align	1
+ 181              		.syntax unified
+ 182              		.code	16
+ 183              		.thumb_func
+ 185              	accel_goto_standby:
+ 186              	.LFB43:
+  41:Core/Src/accelerometer_controller.c **** 
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccoFLDt.s 			page 5
 
 
- 205              		.cfi_offset 4, -8
- 206              		.cfi_offset 14, -4
- 207 0002 86B0     		sub	sp, sp, #24
- 208              	.LCFI6:
- 209              		.cfi_def_cfa_offset 32
- 210 0004 0200     		movs	r2, r0
- 211 0006 1723     		movs	r3, #23
- 212 0008 6B44     		add	r3, r3, sp
- 213 000a 1970     		strb	r1, [r3]
-  10:Core/Src/accelerometer_controller.c ****                              MMA8451Q_I2C_ADDR,
- 214              		.loc 1 10 5 is_stmt 1 view .LVU32
-  10:Core/Src/accelerometer_controller.c ****                              MMA8451Q_I2C_ADDR,
- 215              		.loc 1 10 12 is_stmt 0 view .LVU33
- 216 000c 064C     		ldr	r4, .L13
- 217 000e 0121     		movs	r1, #1
- 218              	.LVL19:
-  10:Core/Src/accelerometer_controller.c ****                              MMA8451Q_I2C_ADDR,
- 219              		.loc 1 10 12 view .LVU34
- 220 0010 4942     		rsbs	r1, r1, #0
- 221 0012 0291     		str	r1, [sp, #8]
- 222              	.LVL20:
-  10:Core/Src/accelerometer_controller.c ****                              MMA8451Q_I2C_ADDR,
- 223              		.loc 1 10 12 view .LVU35
- 224 0014 0231     		adds	r1, r1, #2
- 225 0016 0191     		str	r1, [sp, #4]
- 226 0018 0093     		str	r3, [sp]
- 227 001a 0123     		movs	r3, #1
- 228 001c 3731     		adds	r1, r1, #55
- 229 001e 2000     		movs	r0, r4
- 230              	.LVL21:
-  10:Core/Src/accelerometer_controller.c ****                              MMA8451Q_I2C_ADDR,
- 231              		.loc 1 10 12 view .LVU36
- 232 0020 FFF7FEFF 		bl	HAL_I2C_Mem_Write
- 233              	.LVL22:
-  17:Core/Src/accelerometer_controller.c **** 
- 234              		.loc 1 17 1 view .LVU37
- 235 0024 06B0     		add	sp, sp, #24
- 236              		@ sp needed
- 237 0026 10BD     		pop	{r4, pc}
- 238              	.L14:
- 239              		.align	2
- 240              	.L13:
- 241 0028 00000000 		.word	hi2c1
- 242              		.cfi_endproc
- 243              	.LFE40:
- 245              		.section	.text.accel_goto_standby,"ax",%progbits
- 246              		.align	1
- 247              		.syntax unified
- 248              		.code	16
- 249              		.thumb_func
- 251              	accel_goto_standby:
- 252              	.LFB43:
-  43:Core/Src/accelerometer_controller.c ****     uint8_t value;
- 253              		.loc 1 43 1 is_stmt 1 view -0
- 254              		.cfi_startproc
- 255              		@ args = 0, pretend = 0, frame = 8
- 256              		@ frame_needed = 0, uses_anonymous_args = 0
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s 			page 7
-
-
- 257 0000 00B5     		push	{lr}
- 258              	.LCFI7:
- 259              		.cfi_def_cfa_offset 4
- 260              		.cfi_offset 14, -4
- 261 0002 83B0     		sub	sp, sp, #12
- 262              	.LCFI8:
- 263              		.cfi_def_cfa_offset 16
-  44:Core/Src/accelerometer_controller.c ****     HAL_StatusTypeDef status = accel_read_reg(REG_CTRL_REG1, &value);
- 264              		.loc 1 44 5 view .LVU39
-  45:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
- 265              		.loc 1 45 5 view .LVU40
-  45:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
- 266              		.loc 1 45 32 is_stmt 0 view .LVU41
- 267 0004 6B46     		mov	r3, sp
- 268 0006 D91D     		adds	r1, r3, #7
- 269 0008 2A20     		movs	r0, #42
- 270 000a FFF7FEFF 		bl	accel_read_reg
- 271              	.LVL23:
-  46:Core/Src/accelerometer_controller.c **** 
- 272              		.loc 1 46 5 is_stmt 1 view .LVU42
-  46:Core/Src/accelerometer_controller.c **** 
- 273              		.loc 1 46 8 is_stmt 0 view .LVU43
- 274 000e 0028     		cmp	r0, #0
- 275 0010 01D0     		beq	.L17
- 276              	.LVL24:
- 277              	.L16:
-  50:Core/Src/accelerometer_controller.c **** 
- 278              		.loc 1 50 1 view .LVU44
- 279 0012 03B0     		add	sp, sp, #12
- 280              		@ sp needed
- 281 0014 00BD     		pop	{pc}
- 282              	.LVL25:
- 283              	.L17:
-  48:Core/Src/accelerometer_controller.c ****     return accel_write_reg(REG_CTRL_REG1, value);
- 284              		.loc 1 48 5 is_stmt 1 view .LVU45
-  48:Core/Src/accelerometer_controller.c ****     return accel_write_reg(REG_CTRL_REG1, value);
- 285              		.loc 1 48 11 is_stmt 0 view .LVU46
- 286 0016 6B46     		mov	r3, sp
- 287 0018 D979     		ldrb	r1, [r3, #7]
- 288 001a 0122     		movs	r2, #1
- 289 001c 9143     		bics	r1, r2
- 290 001e D971     		strb	r1, [r3, #7]
+  42:Core/Src/accelerometer_controller.c **** static HAL_StatusTypeDef accel_goto_standby(void)
+  43:Core/Src/accelerometer_controller.c **** {
+ 187              		.loc 1 43 1 is_stmt 1 view -0
+ 188              		.cfi_startproc
+ 189              		@ args = 0, pretend = 0, frame = 8
+ 190              		@ frame_needed = 0, uses_anonymous_args = 0
+ 191 0000 00B5     		push	{lr}
+ 192              	.LCFI6:
+ 193              		.cfi_def_cfa_offset 4
+ 194              		.cfi_offset 14, -4
+ 195 0002 83B0     		sub	sp, sp, #12
+ 196              	.LCFI7:
+ 197              		.cfi_def_cfa_offset 16
+  44:Core/Src/accelerometer_controller.c ****     uint8_t value;
+ 198              		.loc 1 44 5 view .LVU24
+  45:Core/Src/accelerometer_controller.c ****     HAL_StatusTypeDef status = accelerometer_read_reg(MMA8451Q_REG_CTRL_REG1, &value);
+ 199              		.loc 1 45 5 view .LVU25
+ 200              		.loc 1 45 32 is_stmt 0 view .LVU26
+ 201 0004 6B46     		mov	r3, sp
+ 202 0006 D91D     		adds	r1, r3, #7
+ 203 0008 2A20     		movs	r0, #42
+ 204 000a FFF7FEFF 		bl	accelerometer_read_reg
+ 205              	.LVL14:
+  46:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
+ 206              		.loc 1 46 5 is_stmt 1 view .LVU27
+ 207              		.loc 1 46 8 is_stmt 0 view .LVU28
+ 208 000e 0028     		cmp	r0, #0
+ 209 0010 01D0     		beq	.L12
+ 210              	.LVL15:
+ 211              	.L11:
+  47:Core/Src/accelerometer_controller.c **** 
+  48:Core/Src/accelerometer_controller.c ****     value &= ~CTRL_REG1_ACTIVE;  // clear ACTIVE bit
+  49:Core/Src/accelerometer_controller.c ****     return accelerometer_write_reg(MMA8451Q_REG_CTRL_REG1, value);
+  50:Core/Src/accelerometer_controller.c **** }
+ 212              		.loc 1 50 1 view .LVU29
+ 213 0012 03B0     		add	sp, sp, #12
+ 214              		@ sp needed
+ 215 0014 00BD     		pop	{pc}
+ 216              	.LVL16:
+ 217              	.L12:
+  48:Core/Src/accelerometer_controller.c ****     return accelerometer_write_reg(MMA8451Q_REG_CTRL_REG1, value);
+ 218              		.loc 1 48 5 is_stmt 1 view .LVU30
+  48:Core/Src/accelerometer_controller.c ****     return accelerometer_write_reg(MMA8451Q_REG_CTRL_REG1, value);
+ 219              		.loc 1 48 11 is_stmt 0 view .LVU31
+ 220 0016 6B46     		mov	r3, sp
+ 221 0018 D979     		ldrb	r1, [r3, #7]
+ 222 001a 0122     		movs	r2, #1
+ 223 001c 9143     		bics	r1, r2
+ 224 001e D971     		strb	r1, [r3, #7]
   49:Core/Src/accelerometer_controller.c **** }
- 291              		.loc 1 49 5 is_stmt 1 view .LVU47
+ 225              		.loc 1 49 5 is_stmt 1 view .LVU32
   49:Core/Src/accelerometer_controller.c **** }
- 292              		.loc 1 49 12 is_stmt 0 view .LVU48
- 293 0020 2A30     		adds	r0, r0, #42
- 294              	.LVL26:
+ 226              		.loc 1 49 12 is_stmt 0 view .LVU33
+ 227 0020 2A30     		adds	r0, r0, #42
+ 228              	.LVL17:
   49:Core/Src/accelerometer_controller.c **** }
- 295              		.loc 1 49 12 view .LVU49
- 296 0022 FFF7FEFF 		bl	accel_write_reg
- 297              	.LVL27:
+ 229              		.loc 1 49 12 view .LVU34
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccoFLDt.s 			page 6
+
+
+ 230 0022 FFF7FEFF 		bl	accelerometer_write_reg
+ 231              	.LVL18:
   49:Core/Src/accelerometer_controller.c **** }
- 298              		.loc 1 49 12 view .LVU50
- 299 0026 F4E7     		b	.L16
- 300              		.cfi_endproc
- 301              	.LFE43:
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s 			page 8
+ 232              		.loc 1 49 12 view .LVU35
+ 233 0026 F4E7     		b	.L11
+ 234              		.cfi_endproc
+ 235              	.LFE43:
+ 237              		.section	.text.accel_goto_active,"ax",%progbits
+ 238              		.align	1
+ 239              		.syntax unified
+ 240              		.code	16
+ 241              		.thumb_func
+ 243              	accel_goto_active:
+ 244              	.LFB44:
+  51:Core/Src/accelerometer_controller.c **** 
+  52:Core/Src/accelerometer_controller.c **** static HAL_StatusTypeDef accel_goto_active(void)
+  53:Core/Src/accelerometer_controller.c **** {
+ 245              		.loc 1 53 1 is_stmt 1 view -0
+ 246              		.cfi_startproc
+ 247              		@ args = 0, pretend = 0, frame = 8
+ 248              		@ frame_needed = 0, uses_anonymous_args = 0
+ 249 0000 00B5     		push	{lr}
+ 250              	.LCFI8:
+ 251              		.cfi_def_cfa_offset 4
+ 252              		.cfi_offset 14, -4
+ 253 0002 83B0     		sub	sp, sp, #12
+ 254              	.LCFI9:
+ 255              		.cfi_def_cfa_offset 16
+  54:Core/Src/accelerometer_controller.c ****     uint8_t value;
+ 256              		.loc 1 54 5 view .LVU37
+  55:Core/Src/accelerometer_controller.c ****     HAL_StatusTypeDef status = accelerometer_read_reg(MMA8451Q_REG_CTRL_REG1, &value);
+ 257              		.loc 1 55 5 view .LVU38
+ 258              		.loc 1 55 32 is_stmt 0 view .LVU39
+ 259 0004 6B46     		mov	r3, sp
+ 260 0006 D91D     		adds	r1, r3, #7
+ 261 0008 2A20     		movs	r0, #42
+ 262 000a FFF7FEFF 		bl	accelerometer_read_reg
+ 263              	.LVL19:
+  56:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
+ 264              		.loc 1 56 5 is_stmt 1 view .LVU40
+ 265              		.loc 1 56 8 is_stmt 0 view .LVU41
+ 266 000e 0028     		cmp	r0, #0
+ 267 0010 01D0     		beq	.L15
+ 268              	.LVL20:
+ 269              	.L14:
+  57:Core/Src/accelerometer_controller.c **** 
+  58:Core/Src/accelerometer_controller.c ****     value |= CTRL_REG1_ACTIVE;  // set ACTIVE bit
+  59:Core/Src/accelerometer_controller.c ****     return accelerometer_write_reg(MMA8451Q_REG_CTRL_REG1, value);
+  60:Core/Src/accelerometer_controller.c **** }
+ 270              		.loc 1 60 1 view .LVU42
+ 271 0012 03B0     		add	sp, sp, #12
+ 272              		@ sp needed
+ 273 0014 00BD     		pop	{pc}
+ 274              	.LVL21:
+ 275              	.L15:
+  58:Core/Src/accelerometer_controller.c ****     return accelerometer_write_reg(MMA8451Q_REG_CTRL_REG1, value);
+ 276              		.loc 1 58 5 is_stmt 1 view .LVU43
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccoFLDt.s 			page 7
 
 
- 303              		.section	.text.accelerometer_controller_initialize,"ax",%progbits
- 304              		.align	1
- 305              		.global	accelerometer_controller_initialize
- 306              		.syntax unified
- 307              		.code	16
- 308              		.thumb_func
- 310              	accelerometer_controller_initialize:
- 311              	.LFB46:
-  72:Core/Src/accelerometer_controller.c **** 
-  73:Core/Src/accelerometer_controller.c **** HAL_StatusTypeDef accelerometer_controller_initialize(void)
-  74:Core/Src/accelerometer_controller.c **** {
- 312              		.loc 1 74 1 is_stmt 1 view -0
- 313              		.cfi_startproc
- 314              		@ args = 0, pretend = 0, frame = 8
- 315              		@ frame_needed = 0, uses_anonymous_args = 0
- 316 0000 10B5     		push	{r4, lr}
- 317              	.LCFI9:
- 318              		.cfi_def_cfa_offset 8
- 319              		.cfi_offset 4, -8
- 320              		.cfi_offset 14, -4
- 321 0002 82B0     		sub	sp, sp, #8
- 322              	.LCFI10:
- 323              		.cfi_def_cfa_offset 16
-  75:Core/Src/accelerometer_controller.c ****     HAL_StatusTypeDef status;
- 324              		.loc 1 75 5 view .LVU52
-  76:Core/Src/accelerometer_controller.c ****     uint8_t whoami;
- 325              		.loc 1 76 5 view .LVU53
-  77:Core/Src/accelerometer_controller.c **** 
-  78:Core/Src/accelerometer_controller.c ****     /* 1) Read WHO_AM_I */
-  79:Core/Src/accelerometer_controller.c ****     status = accel_read_reg(REG_WHO_AM_I, &whoami);
- 326              		.loc 1 79 5 view .LVU54
- 327              		.loc 1 79 14 is_stmt 0 view .LVU55
- 328 0004 6B46     		mov	r3, sp
- 329 0006 D91D     		adds	r1, r3, #7
- 330 0008 0D20     		movs	r0, #13
- 331 000a FFF7FEFF 		bl	accel_read_reg
- 332              	.LVL28:
-  80:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
- 333              		.loc 1 80 5 is_stmt 1 view .LVU56
- 334              		.loc 1 80 8 is_stmt 0 view .LVU57
- 335 000e 0028     		cmp	r0, #0
- 336 0010 05D1     		bne	.L19
-  81:Core/Src/accelerometer_controller.c ****         return status;
-  82:Core/Src/accelerometer_controller.c ****     }
-  83:Core/Src/accelerometer_controller.c ****     if (whoami != WHO_AM_I_VALUE) {
- 337              		.loc 1 83 5 is_stmt 1 view .LVU58
- 338              		.loc 1 83 16 is_stmt 0 view .LVU59
- 339 0012 6B46     		mov	r3, sp
- 340 0014 0733     		adds	r3, r3, #7
- 341 0016 1B78     		ldrb	r3, [r3]
- 342              		.loc 1 83 8 view .LVU60
- 343 0018 1A2B     		cmp	r3, #26
- 344 001a 02D0     		beq	.L21
-  84:Core/Src/accelerometer_controller.c ****         return HAL_ERROR; // Device not recognized
- 345              		.loc 1 84 16 view .LVU61
- 346 001c 0120     		movs	r0, #1
- 347              	.LVL29:
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s 			page 9
+  58:Core/Src/accelerometer_controller.c ****     return accelerometer_write_reg(MMA8451Q_REG_CTRL_REG1, value);
+ 277              		.loc 1 58 11 is_stmt 0 view .LVU44
+ 278 0016 6B46     		mov	r3, sp
+ 279 0018 D979     		ldrb	r1, [r3, #7]
+ 280 001a 0122     		movs	r2, #1
+ 281 001c 1143     		orrs	r1, r2
+ 282 001e C9B2     		uxtb	r1, r1
+ 283 0020 D971     		strb	r1, [r3, #7]
+  59:Core/Src/accelerometer_controller.c **** }
+ 284              		.loc 1 59 5 is_stmt 1 view .LVU45
+  59:Core/Src/accelerometer_controller.c **** }
+ 285              		.loc 1 59 12 is_stmt 0 view .LVU46
+ 286 0022 2A30     		adds	r0, r0, #42
+ 287              	.LVL22:
+  59:Core/Src/accelerometer_controller.c **** }
+ 288              		.loc 1 59 12 view .LVU47
+ 289 0024 FFF7FEFF 		bl	accelerometer_write_reg
+ 290              	.LVL23:
+  59:Core/Src/accelerometer_controller.c **** }
+ 291              		.loc 1 59 12 view .LVU48
+ 292 0028 F3E7     		b	.L14
+ 293              		.cfi_endproc
+ 294              	.LFE44:
+ 296              		.section	.text.accelerometer_controller_initialize,"ax",%progbits
+ 297              		.align	1
+ 298              		.global	accelerometer_controller_initialize
+ 299              		.syntax unified
+ 300              		.code	16
+ 301              		.thumb_func
+ 303              	accelerometer_controller_initialize:
+ 304              	.LFB46:
+  61:Core/Src/accelerometer_controller.c **** 
+  62:Core/Src/accelerometer_controller.c **** static uint8_t mg_to_threshold_code(uint16_t mg)
+  63:Core/Src/accelerometer_controller.c **** {
+  64:Core/Src/accelerometer_controller.c ****     float counts = (float)mg / 63.0f;  // 63 mg per LSB
+  65:Core/Src/accelerometer_controller.c ****     if (counts > 127.0f) counts = 127.0f;
+  66:Core/Src/accelerometer_controller.c ****     return (uint8_t)(counts + 0.5f);
+  67:Core/Src/accelerometer_controller.c **** }
+  68:Core/Src/accelerometer_controller.c **** 
+  69:Core/Src/accelerometer_controller.c **** HAL_StatusTypeDef accelerometer_controller_initialize(void)
+  70:Core/Src/accelerometer_controller.c **** {
+ 305              		.loc 1 70 1 is_stmt 1 view -0
+ 306              		.cfi_startproc
+ 307              		@ args = 0, pretend = 0, frame = 8
+ 308              		@ frame_needed = 0, uses_anonymous_args = 0
+ 309 0000 00B5     		push	{lr}
+ 310              	.LCFI10:
+ 311              		.cfi_def_cfa_offset 4
+ 312              		.cfi_offset 14, -4
+ 313 0002 83B0     		sub	sp, sp, #12
+ 314              	.LCFI11:
+ 315              		.cfi_def_cfa_offset 16
+  71:Core/Src/accelerometer_controller.c ****     HAL_StatusTypeDef status;
+ 316              		.loc 1 71 5 view .LVU50
+  72:Core/Src/accelerometer_controller.c ****     uint8_t who_am_i;
+ 317              		.loc 1 72 5 view .LVU51
+  73:Core/Src/accelerometer_controller.c **** 
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccoFLDt.s 			page 8
 
 
- 348              	.L19:
-  85:Core/Src/accelerometer_controller.c ****     }
-  86:Core/Src/accelerometer_controller.c **** 
-  87:Core/Src/accelerometer_controller.c ****     /* 2) Put device into Standby */
-  88:Core/Src/accelerometer_controller.c ****     status = accel_goto_standby();
-  89:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
-  90:Core/Src/accelerometer_controller.c ****         return status;
-  91:Core/Src/accelerometer_controller.c ****     }
-  92:Core/Src/accelerometer_controller.c **** 
-  93:Core/Src/accelerometer_controller.c ****     /* 3) Configure ±2g range (REG_XYZ_DATA_CFG) */
-  94:Core/Src/accelerometer_controller.c ****     status = accel_write_reg(REG_XYZ_DATA_CFG, XYZ_DATA_CFG_FS_2G);
-  95:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
-  96:Core/Src/accelerometer_controller.c ****         return status;
-  97:Core/Src/accelerometer_controller.c ****     }
-  98:Core/Src/accelerometer_controller.c **** 
-  99:Core/Src/accelerometer_controller.c ****     /* 4) Set HP_FILTER_CUTOFF = 0x08 => enable low-pass for pulses */
- 100:Core/Src/accelerometer_controller.c ****     status = accel_write_reg(REG_HP_FILTER_CUTOFF, 0x08);
- 101:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
- 102:Core/Src/accelerometer_controller.c ****         return status;
- 103:Core/Src/accelerometer_controller.c ****     }
- 104:Core/Src/accelerometer_controller.c **** 
- 105:Core/Src/accelerometer_controller.c ****     /* 5) Configure FF_MT for motion detection */
- 106:Core/Src/accelerometer_controller.c ****     uint8_t ff_mt_cfg = (FF_MT_CFG_ELE | FF_MT_CFG_OAE |
- 107:Core/Src/accelerometer_controller.c ****                          FF_MT_CFG_XEFE | FF_MT_CFG_YEFE | FF_MT_CFG_ZEFE);
- 108:Core/Src/accelerometer_controller.c ****     status = accel_write_reg(REG_FF_MT_CFG, ff_mt_cfg);
- 109:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
- 110:Core/Src/accelerometer_controller.c ****         return status;
- 111:Core/Src/accelerometer_controller.c ****     }
- 112:Core/Src/accelerometer_controller.c **** 
- 113:Core/Src/accelerometer_controller.c ****     /* 6) Set motion threshold (mg => code) and debounce */
- 114:Core/Src/accelerometer_controller.c ****     uint8_t ths_code = mg_to_threshold_code(ACCEL_MOTION_THRESHOLD_MG);
- 115:Core/Src/accelerometer_controller.c ****     status = accel_write_reg(REG_FF_MT_THS, ths_code);
- 116:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
- 117:Core/Src/accelerometer_controller.c **** 
- 118:Core/Src/accelerometer_controller.c ****     status = accel_write_reg(REG_FF_MT_COUNT, ACCEL_MOTION_DEBOUNCE_COUNT);
- 119:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
- 120:Core/Src/accelerometer_controller.c **** 
- 121:Core/Src/accelerometer_controller.c ****     /* 7) Configure Tap detection for X,Y,Z single tap */
- 122:Core/Src/accelerometer_controller.c ****     uint8_t pulse_cfg = (PULSE_CFG_ELE |
- 123:Core/Src/accelerometer_controller.c ****                          PULSE_CFG_XSPEFE |
- 124:Core/Src/accelerometer_controller.c ****                          PULSE_CFG_YSPEFE |
- 125:Core/Src/accelerometer_controller.c ****                          PULSE_CFG_ZSPEFE);
- 126:Core/Src/accelerometer_controller.c ****     status = accel_write_reg(REG_PULSE_CFG, pulse_cfg);
- 127:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
- 128:Core/Src/accelerometer_controller.c ****         return status;
- 129:Core/Src/accelerometer_controller.c ****     }
- 130:Core/Src/accelerometer_controller.c **** 
- 131:Core/Src/accelerometer_controller.c ****     /* Tap thresholds */
- 132:Core/Src/accelerometer_controller.c ****     uint8_t tap_ths = mg_to_threshold_code(ACCEL_TAP_THRESHOLD_MG);
- 133:Core/Src/accelerometer_controller.c ****     status = accel_write_reg(REG_PULSE_THSX, tap_ths);
- 134:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
- 135:Core/Src/accelerometer_controller.c ****     status = accel_write_reg(REG_PULSE_THSY, tap_ths);
- 136:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
- 137:Core/Src/accelerometer_controller.c ****     status = accel_write_reg(REG_PULSE_THSZ, tap_ths);
- 138:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
- 139:Core/Src/accelerometer_controller.c **** 
- 140:Core/Src/accelerometer_controller.c ****     /* Tap timing: TMLT, LTCY, WIND */
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s 			page 10
+  74:Core/Src/accelerometer_controller.c ****     // Read WHO_AM_I
+  75:Core/Src/accelerometer_controller.c ****     status = accelerometer_read_reg(MMA8451Q_REG_WHO_AM_I, &who_am_i);
+ 318              		.loc 1 75 5 view .LVU52
+ 319              		.loc 1 75 14 is_stmt 0 view .LVU53
+ 320 0004 6B46     		mov	r3, sp
+ 321 0006 D91D     		adds	r1, r3, #7
+ 322 0008 0D20     		movs	r0, #13
+ 323 000a FFF7FEFF 		bl	accelerometer_read_reg
+ 324              	.LVL24:
+  76:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
+ 325              		.loc 1 76 5 is_stmt 1 view .LVU54
+ 326              		.loc 1 76 8 is_stmt 0 view .LVU55
+ 327 000e 0028     		cmp	r0, #0
+ 328 0010 05D1     		bne	.L17
+  77:Core/Src/accelerometer_controller.c ****         return status;
+  78:Core/Src/accelerometer_controller.c ****     }
+  79:Core/Src/accelerometer_controller.c ****     if (who_am_i != WHO_AM_I_VALUE) {
+ 329              		.loc 1 79 5 is_stmt 1 view .LVU56
+ 330              		.loc 1 79 18 is_stmt 0 view .LVU57
+ 331 0012 6B46     		mov	r3, sp
+ 332 0014 0733     		adds	r3, r3, #7
+ 333 0016 1B78     		ldrb	r3, [r3]
+ 334              		.loc 1 79 8 view .LVU58
+ 335 0018 1A2B     		cmp	r3, #26
+ 336 001a 02D0     		beq	.L19
+  80:Core/Src/accelerometer_controller.c ****         return HAL_ERROR; // Device not recognized
+ 337              		.loc 1 80 16 view .LVU59
+ 338 001c 0120     		movs	r0, #1
+ 339              	.LVL25:
+ 340              	.L17:
+  81:Core/Src/accelerometer_controller.c ****     }
+  82:Core/Src/accelerometer_controller.c **** 
+  83:Core/Src/accelerometer_controller.c ****     // Put device into Standby
+  84:Core/Src/accelerometer_controller.c ****     status = accel_goto_standby();
+  85:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
+  86:Core/Src/accelerometer_controller.c ****         return status;
+  87:Core/Src/accelerometer_controller.c ****     }
+  88:Core/Src/accelerometer_controller.c **** 
+  89:Core/Src/accelerometer_controller.c ****     // Configure g range and high-pass filter
+  90:Core/Src/accelerometer_controller.c ****     status = accelerometer_write_reg(MMA8451Q_REG_XYZ_DATA_CFG, XYZ_DATA_CFG_HP_OFF_FS_2G);
+  91:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
+  92:Core/Src/accelerometer_controller.c ****         return status;
+  93:Core/Src/accelerometer_controller.c ****     }
+  94:Core/Src/accelerometer_controller.c **** 
+  95:Core/Src/accelerometer_controller.c ****     // Configure HPF cutoff
+  96:Core/Src/accelerometer_controller.c ****     status = accelerometer_write_reg(MMA8451Q_REG_HP_FILTER_CUTOFF, HP_FILTER_CUTOFF);
+  97:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
+  98:Core/Src/accelerometer_controller.c ****         return status;
+  99:Core/Src/accelerometer_controller.c ****     }
+ 100:Core/Src/accelerometer_controller.c **** 
+ 101:Core/Src/accelerometer_controller.c ****     // /* 5) Configure FF_MT for motion detection */
+ 102:Core/Src/accelerometer_controller.c ****     // uint8_t ff_mt_cfg = (FF_MT_CFG_ELE | FF_MT_CFG_OAE |
+ 103:Core/Src/accelerometer_controller.c ****     //                      FF_MT_CFG_XEFE | FF_MT_CFG_YEFE | FF_MT_CFG_ZEFE);
+ 104:Core/Src/accelerometer_controller.c ****     // status = accelerometer_write_reg(MMA8451Q_REG_FF_MT_CFG, ff_mt_cfg);
+ 105:Core/Src/accelerometer_controller.c ****     // if (status != HAL_OK) {
+ 106:Core/Src/accelerometer_controller.c ****     //     return status;
+ 107:Core/Src/accelerometer_controller.c ****     // }
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccoFLDt.s 			page 9
 
 
- 141:Core/Src/accelerometer_controller.c ****     status = accel_write_reg(REG_PULSE_TMLT, ACCEL_TAP_TIME_LIMIT);
- 142:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
- 143:Core/Src/accelerometer_controller.c ****     status = accel_write_reg(REG_PULSE_LTCY, ACCEL_TAP_LATENCY);
- 144:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
- 145:Core/Src/accelerometer_controller.c ****     status = accel_write_reg(REG_PULSE_WIND, ACCEL_TAP_WINDOW);
- 146:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
+ 108:Core/Src/accelerometer_controller.c **** 
+ 109:Core/Src/accelerometer_controller.c ****     // /* 6) Set motion threshold (mg => code) and debounce */
+ 110:Core/Src/accelerometer_controller.c ****     // uint8_t ths_code = mg_to_threshold_code(ACCEL_MOTION_THRESHOLD_MG);
+ 111:Core/Src/accelerometer_controller.c ****     // status = accelerometer_write_reg(MMA8451Q_REG_FF_MT_THS, ths_code);
+ 112:Core/Src/accelerometer_controller.c ****     // if (status != HAL_OK) return status;
+ 113:Core/Src/accelerometer_controller.c **** 
+ 114:Core/Src/accelerometer_controller.c ****     // status = accelerometer_write_reg(MMA8451Q_REG_FF_MT_COUNT, ACCEL_MOTION_DEBOUNCE_COUNT);
+ 115:Core/Src/accelerometer_controller.c ****     // if (status != HAL_OK) return status;
+ 116:Core/Src/accelerometer_controller.c **** 
+ 117:Core/Src/accelerometer_controller.c ****     // /* 7) Configure Tap detection for X,Y,Z single tap */
+ 118:Core/Src/accelerometer_controller.c ****     // uint8_t pulse_cfg = (PULSE_CFG_ELE |
+ 119:Core/Src/accelerometer_controller.c ****     //                      PULSE_CFG_XSPEFE |
+ 120:Core/Src/accelerometer_controller.c ****     //                      PULSE_CFG_YSPEFE |
+ 121:Core/Src/accelerometer_controller.c ****     //                      PULSE_CFG_ZSPEFE);
+ 122:Core/Src/accelerometer_controller.c ****     // status = accelerometer_write_reg(MMA8451Q_REG_PULSE_CFG, pulse_cfg);
+ 123:Core/Src/accelerometer_controller.c ****     // if (status != HAL_OK) {
+ 124:Core/Src/accelerometer_controller.c ****     //     return status;
+ 125:Core/Src/accelerometer_controller.c ****     // }
+ 126:Core/Src/accelerometer_controller.c **** 
+ 127:Core/Src/accelerometer_controller.c ****     // /* Tap thresholds */
+ 128:Core/Src/accelerometer_controller.c ****     // uint8_t tap_ths = mg_to_threshold_code(ACCEL_TAP_THRESHOLD_MG);
+ 129:Core/Src/accelerometer_controller.c ****     // status = accelerometer_write_reg(MMA8451Q_REG_PULSE_THSX, tap_ths);
+ 130:Core/Src/accelerometer_controller.c ****     // if (status != HAL_OK) return status;
+ 131:Core/Src/accelerometer_controller.c ****     // status = accelerometer_write_reg(MMA8451Q_REG_PULSE_THSY, tap_ths);
+ 132:Core/Src/accelerometer_controller.c ****     // if (status != HAL_OK) return status;
+ 133:Core/Src/accelerometer_controller.c ****     // status = accelerometer_write_reg(MMA8451Q_REG_PULSE_THSZ, tap_ths);
+ 134:Core/Src/accelerometer_controller.c ****     // if (status != HAL_OK) return status;
+ 135:Core/Src/accelerometer_controller.c **** 
+ 136:Core/Src/accelerometer_controller.c ****     // /* Tap timing: TMLT, LTCY, WIND */
+ 137:Core/Src/accelerometer_controller.c ****     // status = accelerometer_write_reg(MMA8451Q_REG_PULSE_TMLT, ACCEL_TAP_TIME_LIMIT);
+ 138:Core/Src/accelerometer_controller.c ****     // if (status != HAL_OK) return status;
+ 139:Core/Src/accelerometer_controller.c ****     // status = accelerometer_write_reg(MMA8451Q_REG_PULSE_LTCY, ACCEL_TAP_LATENCY);
+ 140:Core/Src/accelerometer_controller.c ****     // if (status != HAL_OK) return status;
+ 141:Core/Src/accelerometer_controller.c ****     // status = accelerometer_write_reg(MMA8451Q_REG_PULSE_WIND, ACCEL_TAP_WINDOW);
+ 142:Core/Src/accelerometer_controller.c ****     // if (status != HAL_OK) return status;
+ 143:Core/Src/accelerometer_controller.c **** 
+ 144:Core/Src/accelerometer_controller.c ****     // /* 8) Set auto-sleep timeout: e.g., 50 => 0.5s at 100Hz */
+ 145:Core/Src/accelerometer_controller.c ****     // status = accelerometer_write_reg(MMA8451Q_REG_ASLP_COUNT, 50);
+ 146:Core/Src/accelerometer_controller.c ****     // if (status != HAL_OK) return status;
  147:Core/Src/accelerometer_controller.c **** 
- 148:Core/Src/accelerometer_controller.c ****     /* 8) Set auto-sleep timeout: e.g., 50 => 0.5s at 100Hz */
- 149:Core/Src/accelerometer_controller.c ****     status = accel_write_reg(REG_ASLP_COUNT, 50);
- 150:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
- 151:Core/Src/accelerometer_controller.c **** 
- 152:Core/Src/accelerometer_controller.c ****     /* 9) CTRL_REG2: SLPE=1 => auto-sleep, normal mode */
- 153:Core/Src/accelerometer_controller.c ****     uint8_t ctrl_reg2 = CTRL_REG2_SLPE;
- 154:Core/Src/accelerometer_controller.c ****     status = accel_write_reg(REG_CTRL_REG2, ctrl_reg2);
- 155:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
- 156:Core/Src/accelerometer_controller.c ****         return status;
- 157:Core/Src/accelerometer_controller.c ****     }
- 158:Core/Src/accelerometer_controller.c **** 
- 159:Core/Src/accelerometer_controller.c ****     /* 10) CTRL_REG3: IPOL=1 => active-high, WAKE_FF_MT=1 => motion can wake */
- 160:Core/Src/accelerometer_controller.c ****     uint8_t ctrl_reg3 = (CTRL_REG3_IPOL | (1 << 3));
- 161:Core/Src/accelerometer_controller.c ****     status = accel_write_reg(REG_CTRL_REG3, ctrl_reg3);
- 162:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
- 163:Core/Src/accelerometer_controller.c ****         return status;
- 164:Core/Src/accelerometer_controller.c ****     }
- 165:Core/Src/accelerometer_controller.c **** 
- 166:Core/Src/accelerometer_controller.c ****     /* 11) CTRL_REG4: enable interrupts for FF_MT, PULSE, ASLP */
- 167:Core/Src/accelerometer_controller.c ****     uint8_t ctrl_reg4 = (CTRL_REG4_INT_EN_FF_MT |
- 168:Core/Src/accelerometer_controller.c ****                          CTRL_REG4_INT_EN_PULSE |
- 169:Core/Src/accelerometer_controller.c ****                          CTRL_REG4_INT_EN_ASLP);
- 170:Core/Src/accelerometer_controller.c ****     status = accel_write_reg(REG_CTRL_REG4, ctrl_reg4);
- 171:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
- 172:Core/Src/accelerometer_controller.c ****         return status;
- 173:Core/Src/accelerometer_controller.c ****     }
- 174:Core/Src/accelerometer_controller.c **** 
- 175:Core/Src/accelerometer_controller.c ****     /* 12) CTRL_REG5: route PULSE => INT1, FF_MT => INT2, ASLP => INT2 */
- 176:Core/Src/accelerometer_controller.c ****     uint8_t ctrl_reg5 = 0x00;
- 177:Core/Src/accelerometer_controller.c ****     // PULSE => bit3 = 1 => INT1
- 178:Core/Src/accelerometer_controller.c ****     ctrl_reg5 |= CTRL_REG5_INT_CFG_PULSE;  // (1 << 3)
- 179:Core/Src/accelerometer_controller.c ****     // FF_MT => bit2 = 0 => INT2
- 180:Core/Src/accelerometer_controller.c ****     // ASLP => bit7 = 0 => INT2
- 181:Core/Src/accelerometer_controller.c ****     status = accel_write_reg(REG_CTRL_REG5, ctrl_reg5);
- 182:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
- 183:Core/Src/accelerometer_controller.c ****         return status;
- 184:Core/Src/accelerometer_controller.c ****     }
- 185:Core/Src/accelerometer_controller.c **** 
- 186:Core/Src/accelerometer_controller.c ****     /* 13) CTRL_REG1: ODR=100Hz (DR=0b011), LNOISE=1, ASLP_RATE=00 => 50Hz, then ACTIVE=1 */
- 187:Core/Src/accelerometer_controller.c ****     uint8_t ctrl_reg1 = 0;
- 188:Core/Src/accelerometer_controller.c ****     // DR=0b011 => bits [5:3] = 3<<3 => 0x18
- 189:Core/Src/accelerometer_controller.c ****     // LNOISE=1 => bit2 => 0x04
- 190:Core/Src/accelerometer_controller.c ****     // ACTIVE => bit0 => 0x01
- 191:Core/Src/accelerometer_controller.c ****     ctrl_reg1 = (3 << 3) | (1 << 2) | CTRL_REG1_ACTIVE;  // 0x1D
- 192:Core/Src/accelerometer_controller.c ****     status = accel_write_reg(REG_CTRL_REG1, ctrl_reg1);
- 193:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
- 194:Core/Src/accelerometer_controller.c ****         return status;
- 195:Core/Src/accelerometer_controller.c ****     }
- 196:Core/Src/accelerometer_controller.c **** 
- 197:Core/Src/accelerometer_controller.c ****     return HAL_OK;
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s 			page 11
+ 148:Core/Src/accelerometer_controller.c ****     // /* 9) CTRL_REG2: SLPE=1 => auto-sleep, normal mode */
+ 149:Core/Src/accelerometer_controller.c ****     // uint8_t ctrl_reg2 = CTRL_REG2_SLPE;
+ 150:Core/Src/accelerometer_controller.c ****     // status = accelerometer_write_reg(MMA8451Q_REG_CTRL_REG2, ctrl_reg2);
+ 151:Core/Src/accelerometer_controller.c ****     // if (status != HAL_OK) {
+ 152:Core/Src/accelerometer_controller.c ****     //     return status;
+ 153:Core/Src/accelerometer_controller.c ****     // }
+ 154:Core/Src/accelerometer_controller.c **** 
+ 155:Core/Src/accelerometer_controller.c ****     // /* 10) CTRL_REG3: IPOL=1 => active-high, WAKE_FF_MT=1 => motion can wake */
+ 156:Core/Src/accelerometer_controller.c ****     // uint8_t ctrl_reg3 = (CTRL_REG3_IPOL | (1 << 3));
+ 157:Core/Src/accelerometer_controller.c ****     // status = accelerometer_write_reg(MMA8451Q_REG_CTRL_REG3, ctrl_reg3);
+ 158:Core/Src/accelerometer_controller.c ****     // if (status != HAL_OK) {
+ 159:Core/Src/accelerometer_controller.c ****     //     return status;
+ 160:Core/Src/accelerometer_controller.c ****     // }
+ 161:Core/Src/accelerometer_controller.c **** 
+ 162:Core/Src/accelerometer_controller.c ****     // /* 11) CTRL_REG4: enable interrupts for FF_MT, PULSE, ASLP */
+ 163:Core/Src/accelerometer_controller.c ****     // uint8_t ctrl_reg4 = (CTRL_REG4_INT_EN_FF_MT |
+ 164:Core/Src/accelerometer_controller.c ****     //                      CTRL_REG4_INT_EN_PULSE |
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccoFLDt.s 			page 10
 
 
- 198:Core/Src/accelerometer_controller.c **** }
- 349              		.loc 1 198 1 view .LVU62
- 350 001e 02B0     		add	sp, sp, #8
- 351              		@ sp needed
- 352 0020 10BD     		pop	{r4, pc}
- 353              	.LVL30:
- 354              	.L21:
-  88:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
- 355              		.loc 1 88 5 is_stmt 1 view .LVU63
-  88:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
- 356              		.loc 1 88 14 is_stmt 0 view .LVU64
- 357 0022 FFF7FEFF 		bl	accel_goto_standby
- 358              	.LVL31:
-  89:Core/Src/accelerometer_controller.c ****         return status;
- 359              		.loc 1 89 5 is_stmt 1 view .LVU65
-  89:Core/Src/accelerometer_controller.c ****         return status;
- 360              		.loc 1 89 8 is_stmt 0 view .LVU66
- 361 0026 0028     		cmp	r0, #0
- 362 0028 F9D1     		bne	.L19
-  94:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
- 363              		.loc 1 94 5 is_stmt 1 view .LVU67
-  94:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
- 364              		.loc 1 94 14 is_stmt 0 view .LVU68
- 365 002a 0021     		movs	r1, #0
- 366 002c 0E30     		adds	r0, r0, #14
- 367              	.LVL32:
-  94:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
- 368              		.loc 1 94 14 view .LVU69
- 369 002e FFF7FEFF 		bl	accel_write_reg
- 370              	.LVL33:
-  95:Core/Src/accelerometer_controller.c ****         return status;
- 371              		.loc 1 95 5 is_stmt 1 view .LVU70
-  95:Core/Src/accelerometer_controller.c ****         return status;
- 372              		.loc 1 95 8 is_stmt 0 view .LVU71
- 373 0032 0028     		cmp	r0, #0
- 374 0034 F3D1     		bne	.L19
- 100:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
- 375              		.loc 1 100 5 is_stmt 1 view .LVU72
- 100:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
- 376              		.loc 1 100 14 is_stmt 0 view .LVU73
- 377 0036 0821     		movs	r1, #8
- 378 0038 0F30     		adds	r0, r0, #15
- 379              	.LVL34:
- 100:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
- 380              		.loc 1 100 14 view .LVU74
- 381 003a FFF7FEFF 		bl	accel_write_reg
- 382              	.LVL35:
- 101:Core/Src/accelerometer_controller.c ****         return status;
- 383              		.loc 1 101 5 is_stmt 1 view .LVU75
- 101:Core/Src/accelerometer_controller.c ****         return status;
- 384              		.loc 1 101 8 is_stmt 0 view .LVU76
- 385 003e 0028     		cmp	r0, #0
- 386 0040 EDD1     		bne	.L19
- 106:Core/Src/accelerometer_controller.c ****                          FF_MT_CFG_XEFE | FF_MT_CFG_YEFE | FF_MT_CFG_ZEFE);
- 387              		.loc 1 106 5 is_stmt 1 view .LVU77
- 388              	.LVL36:
- 108:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s 			page 12
+ 165:Core/Src/accelerometer_controller.c ****     //                      CTRL_REG4_INT_EN_ASLP);
+ 166:Core/Src/accelerometer_controller.c ****     // status = accelerometer_write_reg(MMA8451Q_REG_CTRL_REG4, ctrl_reg4);
+ 167:Core/Src/accelerometer_controller.c ****     // if (status != HAL_OK) {
+ 168:Core/Src/accelerometer_controller.c ****     //     return status;
+ 169:Core/Src/accelerometer_controller.c ****     // }
+ 170:Core/Src/accelerometer_controller.c **** 
+ 171:Core/Src/accelerometer_controller.c ****     // /* 12) CTRL_REG5: route PULSE => INT1, FF_MT => INT2, ASLP => INT2 */
+ 172:Core/Src/accelerometer_controller.c ****     // uint8_t ctrl_reg5 = 0x00;
+ 173:Core/Src/accelerometer_controller.c ****     // // PULSE => bit3 = 1 => INT1
+ 174:Core/Src/accelerometer_controller.c ****     // ctrl_reg5 |= CTRL_REG5_INT_CFG_PULSE;  // (1 << 3)
+ 175:Core/Src/accelerometer_controller.c ****     // // FF_MT => bit2 = 0 => INT2
+ 176:Core/Src/accelerometer_controller.c ****     // // ASLP => bit7 = 0 => INT2
+ 177:Core/Src/accelerometer_controller.c ****     // status = accelerometer_write_reg(MMA8451Q_REG_CTRL_REG5, ctrl_reg5);
+ 178:Core/Src/accelerometer_controller.c ****     // if (status != HAL_OK) {
+ 179:Core/Src/accelerometer_controller.c ****     //     return status;
+ 180:Core/Src/accelerometer_controller.c ****     // }
+ 181:Core/Src/accelerometer_controller.c **** 
+ 182:Core/Src/accelerometer_controller.c ****     // /* 13) CTRL_REG1: ODR=100Hz (DR=0b011), LNOISE=1, ASLP_RATE=00 => 50Hz, then ACTIVE=1 */
+ 183:Core/Src/accelerometer_controller.c ****     // uint8_t ctrl_reg1 = 0;
+ 184:Core/Src/accelerometer_controller.c ****     // // DR=0b011 => bits [5:3] = 3<<3 => 0x18
+ 185:Core/Src/accelerometer_controller.c ****     // // LNOISE=1 => bit2 => 0x04
+ 186:Core/Src/accelerometer_controller.c ****     // // ACTIVE => bit0 => 0x01
+ 187:Core/Src/accelerometer_controller.c ****     // ctrl_reg1 = (3 << 3) | (1 << 2) | CTRL_REG1_ACTIVE;  // 0x1D
+ 188:Core/Src/accelerometer_controller.c ****     // status = accelerometer_write_reg(MMA8451Q_REG_CTRL_REG1, ctrl_reg1);
+ 189:Core/Src/accelerometer_controller.c ****     // if (status != HAL_OK) {
+ 190:Core/Src/accelerometer_controller.c ****     //     return status;
+ 191:Core/Src/accelerometer_controller.c ****     // }
+ 192:Core/Src/accelerometer_controller.c **** 
+ 193:Core/Src/accelerometer_controller.c ****     // Put device into Active
+ 194:Core/Src/accelerometer_controller.c ****     status = accel_goto_active();
+ 195:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
+ 196:Core/Src/accelerometer_controller.c ****         return status;
+ 197:Core/Src/accelerometer_controller.c ****     }
+ 198:Core/Src/accelerometer_controller.c **** 
+ 199:Core/Src/accelerometer_controller.c ****     return HAL_OK;
+ 200:Core/Src/accelerometer_controller.c **** }
+ 341              		.loc 1 200 1 view .LVU60
+ 342 001e 03B0     		add	sp, sp, #12
+ 343              		@ sp needed
+ 344 0020 00BD     		pop	{pc}
+ 345              	.LVL26:
+ 346              	.L19:
+  84:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
+ 347              		.loc 1 84 5 is_stmt 1 view .LVU61
+  84:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
+ 348              		.loc 1 84 14 is_stmt 0 view .LVU62
+ 349 0022 FFF7FEFF 		bl	accel_goto_standby
+ 350              	.LVL27:
+  85:Core/Src/accelerometer_controller.c ****         return status;
+ 351              		.loc 1 85 5 is_stmt 1 view .LVU63
+  85:Core/Src/accelerometer_controller.c ****         return status;
+ 352              		.loc 1 85 8 is_stmt 0 view .LVU64
+ 353 0026 0028     		cmp	r0, #0
+ 354 0028 F9D1     		bne	.L17
+  90:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
+ 355              		.loc 1 90 5 is_stmt 1 view .LVU65
+  90:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccoFLDt.s 			page 11
 
 
- 389              		.loc 1 108 5 view .LVU78
- 108:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
- 390              		.loc 1 108 14 is_stmt 0 view .LVU79
- 391 0042 CE21     		movs	r1, #206
- 392 0044 1530     		adds	r0, r0, #21
- 393              	.LVL37:
- 108:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
- 394              		.loc 1 108 14 view .LVU80
- 395 0046 FFF7FEFF 		bl	accel_write_reg
- 396              	.LVL38:
- 109:Core/Src/accelerometer_controller.c ****         return status;
- 397              		.loc 1 109 5 is_stmt 1 view .LVU81
- 109:Core/Src/accelerometer_controller.c ****         return status;
- 398              		.loc 1 109 8 is_stmt 0 view .LVU82
- 399 004a 0028     		cmp	r0, #0
- 400 004c E7D1     		bne	.L19
- 114:Core/Src/accelerometer_controller.c ****     status = accel_write_reg(REG_FF_MT_THS, ths_code);
- 401              		.loc 1 114 5 is_stmt 1 view .LVU83
- 114:Core/Src/accelerometer_controller.c ****     status = accel_write_reg(REG_FF_MT_THS, ths_code);
- 402              		.loc 1 114 24 is_stmt 0 view .LVU84
- 403 004e C830     		adds	r0, r0, #200
- 404              	.LVL39:
- 114:Core/Src/accelerometer_controller.c ****     status = accel_write_reg(REG_FF_MT_THS, ths_code);
- 405              		.loc 1 114 24 view .LVU85
- 406 0050 FFF7FEFF 		bl	mg_to_threshold_code
- 407              	.LVL40:
- 114:Core/Src/accelerometer_controller.c ****     status = accel_write_reg(REG_FF_MT_THS, ths_code);
- 408              		.loc 1 114 24 view .LVU86
- 409 0054 0100     		movs	r1, r0
- 410              	.LVL41:
- 115:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
- 411              		.loc 1 115 5 is_stmt 1 view .LVU87
- 115:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
- 412              		.loc 1 115 14 is_stmt 0 view .LVU88
- 413 0056 1720     		movs	r0, #23
- 414 0058 FFF7FEFF 		bl	accel_write_reg
- 415              	.LVL42:
- 116:Core/Src/accelerometer_controller.c **** 
- 416              		.loc 1 116 5 is_stmt 1 view .LVU89
- 116:Core/Src/accelerometer_controller.c **** 
- 417              		.loc 1 116 8 is_stmt 0 view .LVU90
- 418 005c 0028     		cmp	r0, #0
- 419 005e DED1     		bne	.L19
- 118:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
- 420              		.loc 1 118 5 is_stmt 1 view .LVU91
- 118:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
- 421              		.loc 1 118 14 is_stmt 0 view .LVU92
- 422 0060 0521     		movs	r1, #5
- 423 0062 1830     		adds	r0, r0, #24
- 424              	.LVL43:
- 118:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
- 425              		.loc 1 118 14 view .LVU93
- 426 0064 FFF7FEFF 		bl	accel_write_reg
- 427              	.LVL44:
- 119:Core/Src/accelerometer_controller.c **** 
- 428              		.loc 1 119 5 is_stmt 1 view .LVU94
- 119:Core/Src/accelerometer_controller.c **** 
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s 			page 13
+ 356              		.loc 1 90 14 is_stmt 0 view .LVU66
+ 357 002a 0021     		movs	r1, #0
+ 358 002c 0E30     		adds	r0, r0, #14
+ 359              	.LVL28:
+  90:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
+ 360              		.loc 1 90 14 view .LVU67
+ 361 002e FFF7FEFF 		bl	accelerometer_write_reg
+ 362              	.LVL29:
+  91:Core/Src/accelerometer_controller.c ****         return status;
+ 363              		.loc 1 91 5 is_stmt 1 view .LVU68
+  91:Core/Src/accelerometer_controller.c ****         return status;
+ 364              		.loc 1 91 8 is_stmt 0 view .LVU69
+ 365 0032 0028     		cmp	r0, #0
+ 366 0034 F3D1     		bne	.L17
+  96:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
+ 367              		.loc 1 96 5 is_stmt 1 view .LVU70
+  96:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
+ 368              		.loc 1 96 14 is_stmt 0 view .LVU71
+ 369 0036 0021     		movs	r1, #0
+ 370 0038 0F30     		adds	r0, r0, #15
+ 371              	.LVL30:
+  96:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
+ 372              		.loc 1 96 14 view .LVU72
+ 373 003a FFF7FEFF 		bl	accelerometer_write_reg
+ 374              	.LVL31:
+  97:Core/Src/accelerometer_controller.c ****         return status;
+ 375              		.loc 1 97 5 is_stmt 1 view .LVU73
+  97:Core/Src/accelerometer_controller.c ****         return status;
+ 376              		.loc 1 97 8 is_stmt 0 view .LVU74
+ 377 003e 0028     		cmp	r0, #0
+ 378 0040 EDD1     		bne	.L17
+ 194:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
+ 379              		.loc 1 194 5 is_stmt 1 view .LVU75
+ 194:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
+ 380              		.loc 1 194 14 is_stmt 0 view .LVU76
+ 381 0042 FFF7FEFF 		bl	accel_goto_active
+ 382              	.LVL32:
+ 195:Core/Src/accelerometer_controller.c ****         return status;
+ 383              		.loc 1 195 5 is_stmt 1 view .LVU77
+ 384 0046 EAE7     		b	.L17
+ 385              		.cfi_endproc
+ 386              	.LFE46:
+ 388              		.section	.text.accelerometer_read_mps2,"ax",%progbits
+ 389              		.align	1
+ 390              		.global	accelerometer_read_mps2
+ 391              		.syntax unified
+ 392              		.code	16
+ 393              		.thumb_func
+ 395              	accelerometer_read_mps2:
+ 396              	.LVL33:
+ 397              	.LFB47:
+ 201:Core/Src/accelerometer_controller.c **** 
+ 202:Core/Src/accelerometer_controller.c **** HAL_StatusTypeDef accelerometer_read_mps2(accel_data_t *data)
+ 203:Core/Src/accelerometer_controller.c **** {
+ 398              		.loc 1 203 1 view -0
+ 399              		.cfi_startproc
+ 400              		@ args = 0, pretend = 0, frame = 8
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccoFLDt.s 			page 12
 
 
- 429              		.loc 1 119 8 is_stmt 0 view .LVU95
- 430 0068 0028     		cmp	r0, #0
- 431 006a D8D1     		bne	.L19
- 122:Core/Src/accelerometer_controller.c ****                          PULSE_CFG_XSPEFE |
- 432              		.loc 1 122 5 is_stmt 1 view .LVU96
- 433              	.LVL45:
- 126:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
- 434              		.loc 1 126 5 view .LVU97
- 126:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
- 435              		.loc 1 126 14 is_stmt 0 view .LVU98
- 436 006c 4B21     		movs	r1, #75
- 437 006e 2130     		adds	r0, r0, #33
- 438              	.LVL46:
- 126:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
- 439              		.loc 1 126 14 view .LVU99
- 440 0070 FFF7FEFF 		bl	accel_write_reg
- 441              	.LVL47:
- 127:Core/Src/accelerometer_controller.c ****         return status;
- 442              		.loc 1 127 5 is_stmt 1 view .LVU100
- 127:Core/Src/accelerometer_controller.c ****         return status;
- 443              		.loc 1 127 8 is_stmt 0 view .LVU101
- 444 0074 0028     		cmp	r0, #0
- 445 0076 D2D1     		bne	.L19
- 132:Core/Src/accelerometer_controller.c ****     status = accel_write_reg(REG_PULSE_THSX, tap_ths);
- 446              		.loc 1 132 5 is_stmt 1 view .LVU102
- 132:Core/Src/accelerometer_controller.c ****     status = accel_write_reg(REG_PULSE_THSX, tap_ths);
- 447              		.loc 1 132 23 is_stmt 0 view .LVU103
- 448 0078 9630     		adds	r0, r0, #150
- 449              	.LVL48:
- 132:Core/Src/accelerometer_controller.c ****     status = accel_write_reg(REG_PULSE_THSX, tap_ths);
- 450              		.loc 1 132 23 view .LVU104
- 451 007a 8000     		lsls	r0, r0, #2
- 452              	.LVL49:
- 132:Core/Src/accelerometer_controller.c ****     status = accel_write_reg(REG_PULSE_THSX, tap_ths);
- 453              		.loc 1 132 23 view .LVU105
- 454 007c FFF7FEFF 		bl	mg_to_threshold_code
- 455              	.LVL50:
- 456 0080 0400     		movs	r4, r0
- 457              	.LVL51:
- 133:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
- 458              		.loc 1 133 5 is_stmt 1 view .LVU106
- 133:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
- 459              		.loc 1 133 14 is_stmt 0 view .LVU107
- 460 0082 0100     		movs	r1, r0
- 461 0084 2320     		movs	r0, #35
- 462              	.LVL52:
- 133:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
- 463              		.loc 1 133 14 view .LVU108
- 464 0086 FFF7FEFF 		bl	accel_write_reg
- 465              	.LVL53:
- 134:Core/Src/accelerometer_controller.c ****     status = accel_write_reg(REG_PULSE_THSY, tap_ths);
- 466              		.loc 1 134 5 is_stmt 1 view .LVU109
- 134:Core/Src/accelerometer_controller.c ****     status = accel_write_reg(REG_PULSE_THSY, tap_ths);
- 467              		.loc 1 134 8 is_stmt 0 view .LVU110
- 468 008a 0028     		cmp	r0, #0
- 469 008c C7D1     		bne	.L19
- 135:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s 			page 14
+ 401              		@ frame_needed = 0, uses_anonymous_args = 0
+ 402              		.loc 1 203 1 is_stmt 0 view .LVU79
+ 403 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+ 404              	.LCFI12:
+ 405              		.cfi_def_cfa_offset 20
+ 406              		.cfi_offset 4, -20
+ 407              		.cfi_offset 5, -16
+ 408              		.cfi_offset 6, -12
+ 409              		.cfi_offset 7, -8
+ 410              		.cfi_offset 14, -4
+ 411 0002 C646     		mov	lr, r8
+ 412 0004 00B5     		push	{lr}
+ 413              	.LCFI13:
+ 414              		.cfi_def_cfa_offset 24
+ 415              		.cfi_offset 8, -24
+ 416 0006 82B0     		sub	sp, sp, #8
+ 417              	.LCFI14:
+ 418              		.cfi_def_cfa_offset 32
+ 419 0008 041E     		subs	r4, r0, #0
+ 204:Core/Src/accelerometer_controller.c ****     if (!data) {
+ 420              		.loc 1 204 5 is_stmt 1 view .LVU80
+ 421              		.loc 1 204 8 is_stmt 0 view .LVU81
+ 422 000a 44D0     		beq	.L22
+ 205:Core/Src/accelerometer_controller.c ****         return HAL_ERROR;
+ 206:Core/Src/accelerometer_controller.c ****     }
+ 207:Core/Src/accelerometer_controller.c **** 
+ 208:Core/Src/accelerometer_controller.c ****     // Read X, Y, Z (6 bytes)
+ 209:Core/Src/accelerometer_controller.c ****     uint8_t raw[6];
+ 423              		.loc 1 209 5 is_stmt 1 view .LVU82
+ 210:Core/Src/accelerometer_controller.c ****     HAL_StatusTypeDef status = accelerometer_read_regs(MMA8451Q_REG_OUT_X_MSB, raw, 6);
+ 424              		.loc 1 210 5 view .LVU83
+ 425              		.loc 1 210 32 is_stmt 0 view .LVU84
+ 426 000c 0622     		movs	r2, #6
+ 427 000e 6946     		mov	r1, sp
+ 428 0010 0120     		movs	r0, #1
+ 429              	.LVL34:
+ 430              		.loc 1 210 32 view .LVU85
+ 431 0012 FFF7FEFF 		bl	accelerometer_read_regs
+ 432              	.LVL35:
+ 433 0016 071E     		subs	r7, r0, #0
+ 434              	.LVL36:
+ 211:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
+ 435              		.loc 1 211 5 is_stmt 1 view .LVU86
+ 436              		.loc 1 211 8 is_stmt 0 view .LVU87
+ 437 0018 38D1     		bne	.L21
+ 212:Core/Src/accelerometer_controller.c ****         return status;
+ 213:Core/Src/accelerometer_controller.c ****     }
+ 214:Core/Src/accelerometer_controller.c **** 
+ 215:Core/Src/accelerometer_controller.c ****     // 14-bit sign-extended: (MSB << 8 | LSB) >> 2
+ 216:Core/Src/accelerometer_controller.c ****     int16_t x = (int16_t)((raw[0] << 8) | raw[1]);  x >>= 2;
+ 438              		.loc 1 216 5 is_stmt 1 view .LVU88
+ 439              		.loc 1 216 31 is_stmt 0 view .LVU89
+ 440 001a 6B46     		mov	r3, sp
+ 441 001c 1878     		ldrb	r0, [r3]
+ 442              	.LVL37:
+ 443              		.loc 1 216 17 view .LVU90
+ 444 001e 0002     		lsls	r0, r0, #8
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccoFLDt.s 			page 13
 
 
- 470              		.loc 1 135 5 is_stmt 1 view .LVU111
- 135:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
- 471              		.loc 1 135 14 is_stmt 0 view .LVU112
- 472 008e 2100     		movs	r1, r4
- 473 0090 2430     		adds	r0, r0, #36
- 474              	.LVL54:
- 135:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
- 475              		.loc 1 135 14 view .LVU113
- 476 0092 FFF7FEFF 		bl	accel_write_reg
- 477              	.LVL55:
- 136:Core/Src/accelerometer_controller.c ****     status = accel_write_reg(REG_PULSE_THSZ, tap_ths);
- 478              		.loc 1 136 5 is_stmt 1 view .LVU114
- 136:Core/Src/accelerometer_controller.c ****     status = accel_write_reg(REG_PULSE_THSZ, tap_ths);
- 479              		.loc 1 136 8 is_stmt 0 view .LVU115
- 480 0096 0028     		cmp	r0, #0
- 481 0098 C1D1     		bne	.L19
- 137:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
- 482              		.loc 1 137 5 is_stmt 1 view .LVU116
- 137:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
- 483              		.loc 1 137 14 is_stmt 0 view .LVU117
- 484 009a 2100     		movs	r1, r4
- 485 009c 2530     		adds	r0, r0, #37
- 486              	.LVL56:
- 137:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
- 487              		.loc 1 137 14 view .LVU118
- 488 009e FFF7FEFF 		bl	accel_write_reg
- 489              	.LVL57:
- 138:Core/Src/accelerometer_controller.c **** 
- 490              		.loc 1 138 5 is_stmt 1 view .LVU119
- 138:Core/Src/accelerometer_controller.c **** 
- 491              		.loc 1 138 8 is_stmt 0 view .LVU120
- 492 00a2 0028     		cmp	r0, #0
- 493 00a4 BBD1     		bne	.L19
- 141:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
- 494              		.loc 1 141 5 is_stmt 1 view .LVU121
- 141:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
- 495              		.loc 1 141 14 is_stmt 0 view .LVU122
- 496 00a6 0A21     		movs	r1, #10
- 497 00a8 2630     		adds	r0, r0, #38
- 498              	.LVL58:
- 141:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
- 499              		.loc 1 141 14 view .LVU123
- 500 00aa FFF7FEFF 		bl	accel_write_reg
- 501              	.LVL59:
- 142:Core/Src/accelerometer_controller.c ****     status = accel_write_reg(REG_PULSE_LTCY, ACCEL_TAP_LATENCY);
- 502              		.loc 1 142 5 is_stmt 1 view .LVU124
- 142:Core/Src/accelerometer_controller.c ****     status = accel_write_reg(REG_PULSE_LTCY, ACCEL_TAP_LATENCY);
- 503              		.loc 1 142 8 is_stmt 0 view .LVU125
- 504 00ae 0028     		cmp	r0, #0
- 505 00b0 B5D1     		bne	.L19
- 143:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
- 506              		.loc 1 143 5 is_stmt 1 view .LVU126
- 143:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
- 507              		.loc 1 143 14 is_stmt 0 view .LVU127
- 508 00b2 1421     		movs	r1, #20
- 509 00b4 2730     		adds	r0, r0, #39
- 510              	.LVL60:
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s 			page 15
+ 445 0020 00B2     		sxth	r0, r0
+ 446              		.loc 1 216 46 view .LVU91
+ 447 0022 5A78     		ldrb	r2, [r3, #1]
+ 448              		.loc 1 216 13 view .LVU92
+ 449 0024 1043     		orrs	r0, r2
+ 450              	.LVL38:
+ 451              		.loc 1 216 53 is_stmt 1 view .LVU93
+ 452              		.loc 1 216 55 is_stmt 0 view .LVU94
+ 453 0026 8010     		asrs	r0, r0, #2
+ 454              	.LVL39:
+ 217:Core/Src/accelerometer_controller.c ****     int16_t y = (int16_t)((raw[2] << 8) | raw[3]);  y >>= 2;
+ 455              		.loc 1 217 5 is_stmt 1 view .LVU95
+ 456              		.loc 1 217 31 is_stmt 0 view .LVU96
+ 457 0028 9E78     		ldrb	r6, [r3, #2]
+ 458              		.loc 1 217 17 view .LVU97
+ 459 002a 3602     		lsls	r6, r6, #8
+ 460 002c 36B2     		sxth	r6, r6
+ 461              		.loc 1 217 46 view .LVU98
+ 462 002e DA78     		ldrb	r2, [r3, #3]
+ 463              		.loc 1 217 13 view .LVU99
+ 464 0030 1643     		orrs	r6, r2
+ 465              	.LVL40:
+ 466              		.loc 1 217 53 is_stmt 1 view .LVU100
+ 467              		.loc 1 217 55 is_stmt 0 view .LVU101
+ 468 0032 B610     		asrs	r6, r6, #2
+ 469              	.LVL41:
+ 218:Core/Src/accelerometer_controller.c ****     int16_t z = (int16_t)((raw[4] << 8) | raw[5]);  z >>= 2;
+ 470              		.loc 1 218 5 is_stmt 1 view .LVU102
+ 471              		.loc 1 218 31 is_stmt 0 view .LVU103
+ 472 0034 1D79     		ldrb	r5, [r3, #4]
+ 473              		.loc 1 218 17 view .LVU104
+ 474 0036 2D02     		lsls	r5, r5, #8
+ 475 0038 2DB2     		sxth	r5, r5
+ 476              		.loc 1 218 46 view .LVU105
+ 477 003a 5B79     		ldrb	r3, [r3, #5]
+ 478              		.loc 1 218 13 view .LVU106
+ 479 003c 1D43     		orrs	r5, r3
+ 480              	.LVL42:
+ 481              		.loc 1 218 53 is_stmt 1 view .LVU107
+ 482              		.loc 1 218 55 is_stmt 0 view .LVU108
+ 483 003e AD10     		asrs	r5, r5, #2
+ 484              	.LVL43:
+ 219:Core/Src/accelerometer_controller.c **** 
+ 220:Core/Src/accelerometer_controller.c ****     // Convert to g
+ 221:Core/Src/accelerometer_controller.c ****     float x_g = (float)x / MMA8451Q_SENS_2G_14BIT;
+ 485              		.loc 1 221 5 is_stmt 1 view .LVU109
+ 486              		.loc 1 221 17 is_stmt 0 view .LVU110
+ 487 0040 FFF7FEFF 		bl	__aeabi_i2f
+ 488              	.LVL44:
+ 489              		.loc 1 221 11 view .LVU111
+ 490 0044 E621     		movs	r1, #230
+ 491 0046 8905     		lsls	r1, r1, #22
+ 492 0048 FFF7FEFF 		bl	__aeabi_fmul
+ 493              	.LVL45:
+ 494 004c 8046     		mov	r8, r0
+ 495              	.LVL46:
+ 222:Core/Src/accelerometer_controller.c ****     float y_g = (float)y / MMA8451Q_SENS_2G_14BIT;
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccoFLDt.s 			page 14
 
 
- 143:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
- 511              		.loc 1 143 14 view .LVU128
- 512 00b6 FFF7FEFF 		bl	accel_write_reg
- 513              	.LVL61:
- 144:Core/Src/accelerometer_controller.c ****     status = accel_write_reg(REG_PULSE_WIND, ACCEL_TAP_WINDOW);
- 514              		.loc 1 144 5 is_stmt 1 view .LVU129
- 144:Core/Src/accelerometer_controller.c ****     status = accel_write_reg(REG_PULSE_WIND, ACCEL_TAP_WINDOW);
- 515              		.loc 1 144 8 is_stmt 0 view .LVU130
- 516 00ba 0028     		cmp	r0, #0
- 517 00bc AFD1     		bne	.L19
- 145:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
- 518              		.loc 1 145 5 is_stmt 1 view .LVU131
- 145:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
- 519              		.loc 1 145 14 is_stmt 0 view .LVU132
- 520 00be 5021     		movs	r1, #80
- 521 00c0 2830     		adds	r0, r0, #40
- 522              	.LVL62:
- 145:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
- 523              		.loc 1 145 14 view .LVU133
- 524 00c2 FFF7FEFF 		bl	accel_write_reg
- 525              	.LVL63:
- 146:Core/Src/accelerometer_controller.c **** 
- 526              		.loc 1 146 5 is_stmt 1 view .LVU134
- 146:Core/Src/accelerometer_controller.c **** 
- 527              		.loc 1 146 8 is_stmt 0 view .LVU135
- 528 00c6 0028     		cmp	r0, #0
- 529 00c8 A9D1     		bne	.L19
- 149:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
- 530              		.loc 1 149 5 is_stmt 1 view .LVU136
- 149:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
- 531              		.loc 1 149 14 is_stmt 0 view .LVU137
- 532 00ca 3221     		movs	r1, #50
- 533 00cc 2930     		adds	r0, r0, #41
- 534              	.LVL64:
- 149:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
- 535              		.loc 1 149 14 view .LVU138
- 536 00ce FFF7FEFF 		bl	accel_write_reg
- 537              	.LVL65:
- 150:Core/Src/accelerometer_controller.c **** 
- 538              		.loc 1 150 5 is_stmt 1 view .LVU139
- 150:Core/Src/accelerometer_controller.c **** 
- 539              		.loc 1 150 8 is_stmt 0 view .LVU140
- 540 00d2 0028     		cmp	r0, #0
- 541 00d4 A3D1     		bne	.L19
- 153:Core/Src/accelerometer_controller.c ****     status = accel_write_reg(REG_CTRL_REG2, ctrl_reg2);
- 542              		.loc 1 153 5 is_stmt 1 view .LVU141
- 543              	.LVL66:
- 154:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
- 544              		.loc 1 154 5 view .LVU142
- 154:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
- 545              		.loc 1 154 14 is_stmt 0 view .LVU143
- 546 00d6 0421     		movs	r1, #4
- 547 00d8 2B30     		adds	r0, r0, #43
- 548              	.LVL67:
- 154:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
- 549              		.loc 1 154 14 view .LVU144
- 550 00da FFF7FEFF 		bl	accel_write_reg
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s 			page 16
+ 496              		.loc 1 222 5 is_stmt 1 view .LVU112
+ 497              		.loc 1 222 17 is_stmt 0 view .LVU113
+ 498 004e 3000     		movs	r0, r6
+ 499              	.LVL47:
+ 500              		.loc 1 222 17 view .LVU114
+ 501 0050 FFF7FEFF 		bl	__aeabi_i2f
+ 502              	.LVL48:
+ 503              		.loc 1 222 11 view .LVU115
+ 504 0054 E621     		movs	r1, #230
+ 505 0056 8905     		lsls	r1, r1, #22
+ 506 0058 FFF7FEFF 		bl	__aeabi_fmul
+ 507              	.LVL49:
+ 508 005c 061C     		adds	r6, r0, #0
+ 509              	.LVL50:
+ 223:Core/Src/accelerometer_controller.c ****     float z_g = (float)z / MMA8451Q_SENS_2G_14BIT;
+ 510              		.loc 1 223 5 is_stmt 1 view .LVU116
+ 511              		.loc 1 223 17 is_stmt 0 view .LVU117
+ 512 005e 2800     		movs	r0, r5
+ 513              	.LVL51:
+ 514              		.loc 1 223 17 view .LVU118
+ 515 0060 FFF7FEFF 		bl	__aeabi_i2f
+ 516              	.LVL52:
+ 517              		.loc 1 223 11 view .LVU119
+ 518 0064 E621     		movs	r1, #230
+ 519 0066 8905     		lsls	r1, r1, #22
+ 520 0068 FFF7FEFF 		bl	__aeabi_fmul
+ 521              	.LVL53:
+ 522 006c 051C     		adds	r5, r0, #0
+ 523              	.LVL54:
+ 224:Core/Src/accelerometer_controller.c **** 
+ 225:Core/Src/accelerometer_controller.c ****     /* Convert to m/s^2 */
+ 226:Core/Src/accelerometer_controller.c ****     data->x_mps2 = x_g * ACCEL_G;
+ 524              		.loc 1 226 5 is_stmt 1 view .LVU120
+ 525              		.loc 1 226 24 is_stmt 0 view .LVU121
+ 526 006e 0B49     		ldr	r1, .L23
+ 527 0070 4046     		mov	r0, r8
+ 528              	.LVL55:
+ 529              		.loc 1 226 24 view .LVU122
+ 530 0072 FFF7FEFF 		bl	__aeabi_fmul
+ 531              	.LVL56:
+ 532              		.loc 1 226 18 view .LVU123
+ 533 0076 2060     		str	r0, [r4]
+ 227:Core/Src/accelerometer_controller.c ****     data->y_mps2 = y_g * ACCEL_G;
+ 534              		.loc 1 227 5 is_stmt 1 view .LVU124
+ 535              		.loc 1 227 24 is_stmt 0 view .LVU125
+ 536 0078 0849     		ldr	r1, .L23
+ 537 007a 301C     		adds	r0, r6, #0
+ 538 007c FFF7FEFF 		bl	__aeabi_fmul
+ 539              	.LVL57:
+ 540              		.loc 1 227 18 view .LVU126
+ 541 0080 6060     		str	r0, [r4, #4]
+ 228:Core/Src/accelerometer_controller.c ****     data->z_mps2 = z_g * ACCEL_G;
+ 542              		.loc 1 228 5 is_stmt 1 view .LVU127
+ 543              		.loc 1 228 24 is_stmt 0 view .LVU128
+ 544 0082 0649     		ldr	r1, .L23
+ 545 0084 281C     		adds	r0, r5, #0
+ 546 0086 FFF7FEFF 		bl	__aeabi_fmul
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccoFLDt.s 			page 15
 
 
- 551              	.LVL68:
- 155:Core/Src/accelerometer_controller.c ****         return status;
- 552              		.loc 1 155 5 is_stmt 1 view .LVU145
- 155:Core/Src/accelerometer_controller.c ****         return status;
- 553              		.loc 1 155 8 is_stmt 0 view .LVU146
- 554 00de 0028     		cmp	r0, #0
- 555 00e0 9DD1     		bne	.L19
- 160:Core/Src/accelerometer_controller.c ****     status = accel_write_reg(REG_CTRL_REG3, ctrl_reg3);
- 556              		.loc 1 160 5 is_stmt 1 view .LVU147
- 557              	.LVL69:
- 161:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
- 558              		.loc 1 161 5 view .LVU148
- 161:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
- 559              		.loc 1 161 14 is_stmt 0 view .LVU149
- 560 00e2 0A21     		movs	r1, #10
- 561 00e4 2C30     		adds	r0, r0, #44
- 562              	.LVL70:
- 161:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
- 563              		.loc 1 161 14 view .LVU150
- 564 00e6 FFF7FEFF 		bl	accel_write_reg
- 565              	.LVL71:
- 162:Core/Src/accelerometer_controller.c ****         return status;
- 566              		.loc 1 162 5 is_stmt 1 view .LVU151
- 162:Core/Src/accelerometer_controller.c ****         return status;
- 567              		.loc 1 162 8 is_stmt 0 view .LVU152
- 568 00ea 0028     		cmp	r0, #0
- 569 00ec 97D1     		bne	.L19
- 167:Core/Src/accelerometer_controller.c ****                          CTRL_REG4_INT_EN_PULSE |
- 570              		.loc 1 167 5 is_stmt 1 view .LVU153
- 571              	.LVL72:
- 170:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
- 572              		.loc 1 170 5 view .LVU154
- 170:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
- 573              		.loc 1 170 14 is_stmt 0 view .LVU155
- 574 00ee 8C21     		movs	r1, #140
- 575 00f0 2D30     		adds	r0, r0, #45
- 576              	.LVL73:
- 170:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
- 577              		.loc 1 170 14 view .LVU156
- 578 00f2 FFF7FEFF 		bl	accel_write_reg
- 579              	.LVL74:
- 171:Core/Src/accelerometer_controller.c ****         return status;
- 580              		.loc 1 171 5 is_stmt 1 view .LVU157
- 171:Core/Src/accelerometer_controller.c ****         return status;
- 581              		.loc 1 171 8 is_stmt 0 view .LVU158
- 582 00f6 0028     		cmp	r0, #0
- 583 00f8 00D0     		beq	.LCB499
- 584 00fa 90E7     		b	.L19	@long jump
- 585              	.LCB499:
- 176:Core/Src/accelerometer_controller.c ****     // PULSE => bit3 = 1 => INT1
- 586              		.loc 1 176 5 is_stmt 1 view .LVU159
- 587              	.LVL75:
- 178:Core/Src/accelerometer_controller.c ****     // FF_MT => bit2 = 0 => INT2
- 588              		.loc 1 178 5 view .LVU160
- 181:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
- 589              		.loc 1 181 5 view .LVU161
- 181:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s 			page 17
+ 547              	.LVL58:
+ 548              		.loc 1 228 18 view .LVU129
+ 549 008a A060     		str	r0, [r4, #8]
+ 229:Core/Src/accelerometer_controller.c **** 
+ 230:Core/Src/accelerometer_controller.c ****     return HAL_OK;
+ 550              		.loc 1 230 5 is_stmt 1 view .LVU130
+ 551              	.LVL59:
+ 552              	.L21:
+ 231:Core/Src/accelerometer_controller.c **** }
+ 553              		.loc 1 231 1 is_stmt 0 view .LVU131
+ 554 008c 3800     		movs	r0, r7
+ 555 008e 02B0     		add	sp, sp, #8
+ 556              		@ sp needed
+ 557              	.LVL60:
+ 558              		.loc 1 231 1 view .LVU132
+ 559 0090 80BC     		pop	{r7}
+ 560 0092 B846     		mov	r8, r7
+ 561 0094 F0BD     		pop	{r4, r5, r6, r7, pc}
+ 562              	.LVL61:
+ 563              	.L22:
+ 205:Core/Src/accelerometer_controller.c ****     }
+ 564              		.loc 1 205 16 view .LVU133
+ 565 0096 0127     		movs	r7, #1
+ 566 0098 F8E7     		b	.L21
+ 567              	.L24:
+ 568 009a C046     		.align	2
+ 569              	.L23:
+ 570 009c 0AE81C41 		.word	1092413450
+ 571              		.cfi_endproc
+ 572              	.LFE47:
+ 574              		.section	.text.accelerometer_handle_int1,"ax",%progbits
+ 575              		.align	1
+ 576              		.global	accelerometer_handle_int1
+ 577              		.syntax unified
+ 578              		.code	16
+ 579              		.thumb_func
+ 581              	accelerometer_handle_int1:
+ 582              	.LFB48:
+ 232:Core/Src/accelerometer_controller.c **** 
+ 233:Core/Src/accelerometer_controller.c **** void accelerometer_handle_int1(void)
+ 234:Core/Src/accelerometer_controller.c **** {
+ 583              		.loc 1 234 1 is_stmt 1 view -0
+ 584              		.cfi_startproc
+ 585              		@ args = 0, pretend = 0, frame = 8
+ 586              		@ frame_needed = 0, uses_anonymous_args = 0
+ 587 0000 00B5     		push	{lr}
+ 588              	.LCFI15:
+ 589              		.cfi_def_cfa_offset 4
+ 590              		.cfi_offset 14, -4
+ 591 0002 83B0     		sub	sp, sp, #12
+ 592              	.LCFI16:
+ 593              		.cfi_def_cfa_offset 16
+ 235:Core/Src/accelerometer_controller.c ****     led_execute_sequence(LED_SEQ_THREE_BLINKS);
+ 594              		.loc 1 235 5 view .LVU135
+ 595 0004 0120     		movs	r0, #1
+ 596 0006 FFF7FEFF 		bl	led_execute_sequence
+ 597              	.LVL62:
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccoFLDt.s 			page 16
 
 
- 590              		.loc 1 181 14 is_stmt 0 view .LVU162
- 591 00fc 0821     		movs	r1, #8
- 592 00fe 2E30     		adds	r0, r0, #46
- 593              	.LVL76:
- 181:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
- 594              		.loc 1 181 14 view .LVU163
- 595 0100 FFF7FEFF 		bl	accel_write_reg
- 596              	.LVL77:
- 182:Core/Src/accelerometer_controller.c ****         return status;
- 597              		.loc 1 182 5 is_stmt 1 view .LVU164
- 182:Core/Src/accelerometer_controller.c ****         return status;
- 598              		.loc 1 182 8 is_stmt 0 view .LVU165
- 599 0104 0028     		cmp	r0, #0
- 600 0106 00D0     		beq	.LCB514
- 601 0108 89E7     		b	.L19	@long jump
- 602              	.LCB514:
- 187:Core/Src/accelerometer_controller.c ****     // DR=0b011 => bits [5:3] = 3<<3 => 0x18
- 603              		.loc 1 187 5 is_stmt 1 view .LVU166
- 604              	.LVL78:
- 191:Core/Src/accelerometer_controller.c ****     status = accel_write_reg(REG_CTRL_REG1, ctrl_reg1);
- 605              		.loc 1 191 5 view .LVU167
- 192:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
- 606              		.loc 1 192 5 view .LVU168
- 192:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
- 607              		.loc 1 192 14 is_stmt 0 view .LVU169
- 608 010a 1D21     		movs	r1, #29
- 609 010c 2A30     		adds	r0, r0, #42
- 610              	.LVL79:
- 192:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
- 611              		.loc 1 192 14 view .LVU170
- 612 010e FFF7FEFF 		bl	accel_write_reg
- 613              	.LVL80:
- 193:Core/Src/accelerometer_controller.c ****         return status;
- 614              		.loc 1 193 5 is_stmt 1 view .LVU171
- 615 0112 84E7     		b	.L19
- 616              		.cfi_endproc
- 617              	.LFE46:
- 619              		.section	.text.accelerometer_read_mps2,"ax",%progbits
- 620              		.align	1
- 621              		.global	accelerometer_read_mps2
- 622              		.syntax unified
- 623              		.code	16
- 624              		.thumb_func
- 626              	accelerometer_read_mps2:
- 627              	.LVL81:
- 628              	.LFB47:
- 199:Core/Src/accelerometer_controller.c **** 
- 200:Core/Src/accelerometer_controller.c **** HAL_StatusTypeDef accelerometer_read_mps2(accel_data_t *data)
- 201:Core/Src/accelerometer_controller.c **** {
- 629              		.loc 1 201 1 view -0
- 630              		.cfi_startproc
- 631              		@ args = 0, pretend = 0, frame = 8
- 632              		@ frame_needed = 0, uses_anonymous_args = 0
- 633              		.loc 1 201 1 is_stmt 0 view .LVU173
- 634 0000 F0B5     		push	{r4, r5, r6, r7, lr}
- 635              	.LCFI11:
- 636              		.cfi_def_cfa_offset 20
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s 			page 18
+ 236:Core/Src/accelerometer_controller.c ****     // PULSE interrupt => reading PULSE_SRC (0x22) clears
+ 237:Core/Src/accelerometer_controller.c ****     uint8_t dummy;
+ 598              		.loc 1 237 5 view .LVU136
+ 238:Core/Src/accelerometer_controller.c ****     accelerometer_read_reg(MMA8451Q_REG_PULSE_SRC, &dummy);
+ 599              		.loc 1 238 5 view .LVU137
+ 600 000a 6B46     		mov	r3, sp
+ 601 000c D91D     		adds	r1, r3, #7
+ 602 000e 2220     		movs	r0, #34
+ 603 0010 FFF7FEFF 		bl	accelerometer_read_reg
+ 604              	.LVL63:
+ 239:Core/Src/accelerometer_controller.c **** }
+ 605              		.loc 1 239 1 is_stmt 0 view .LVU138
+ 606 0014 03B0     		add	sp, sp, #12
+ 607              		@ sp needed
+ 608 0016 00BD     		pop	{pc}
+ 609              		.cfi_endproc
+ 610              	.LFE48:
+ 612              		.section	.text.accelerometer_handle_int2,"ax",%progbits
+ 613              		.align	1
+ 614              		.global	accelerometer_handle_int2
+ 615              		.syntax unified
+ 616              		.code	16
+ 617              		.thumb_func
+ 619              	accelerometer_handle_int2:
+ 620              	.LFB49:
+ 240:Core/Src/accelerometer_controller.c **** 
+ 241:Core/Src/accelerometer_controller.c **** void accelerometer_handle_int2(void)
+ 242:Core/Src/accelerometer_controller.c **** {
+ 621              		.loc 1 242 1 is_stmt 1 view -0
+ 622              		.cfi_startproc
+ 623              		@ args = 0, pretend = 0, frame = 8
+ 624              		@ frame_needed = 0, uses_anonymous_args = 0
+ 625 0000 10B5     		push	{r4, lr}
+ 626              	.LCFI17:
+ 627              		.cfi_def_cfa_offset 8
+ 628              		.cfi_offset 4, -8
+ 629              		.cfi_offset 14, -4
+ 630 0002 82B0     		sub	sp, sp, #8
+ 631              	.LCFI18:
+ 632              		.cfi_def_cfa_offset 16
+ 243:Core/Src/accelerometer_controller.c ****     led_execute_sequence(LED_SEQ_FADE_IN_OUT);
+ 633              		.loc 1 243 5 view .LVU140
+ 634 0004 0320     		movs	r0, #3
+ 635 0006 FFF7FEFF 		bl	led_execute_sequence
+ 636              	.LVL64:
+ 244:Core/Src/accelerometer_controller.c ****     // FF_MT / ASLP => read INT_SOURCE, then read FF_MT_SRC and/or SYSMOD
+ 245:Core/Src/accelerometer_controller.c ****     uint8_t dummy;
+ 637              		.loc 1 245 5 view .LVU141
+ 246:Core/Src/accelerometer_controller.c ****     accelerometer_read_reg(0x0C, &dummy); // INT_SOURCE
+ 638              		.loc 1 246 5 view .LVU142
+ 639 000a 6B46     		mov	r3, sp
+ 640 000c DC1D     		adds	r4, r3, #7
+ 641 000e 2100     		movs	r1, r4
+ 642 0010 0C20     		movs	r0, #12
+ 643 0012 FFF7FEFF 		bl	accelerometer_read_reg
+ 644              	.LVL65:
+ 247:Core/Src/accelerometer_controller.c ****     accelerometer_read_reg(0x16, &dummy); // FF_MT_SRC (REG_FF_MT_CFG + 1)
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccoFLDt.s 			page 17
 
 
- 637              		.cfi_offset 4, -20
- 638              		.cfi_offset 5, -16
- 639              		.cfi_offset 6, -12
- 640              		.cfi_offset 7, -8
- 641              		.cfi_offset 14, -4
- 642 0002 C646     		mov	lr, r8
- 643 0004 00B5     		push	{lr}
- 644              	.LCFI12:
- 645              		.cfi_def_cfa_offset 24
- 646              		.cfi_offset 8, -24
- 647 0006 82B0     		sub	sp, sp, #8
- 648              	.LCFI13:
- 649              		.cfi_def_cfa_offset 32
- 650 0008 041E     		subs	r4, r0, #0
- 202:Core/Src/accelerometer_controller.c ****     if (!data) {
- 651              		.loc 1 202 5 is_stmt 1 view .LVU174
- 652              		.loc 1 202 8 is_stmt 0 view .LVU175
- 653 000a 44D0     		beq	.L24
- 203:Core/Src/accelerometer_controller.c ****         return HAL_ERROR;
- 204:Core/Src/accelerometer_controller.c ****     }
- 205:Core/Src/accelerometer_controller.c **** 
- 206:Core/Src/accelerometer_controller.c ****     /* Read X, Y, Z (6 bytes) */
- 207:Core/Src/accelerometer_controller.c ****     uint8_t raw[6];
- 654              		.loc 1 207 5 is_stmt 1 view .LVU176
- 208:Core/Src/accelerometer_controller.c ****     HAL_StatusTypeDef status = accel_read_regs(REG_OUT_X_MSB, raw, 6);
- 655              		.loc 1 208 5 view .LVU177
- 656              		.loc 1 208 32 is_stmt 0 view .LVU178
- 657 000c 0622     		movs	r2, #6
- 658 000e 6946     		mov	r1, sp
- 659 0010 0120     		movs	r0, #1
- 660              	.LVL82:
- 661              		.loc 1 208 32 view .LVU179
- 662 0012 FFF7FEFF 		bl	accel_read_regs
- 663              	.LVL83:
- 664 0016 071E     		subs	r7, r0, #0
- 665              	.LVL84:
- 209:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) {
- 666              		.loc 1 209 5 is_stmt 1 view .LVU180
- 667              		.loc 1 209 8 is_stmt 0 view .LVU181
- 668 0018 38D1     		bne	.L23
- 210:Core/Src/accelerometer_controller.c ****         return status;
- 211:Core/Src/accelerometer_controller.c ****     }
- 212:Core/Src/accelerometer_controller.c **** 
- 213:Core/Src/accelerometer_controller.c ****     /* 14-bit sign-extended: (MSB << 8 | LSB) >> 2 */
- 214:Core/Src/accelerometer_controller.c ****     int16_t x = (int16_t)((raw[0] << 8) | raw[1]);  x >>= 2;
- 669              		.loc 1 214 5 is_stmt 1 view .LVU182
- 670              		.loc 1 214 31 is_stmt 0 view .LVU183
- 671 001a 6B46     		mov	r3, sp
- 672 001c 1878     		ldrb	r0, [r3]
- 673              	.LVL85:
- 674              		.loc 1 214 17 view .LVU184
- 675 001e 0002     		lsls	r0, r0, #8
- 676 0020 00B2     		sxth	r0, r0
- 677              		.loc 1 214 46 view .LVU185
- 678 0022 5A78     		ldrb	r2, [r3, #1]
- 679              		.loc 1 214 13 view .LVU186
- 680 0024 1043     		orrs	r0, r2
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s 			page 19
-
-
- 681              	.LVL86:
- 682              		.loc 1 214 53 is_stmt 1 view .LVU187
- 683              		.loc 1 214 55 is_stmt 0 view .LVU188
- 684 0026 8010     		asrs	r0, r0, #2
- 685              	.LVL87:
- 215:Core/Src/accelerometer_controller.c ****     int16_t y = (int16_t)((raw[2] << 8) | raw[3]);  y >>= 2;
- 686              		.loc 1 215 5 is_stmt 1 view .LVU189
- 687              		.loc 1 215 31 is_stmt 0 view .LVU190
- 688 0028 9E78     		ldrb	r6, [r3, #2]
- 689              		.loc 1 215 17 view .LVU191
- 690 002a 3602     		lsls	r6, r6, #8
- 691 002c 36B2     		sxth	r6, r6
- 692              		.loc 1 215 46 view .LVU192
- 693 002e DA78     		ldrb	r2, [r3, #3]
- 694              		.loc 1 215 13 view .LVU193
- 695 0030 1643     		orrs	r6, r2
- 696              	.LVL88:
- 697              		.loc 1 215 53 is_stmt 1 view .LVU194
- 698              		.loc 1 215 55 is_stmt 0 view .LVU195
- 699 0032 B610     		asrs	r6, r6, #2
- 700              	.LVL89:
- 216:Core/Src/accelerometer_controller.c ****     int16_t z = (int16_t)((raw[4] << 8) | raw[5]);  z >>= 2;
- 701              		.loc 1 216 5 is_stmt 1 view .LVU196
- 702              		.loc 1 216 31 is_stmt 0 view .LVU197
- 703 0034 1D79     		ldrb	r5, [r3, #4]
- 704              		.loc 1 216 17 view .LVU198
- 705 0036 2D02     		lsls	r5, r5, #8
- 706 0038 2DB2     		sxth	r5, r5
- 707              		.loc 1 216 46 view .LVU199
- 708 003a 5B79     		ldrb	r3, [r3, #5]
- 709              		.loc 1 216 13 view .LVU200
- 710 003c 1D43     		orrs	r5, r3
- 711              	.LVL90:
- 712              		.loc 1 216 53 is_stmt 1 view .LVU201
- 713              		.loc 1 216 55 is_stmt 0 view .LVU202
- 714 003e AD10     		asrs	r5, r5, #2
- 715              	.LVL91:
- 217:Core/Src/accelerometer_controller.c **** 
- 218:Core/Src/accelerometer_controller.c ****     /* Convert to g */
- 219:Core/Src/accelerometer_controller.c ****     float x_g = (float)x / MMA8451Q_SENS_2G_14BIT;
- 716              		.loc 1 219 5 is_stmt 1 view .LVU203
- 717              		.loc 1 219 17 is_stmt 0 view .LVU204
- 718 0040 FFF7FEFF 		bl	__aeabi_i2f
- 719              	.LVL92:
- 720              		.loc 1 219 11 view .LVU205
- 721 0044 E621     		movs	r1, #230
- 722 0046 8905     		lsls	r1, r1, #22
- 723 0048 FFF7FEFF 		bl	__aeabi_fmul
- 724              	.LVL93:
- 725 004c 8046     		mov	r8, r0
- 726              	.LVL94:
- 220:Core/Src/accelerometer_controller.c ****     float y_g = (float)y / MMA8451Q_SENS_2G_14BIT;
- 727              		.loc 1 220 5 is_stmt 1 view .LVU206
- 728              		.loc 1 220 17 is_stmt 0 view .LVU207
- 729 004e 3000     		movs	r0, r6
- 730              	.LVL95:
- 731              		.loc 1 220 17 view .LVU208
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s 			page 20
-
-
- 732 0050 FFF7FEFF 		bl	__aeabi_i2f
- 733              	.LVL96:
- 734              		.loc 1 220 11 view .LVU209
- 735 0054 E621     		movs	r1, #230
- 736 0056 8905     		lsls	r1, r1, #22
- 737 0058 FFF7FEFF 		bl	__aeabi_fmul
- 738              	.LVL97:
- 739 005c 061C     		adds	r6, r0, #0
- 740              	.LVL98:
- 221:Core/Src/accelerometer_controller.c ****     float z_g = (float)z / MMA8451Q_SENS_2G_14BIT;
- 741              		.loc 1 221 5 is_stmt 1 view .LVU210
- 742              		.loc 1 221 17 is_stmt 0 view .LVU211
- 743 005e 2800     		movs	r0, r5
- 744              	.LVL99:
- 745              		.loc 1 221 17 view .LVU212
- 746 0060 FFF7FEFF 		bl	__aeabi_i2f
- 747              	.LVL100:
- 748              		.loc 1 221 11 view .LVU213
- 749 0064 E621     		movs	r1, #230
- 750 0066 8905     		lsls	r1, r1, #22
- 751 0068 FFF7FEFF 		bl	__aeabi_fmul
- 752              	.LVL101:
- 753 006c 051C     		adds	r5, r0, #0
- 754              	.LVL102:
- 222:Core/Src/accelerometer_controller.c **** 
- 223:Core/Src/accelerometer_controller.c ****     /* Convert to m/s^2 */
- 224:Core/Src/accelerometer_controller.c ****     data->x_mps2 = x_g * ACCEL_G;
- 755              		.loc 1 224 5 is_stmt 1 view .LVU214
- 756              		.loc 1 224 24 is_stmt 0 view .LVU215
- 757 006e 0B49     		ldr	r1, .L25
- 758 0070 4046     		mov	r0, r8
- 759              	.LVL103:
- 760              		.loc 1 224 24 view .LVU216
- 761 0072 FFF7FEFF 		bl	__aeabi_fmul
- 762              	.LVL104:
- 763              		.loc 1 224 18 view .LVU217
- 764 0076 2060     		str	r0, [r4]
- 225:Core/Src/accelerometer_controller.c ****     data->y_mps2 = y_g * ACCEL_G;
- 765              		.loc 1 225 5 is_stmt 1 view .LVU218
- 766              		.loc 1 225 24 is_stmt 0 view .LVU219
- 767 0078 0849     		ldr	r1, .L25
- 768 007a 301C     		adds	r0, r6, #0
- 769 007c FFF7FEFF 		bl	__aeabi_fmul
- 770              	.LVL105:
- 771              		.loc 1 225 18 view .LVU220
- 772 0080 6060     		str	r0, [r4, #4]
- 226:Core/Src/accelerometer_controller.c ****     data->z_mps2 = z_g * ACCEL_G;
- 773              		.loc 1 226 5 is_stmt 1 view .LVU221
- 774              		.loc 1 226 24 is_stmt 0 view .LVU222
- 775 0082 0649     		ldr	r1, .L25
- 776 0084 281C     		adds	r0, r5, #0
- 777 0086 FFF7FEFF 		bl	__aeabi_fmul
- 778              	.LVL106:
- 779              		.loc 1 226 18 view .LVU223
- 780 008a A060     		str	r0, [r4, #8]
- 227:Core/Src/accelerometer_controller.c **** 
- 228:Core/Src/accelerometer_controller.c ****     return HAL_OK;
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s 			page 21
-
-
- 781              		.loc 1 228 5 is_stmt 1 view .LVU224
- 782              	.LVL107:
- 783              	.L23:
- 229:Core/Src/accelerometer_controller.c **** }
- 784              		.loc 1 229 1 is_stmt 0 view .LVU225
- 785 008c 3800     		movs	r0, r7
- 786 008e 02B0     		add	sp, sp, #8
- 787              		@ sp needed
- 788              	.LVL108:
- 789              		.loc 1 229 1 view .LVU226
- 790 0090 80BC     		pop	{r7}
- 791 0092 B846     		mov	r8, r7
- 792 0094 F0BD     		pop	{r4, r5, r6, r7, pc}
- 793              	.LVL109:
- 794              	.L24:
- 203:Core/Src/accelerometer_controller.c ****     }
- 795              		.loc 1 203 16 view .LVU227
- 796 0096 0127     		movs	r7, #1
- 797 0098 F8E7     		b	.L23
- 798              	.L26:
- 799 009a C046     		.align	2
- 800              	.L25:
- 801 009c 0AE81C41 		.word	1092413450
- 802              		.cfi_endproc
- 803              	.LFE47:
- 805              		.section	.text.accelerometer_handle_int1,"ax",%progbits
- 806              		.align	1
- 807              		.global	accelerometer_handle_int1
- 808              		.syntax unified
- 809              		.code	16
- 810              		.thumb_func
- 812              	accelerometer_handle_int1:
- 813              	.LFB48:
- 230:Core/Src/accelerometer_controller.c **** 
- 231:Core/Src/accelerometer_controller.c **** /* Interrupt Handlers */
- 232:Core/Src/accelerometer_controller.c **** void accelerometer_handle_int1(void)
- 233:Core/Src/accelerometer_controller.c **** {
- 814              		.loc 1 233 1 is_stmt 1 view -0
- 815              		.cfi_startproc
- 816              		@ args = 0, pretend = 0, frame = 8
- 817              		@ frame_needed = 0, uses_anonymous_args = 0
- 818 0000 00B5     		push	{lr}
- 819              	.LCFI14:
- 820              		.cfi_def_cfa_offset 4
- 821              		.cfi_offset 14, -4
- 822 0002 83B0     		sub	sp, sp, #12
- 823              	.LCFI15:
- 824              		.cfi_def_cfa_offset 16
- 234:Core/Src/accelerometer_controller.c ****     led_execute_sequence(LED_SEQ_THREE_BLINKS);
- 825              		.loc 1 234 5 view .LVU229
- 826 0004 0120     		movs	r0, #1
- 827 0006 FFF7FEFF 		bl	led_execute_sequence
- 828              	.LVL110:
- 235:Core/Src/accelerometer_controller.c ****     // PULSE interrupt => reading PULSE_SRC (0x22) clears
- 236:Core/Src/accelerometer_controller.c ****     uint8_t dummy;
- 829              		.loc 1 236 5 view .LVU230
- 237:Core/Src/accelerometer_controller.c ****     accel_read_reg(REG_PULSE_SRC, &dummy);
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s 			page 22
-
-
- 830              		.loc 1 237 5 view .LVU231
- 831 000a 6B46     		mov	r3, sp
- 832 000c D91D     		adds	r1, r3, #7
- 833 000e 2220     		movs	r0, #34
- 834 0010 FFF7FEFF 		bl	accel_read_reg
- 835              	.LVL111:
- 238:Core/Src/accelerometer_controller.c **** }
- 836              		.loc 1 238 1 is_stmt 0 view .LVU232
- 837 0014 03B0     		add	sp, sp, #12
- 838              		@ sp needed
- 839 0016 00BD     		pop	{pc}
- 840              		.cfi_endproc
- 841              	.LFE48:
- 843              		.section	.text.accelerometer_handle_int2,"ax",%progbits
- 844              		.align	1
- 845              		.global	accelerometer_handle_int2
- 846              		.syntax unified
- 847              		.code	16
- 848              		.thumb_func
- 850              	accelerometer_handle_int2:
- 851              	.LFB49:
- 239:Core/Src/accelerometer_controller.c **** 
- 240:Core/Src/accelerometer_controller.c **** void accelerometer_handle_int2(void)
- 241:Core/Src/accelerometer_controller.c **** {
- 852              		.loc 1 241 1 is_stmt 1 view -0
- 853              		.cfi_startproc
- 854              		@ args = 0, pretend = 0, frame = 8
- 855              		@ frame_needed = 0, uses_anonymous_args = 0
- 856 0000 10B5     		push	{r4, lr}
- 857              	.LCFI16:
- 858              		.cfi_def_cfa_offset 8
- 859              		.cfi_offset 4, -8
- 860              		.cfi_offset 14, -4
- 861 0002 82B0     		sub	sp, sp, #8
- 862              	.LCFI17:
- 863              		.cfi_def_cfa_offset 16
- 242:Core/Src/accelerometer_controller.c ****     led_execute_sequence(LED_SEQ_FADE_IN_OUT);
- 864              		.loc 1 242 5 view .LVU234
- 865 0004 0320     		movs	r0, #3
- 866 0006 FFF7FEFF 		bl	led_execute_sequence
- 867              	.LVL112:
- 243:Core/Src/accelerometer_controller.c ****     // FF_MT / ASLP => read INT_SOURCE, then read FF_MT_SRC and/or SYSMOD
- 244:Core/Src/accelerometer_controller.c ****     uint8_t dummy;
- 868              		.loc 1 244 5 view .LVU235
- 245:Core/Src/accelerometer_controller.c ****     accel_read_reg(0x0C, &dummy); // INT_SOURCE
- 869              		.loc 1 245 5 view .LVU236
- 870 000a 6B46     		mov	r3, sp
- 871 000c DC1D     		adds	r4, r3, #7
- 872 000e 2100     		movs	r1, r4
- 873 0010 0C20     		movs	r0, #12
- 874 0012 FFF7FEFF 		bl	accel_read_reg
- 875              	.LVL113:
- 246:Core/Src/accelerometer_controller.c ****     accel_read_reg(0x16, &dummy); // FF_MT_SRC (REG_FF_MT_CFG + 1)
- 876              		.loc 1 246 5 view .LVU237
- 877 0016 2100     		movs	r1, r4
- 878 0018 1620     		movs	r0, #22
- 879 001a FFF7FEFF 		bl	accel_read_reg
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s 			page 23
-
-
- 880              	.LVL114:
- 247:Core/Src/accelerometer_controller.c ****     // Possibly also read SYSMOD (0x0B) if needed for ASLP.
- 248:Core/Src/accelerometer_controller.c **** }...
- 881              		.loc 1 248 1 is_stmt 0 view .LVU238
- 882 001e 02B0     		add	sp, sp, #8
- 883              		@ sp needed
- 884 0020 10BD     		pop	{r4, pc}
- 885              		.cfi_endproc
- 886              	.LFE49:
- 888              		.text
- 889              	.Letext0:
- 890              		.file 2 "/Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/arm-none-eabi/include/machine/_defa
- 891              		.file 3 "/Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/arm-none-eabi/include/sys/_stdint.h
- 892              		.file 4 "Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f030x8.h"
- 893              		.file 5 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_def.h"
- 894              		.file 6 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_dma.h"
- 895              		.file 7 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_i2c.h"
- 896              		.file 8 "Core/Inc/accelerometer_controller.h"
- 897              		.file 9 "Core/Inc/led_controller.h"
- 898              		.file 10 "Core/Inc/peripherals.h"
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s 			page 24
+ 645              		.loc 1 247 5 view .LVU143
+ 646 0016 2100     		movs	r1, r4
+ 647 0018 1620     		movs	r0, #22
+ 648 001a FFF7FEFF 		bl	accelerometer_read_reg
+ 649              	.LVL66:
+ 248:Core/Src/accelerometer_controller.c ****     // Possibly also read SYSMOD (0x0B) if needed for ASLP.
+ 249:Core/Src/accelerometer_controller.c **** }...
+ 650              		.loc 1 249 1 is_stmt 0 view .LVU144
+ 651 001e 02B0     		add	sp, sp, #8
+ 652              		@ sp needed
+ 653 0020 10BD     		pop	{r4, pc}
+ 654              		.cfi_endproc
+ 655              	.LFE49:
+ 657              		.text
+ 658              	.Letext0:
+ 659              		.file 2 "/Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/arm-none-eabi/include/machine/_defa
+ 660              		.file 3 "/Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/arm-none-eabi/include/sys/_stdint.h
+ 661              		.file 4 "Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f030x8.h"
+ 662              		.file 5 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_def.h"
+ 663              		.file 6 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_dma.h"
+ 664              		.file 7 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_i2c.h"
+ 665              		.file 8 "Core/Inc/accelerometer_controller.h"
+ 666              		.file 9 "Core/Inc/led_controller.h"
+ 667              		.file 10 "Core/Inc/peripherals.h"
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccoFLDt.s 			page 18
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 accelerometer_controller.c
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s:19     .text.mg_to_threshold_code:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s:24     .text.mg_to_threshold_code:00000000 mg_to_threshold_code
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s:79     .text.mg_to_threshold_code:0000002c $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s:85     .text.accel_read_reg:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s:90     .text.accel_read_reg:00000000 accel_read_reg
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s:131    .text.accel_read_reg:00000020 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s:136    .text.accel_read_regs:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s:141    .text.accel_read_regs:00000000 accel_read_regs
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s:184    .text.accel_read_regs:00000020 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s:189    .text.accel_write_reg:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s:194    .text.accel_write_reg:00000000 accel_write_reg
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s:241    .text.accel_write_reg:00000028 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s:246    .text.accel_goto_standby:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s:251    .text.accel_goto_standby:00000000 accel_goto_standby
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s:304    .text.accelerometer_controller_initialize:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s:310    .text.accelerometer_controller_initialize:00000000 accelerometer_controller_initialize
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s:620    .text.accelerometer_read_mps2:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s:626    .text.accelerometer_read_mps2:00000000 accelerometer_read_mps2
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s:801    .text.accelerometer_read_mps2:0000009c $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s:806    .text.accelerometer_handle_int1:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s:812    .text.accelerometer_handle_int1:00000000 accelerometer_handle_int1
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s:844    .text.accelerometer_handle_int2:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccRsNrwM.s:850    .text.accelerometer_handle_int2:00000000 accelerometer_handle_int2
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccoFLDt.s:19     .text.accelerometer_read_reg:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccoFLDt.s:24     .text.accelerometer_read_reg:00000000 accelerometer_read_reg
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccoFLDt.s:65     .text.accelerometer_read_reg:00000020 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccoFLDt.s:70     .text.accelerometer_read_regs:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccoFLDt.s:75     .text.accelerometer_read_regs:00000000 accelerometer_read_regs
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccoFLDt.s:118    .text.accelerometer_read_regs:00000020 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccoFLDt.s:123    .text.accelerometer_write_reg:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccoFLDt.s:128    .text.accelerometer_write_reg:00000000 accelerometer_write_reg
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccoFLDt.s:175    .text.accelerometer_write_reg:00000028 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccoFLDt.s:180    .text.accel_goto_standby:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccoFLDt.s:185    .text.accel_goto_standby:00000000 accel_goto_standby
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccoFLDt.s:238    .text.accel_goto_active:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccoFLDt.s:243    .text.accel_goto_active:00000000 accel_goto_active
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccoFLDt.s:297    .text.accelerometer_controller_initialize:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccoFLDt.s:303    .text.accelerometer_controller_initialize:00000000 accelerometer_controller_initialize
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccoFLDt.s:389    .text.accelerometer_read_mps2:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccoFLDt.s:395    .text.accelerometer_read_mps2:00000000 accelerometer_read_mps2
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccoFLDt.s:570    .text.accelerometer_read_mps2:0000009c $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccoFLDt.s:575    .text.accelerometer_handle_int1:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccoFLDt.s:581    .text.accelerometer_handle_int1:00000000 accelerometer_handle_int1
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccoFLDt.s:613    .text.accelerometer_handle_int2:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cccoFLDt.s:619    .text.accelerometer_handle_int2:00000000 accelerometer_handle_int2
 
 UNDEFINED SYMBOLS
-__aeabi_ui2f
-__aeabi_fdiv
-__aeabi_fcmpgt
-__aeabi_fadd
-__aeabi_f2uiz
 HAL_I2C_Mem_Read
 hi2c1
 HAL_I2C_Mem_Write

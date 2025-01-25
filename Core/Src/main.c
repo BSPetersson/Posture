@@ -109,11 +109,11 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-//    state_machine_update();
+  //  state_machine_update();
 
     accel_data_t accel;
     if (accelerometer_read_mps2(&accel) == HAL_OK) {
-      if (accel.x_mps2 > 0.5) {
+      if (accel.x_mps2 > 8.0) {
         led_execute_sequence(LED_SEQ_THREE_BLINKS);
       }
         // Use accel.x_mps2, accel.y_mps2, accel.z_mps2

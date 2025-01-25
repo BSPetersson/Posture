@@ -16,13 +16,13 @@ static HAL_StatusTypeDef haptic_feedback_modify_register(uint8_t reg_address, ui
     uint8_t reg_value;
 
     // Transmit the register address
-    status = HAL_I2C_Master_Transmit(&hi2c1, (DRV2605L_I2C_ADDR << 1), &reg_address, 1, HAL_MAX_DELAY);
+    status = HAL_I2C_Master_Transmit(&hi2c1, DRV2605L_I2C_ADDR, &reg_address, 1, HAL_MAX_DELAY);
     if (status != HAL_OK) {
         return status;
     }
 
     // Receive the current register value
-    status = HAL_I2C_Master_Receive(&hi2c1, (DRV2605L_I2C_ADDR << 1), &reg_value, 1, HAL_MAX_DELAY);
+    status = HAL_I2C_Master_Receive(&hi2c1, DRV2605L_I2C_ADDR, &reg_value, 1, HAL_MAX_DELAY);
     if (status != HAL_OK) {
         return status;
     }
@@ -32,7 +32,7 @@ static HAL_StatusTypeDef haptic_feedback_modify_register(uint8_t reg_address, ui
 
     // Transmit the modified register value
     uint8_t data[2] = {reg_address, reg_value};
-    return HAL_I2C_Master_Transmit(&hi2c1, (DRV2605L_I2C_ADDR << 1), data, 2, HAL_MAX_DELAY);
+    return HAL_I2C_Master_Transmit(&hi2c1, DRV2605L_I2C_ADDR, data, 2, HAL_MAX_DELAY);
 }
 
 /**
@@ -200,7 +200,7 @@ HAL_StatusTypeDef haptic_feedback_set_loop_gain(uint8_t loop_gain) {
  */
 HAL_StatusTypeDef haptic_feedback_set_rated_voltage(uint8_t rated_voltage) {
     uint8_t data[2] = {DRV2605L_REG_RATED_VOLTAGE, rated_voltage};
-    return HAL_I2C_Master_Transmit(&hi2c1, (DRV2605L_I2C_ADDR << 1), data, 2, HAL_MAX_DELAY);
+    return HAL_I2C_Master_Transmit(&hi2c1, DRV2605L_I2C_ADDR, data, 2, HAL_MAX_DELAY);
 }
 
 /**
@@ -211,7 +211,7 @@ HAL_StatusTypeDef haptic_feedback_set_rated_voltage(uint8_t rated_voltage) {
  */
 HAL_StatusTypeDef haptic_feedback_set_od_clamp(uint8_t od_clamp) {
     uint8_t data[2] = {DRV2605L_REG_OD_CLAMP, od_clamp};
-    return HAL_I2C_Master_Transmit(&hi2c1, (DRV2605L_I2C_ADDR << 1), data, 2, HAL_MAX_DELAY);
+    return HAL_I2C_Master_Transmit(&hi2c1, DRV2605L_I2C_ADDR, data, 2, HAL_MAX_DELAY);
 }
 
 /**
@@ -352,13 +352,13 @@ HAL_StatusTypeDef haptic_feedback_get_calibration_diagnostic_result(uint8_t *dia
     HAL_StatusTypeDef status;
 
     // Transmit the STATUS register address
-    status = HAL_I2C_Master_Transmit(&hi2c1, (DRV2605L_I2C_ADDR << 1), &reg_address, 1, HAL_MAX_DELAY);
+    status = HAL_I2C_Master_Transmit(&hi2c1, DRV2605L_I2C_ADDR, &reg_address, 1, HAL_MAX_DELAY);
     if (status != HAL_OK) {
         return status;
     }
 
     // Receive the diagnostic result
-    status = HAL_I2C_Master_Receive(&hi2c1, (DRV2605L_I2C_ADDR << 1), diagnostic_result, 1, HAL_MAX_DELAY);
+    status = HAL_I2C_Master_Receive(&hi2c1, DRV2605L_I2C_ADDR, diagnostic_result, 1, HAL_MAX_DELAY);
     if (status != HAL_OK) {
         return status;
     }
@@ -374,7 +374,7 @@ HAL_StatusTypeDef haptic_feedback_get_calibration_diagnostic_result(uint8_t *dia
  */
 HAL_StatusTypeDef haptic_feedback_play_waveform(uint8_t waveform) {
     uint8_t data[2] = {DRV2605L_REG_WAVESEQ1, waveform};
-    return HAL_I2C_Master_Transmit(&hi2c1, (DRV2605L_I2C_ADDR << 1), data, 2, HAL_MAX_DELAY);
+    return HAL_I2C_Master_Transmit(&hi2c1, DRV2605L_I2C_ADDR, data, 2, HAL_MAX_DELAY);
 }
 
 /**
@@ -385,7 +385,7 @@ HAL_StatusTypeDef haptic_feedback_play_waveform(uint8_t waveform) {
  */
 HAL_StatusTypeDef haptic_feedback_set_mode(uint8_t mode) {
     uint8_t data[2] = {DRV2605L_REG_MODE, mode};
-    return HAL_I2C_Master_Transmit(&hi2c1, (DRV2605L_I2C_ADDR << 1), data, 2, HAL_MAX_DELAY);
+    return HAL_I2C_Master_Transmit(&hi2c1, DRV2605L_I2C_ADDR, data, 2, HAL_MAX_DELAY);
 }
 
 /**
@@ -396,7 +396,7 @@ HAL_StatusTypeDef haptic_feedback_set_mode(uint8_t mode) {
  */
 HAL_StatusTypeDef haptic_feedback_set_library(uint8_t library) {
     uint8_t data[2] = {DRV2605L_REG_LIBRARY, library};
-    return HAL_I2C_Master_Transmit(&hi2c1, (DRV2605L_I2C_ADDR << 1), data, 2, HAL_MAX_DELAY);
+    return HAL_I2C_Master_Transmit(&hi2c1, DRV2605L_I2C_ADDR, data, 2, HAL_MAX_DELAY);
 }
 
 /**
@@ -406,7 +406,7 @@ HAL_StatusTypeDef haptic_feedback_set_library(uint8_t library) {
  */
 HAL_StatusTypeDef haptic_feedback_start(void) {
     uint8_t data[2] = {DRV2605L_REG_GO, 0x01};
-    return HAL_I2C_Master_Transmit(&hi2c1, (DRV2605L_I2C_ADDR << 1), data, 2, HAL_MAX_DELAY);
+    return HAL_I2C_Master_Transmit(&hi2c1, DRV2605L_I2C_ADDR, data, 2, HAL_MAX_DELAY);
 }
 
 /**
@@ -416,7 +416,7 @@ HAL_StatusTypeDef haptic_feedback_start(void) {
  */
 HAL_StatusTypeDef haptic_feedback_stop(void) {
     uint8_t data[2] = {DRV2605L_REG_GO, 0x00};
-    return HAL_I2C_Master_Transmit(&hi2c1, (DRV2605L_I2C_ADDR << 1), data, 2, HAL_MAX_DELAY);
+    return HAL_I2C_Master_Transmit(&hi2c1, DRV2605L_I2C_ADDR, data, 2, HAL_MAX_DELAY);
 }
 
 /**
@@ -434,7 +434,7 @@ HAL_StatusTypeDef haptic_feedback_rtp_mode(uint8_t amplitude) {
     }
 
     uint8_t data[2] = {DRV2605L_REG_RTP, amplitude};
-    return HAL_I2C_Master_Transmit(&hi2c1, (DRV2605L_I2C_ADDR << 1), data, 2, HAL_MAX_DELAY);
+    return HAL_I2C_Master_Transmit(&hi2c1, DRV2605L_I2C_ADDR, data, 2, HAL_MAX_DELAY);
 }
 
 /**
@@ -460,5 +460,5 @@ HAL_StatusTypeDef haptic_feedback_diagnostics(void) {
  */
 void haptic_feedback_reset(void) {
     uint8_t data[2] = {DRV2605L_REG_MODE, 0x80}; // 0x80 is the reset command
-    HAL_I2C_Master_Transmit(&hi2c1, (DRV2605L_I2C_ADDR << 1), data, 2, HAL_MAX_DELAY);
+    HAL_I2C_Master_Transmit(&hi2c1, DRV2605L_I2C_ADDR, data, 2, HAL_MAX_DELAY);
 }

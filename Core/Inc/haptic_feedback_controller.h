@@ -29,7 +29,7 @@
 // Mode Values
 // -----------------------------
 
-#define DRV2605L_MODE_INTERNAL_TRIGGER          0x00
+#define DRV2605L_MODE_INTERNAL_TRIGGER           0x00
 #define DRV2605L_MODE_EXTERNAL_TRIGGER_EDGE      0x01
 #define DRV2605L_MODE_EXTERNAL_TRIGGER_LEVEL     0x02
 #define DRV2605L_MODE_PWM_ANALOG                 0x03
@@ -42,7 +42,9 @@
 // I2C Address
 // -----------------------------
 
-#define DRV2605L_I2C_ADDR 0x5A
+#ifndef DRV2605L_I2C_ADDR
+#define DRV2605L_I2C_ADDR   (0x5A << 1)
+#endif
 
 // -----------------------------
 // Pin Definitions for Haptic Driver

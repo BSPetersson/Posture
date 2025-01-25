@@ -1,4 +1,4 @@
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 1
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s 			page 1
 
 
    1              		.cpu cortex-m0
@@ -58,7 +58,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 1
   31:Core/Src/main.c **** 
   32:Core/Src/main.c **** /* Private define ------------------------------------------------------------*/
   33:Core/Src/main.c **** /* USER CODE BEGIN PD */
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 2
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s 			page 2
 
 
   34:Core/Src/main.c **** 
@@ -118,7 +118,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 1
   88:Core/Src/main.c ****   SystemClock_Config();
   89:Core/Src/main.c **** 
   90:Core/Src/main.c ****   /* USER CODE BEGIN SysInit */
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 3
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s 			page 3
 
 
   91:Core/Src/main.c **** 
@@ -142,11 +142,11 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 1
  109:Core/Src/main.c ****   /* USER CODE BEGIN WHILE */
  110:Core/Src/main.c ****   while (1)
  111:Core/Src/main.c ****   {
- 112:Core/Src/main.c **** //    state_machine_update();
+ 112:Core/Src/main.c ****   //  state_machine_update();
  113:Core/Src/main.c **** 
  114:Core/Src/main.c ****     accel_data_t accel;
  115:Core/Src/main.c ****     if (accelerometer_read_mps2(&accel) == HAL_OK) {
- 116:Core/Src/main.c ****       if (accel.x_mps2 > 0.5) {
+ 116:Core/Src/main.c ****       if (accel.x_mps2 > 8.0) {
  117:Core/Src/main.c ****         led_execute_sequence(LED_SEQ_THREE_BLINKS);
  118:Core/Src/main.c ****       }
  119:Core/Src/main.c ****         // Use accel.x_mps2, accel.y_mps2, accel.z_mps2
@@ -178,7 +178,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 1
  145:Core/Src/main.c **** 
  146:Core/Src/main.c ****     /* USER CODE END WHILE */
  147:Core/Src/main.c **** 
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 4
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s 			page 4
 
 
  148:Core/Src/main.c ****     /* USER CODE BEGIN 3 */
@@ -238,7 +238,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 1
  202:Core/Src/main.c **** {
  203:Core/Src/main.c **** 
  204:Core/Src/main.c ****   /* USER CODE BEGIN I2C1_Init 0 */
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 5
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s 			page 5
 
 
  205:Core/Src/main.c **** 
@@ -298,7 +298,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 1
  259:Core/Src/main.c ****   /* USER CODE BEGIN TIM16_Init 1 */
  260:Core/Src/main.c **** 
  261:Core/Src/main.c ****   /* USER CODE END TIM16_Init 1 */
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 6
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s 			page 6
 
 
  262:Core/Src/main.c ****   htim16.Instance = TIM16;
@@ -358,7 +358,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 1
  316:Core/Src/main.c ****   /* USER CODE END USART1_Init 0 */
  317:Core/Src/main.c **** 
  318:Core/Src/main.c ****   /* USER CODE BEGIN USART1_Init 1 */
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 7
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s 			page 7
 
 
  319:Core/Src/main.c **** 
@@ -418,7 +418,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 1
  350:Core/Src/main.c **** /* USER CODE END MX_GPIO_Init_1 */
  351:Core/Src/main.c **** 
  352:Core/Src/main.c ****   /* GPIO Ports Clock Enable */
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 8
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s 			page 8
 
 
  353:Core/Src/main.c ****   __HAL_RCC_GPIOF_CLK_ENABLE();
@@ -478,7 +478,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 1
  100              		.loc 1 355 3 view .LVU20
  356:Core/Src/main.c **** 
  357:Core/Src/main.c ****   /*Configure GPIO pin Output Level */
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 9
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s 			page 9
 
 
  358:Core/Src/main.c ****   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, GPIO_PIN_RESET);
@@ -538,7 +538,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 1
  371:Core/Src/main.c ****   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
  142              		.loc 1 371 3 is_stmt 1 view .LVU37
  143 007a 2100     		movs	r1, r4
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 10
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s 			page 10
 
 
  144 007c 2800     		movs	r0, r5
@@ -598,7 +598,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 1
  386:Core/Src/main.c **** /* USER CODE BEGIN MX_GPIO_Init_2 */
  387:Core/Src/main.c **** /* USER CODE END MX_GPIO_Init_2 */
  388:Core/Src/main.c **** }
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 11
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s 			page 11
 
 
  184              		.loc 1 388 1 is_stmt 0 view .LVU49
@@ -658,7 +658,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 1
  407:Core/Src/main.c ****     // {
  408:Core/Src/main.c ****     //     // PA1 => accelerometer INT1
  409:Core/Src/main.c ****     //     accelerometer_handle_int1();
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 12
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s 			page 12
 
 
  410:Core/Src/main.c ****     // }
@@ -718,7 +718,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 1
    8:Drivers/CMSIS/Include/cmsis_gcc.h ****  * Copyright (c) 2009-2018 Arm Limited. All rights reserved.
    9:Drivers/CMSIS/Include/cmsis_gcc.h ****  *
   10:Drivers/CMSIS/Include/cmsis_gcc.h ****  * SPDX-License-Identifier: Apache-2.0
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 13
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s 			page 13
 
 
   11:Drivers/CMSIS/Include/cmsis_gcc.h ****  *
@@ -778,7 +778,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 1
   65:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __PACKED_STRUCT                        struct __attribute__((packed, aligned(1)))
   66:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
   67:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __PACKED_UNION
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 14
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s 			page 14
 
 
   68:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __PACKED_UNION                         union __attribute__((packed, aligned(1)))
@@ -838,7 +838,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 1
  122:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
  123:Drivers/CMSIS/Include/cmsis_gcc.h **** 
  124:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 15
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s 			page 15
 
 
  125:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Enable IRQ Interrupts
@@ -898,7 +898,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 1
  287              		.cfi_def_cfa_offset 8
  288              		.cfi_offset 4, -8
  289              		.cfi_offset 14, -4
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 16
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s 			page 16
 
 
  211:Core/Src/main.c ****   hi2c1.Init.Timing = 0x00201D2B;
@@ -958,7 +958,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 1
  324 001e FFF7FEFF 		bl	HAL_I2C_Init
  325              	.LVL13:
  220:Core/Src/main.c ****   {
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 17
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s 			page 17
 
 
  326              		.loc 1 220 6 discriminator 1 view .LVU85
@@ -1018,7 +1018,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 1
  371              		.section	.text.MX_TIM16_Init,"ax",%progbits
  372              		.align	1
  373              		.syntax unified
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 18
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s 			page 18
 
 
  374              		.code	16
@@ -1078,7 +1078,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 1
  265:Core/Src/main.c ****   htim16.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
  417              		.loc 1 265 22 is_stmt 0 view .LVU108
  418 0024 1F4A     		ldr	r2, .L27+8
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 19
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s 			page 19
 
 
  419 0026 C260     		str	r2, [r0, #12]
@@ -1138,7 +1138,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 1
  455 004a 8B60     		str	r3, [r1, #8]
  280:Core/Src/main.c ****   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
  456              		.loc 1 280 3 is_stmt 1 view .LVU127
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 20
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s 			page 20
 
 
  280:Core/Src/main.c ****   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
@@ -1198,7 +1198,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 1
  292:Core/Src/main.c ****   sBreakDeadTimeConfig.BreakPolarity = TIM_BREAKPOLARITY_HIGH;
  492              		.loc 1 292 35 is_stmt 0 view .LVU147
  493 006c 0B61     		str	r3, [r1, #16]
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 21
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s 			page 21
 
 
  293:Core/Src/main.c ****   sBreakDeadTimeConfig.AutomaticOutput = TIM_AUTOMATICOUTPUT_DISABLE;
@@ -1258,7 +1258,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 1
  535 009a C046     		.align	2
  536              	.L27:
  537 009c 00000000 		.word	htim16
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 22
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s 			page 22
 
 
  538 00a0 00440140 		.word	1073824768
@@ -1318,7 +1318,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 1
  581              		.loc 1 326 20 is_stmt 0 view .LVU173
  582 0016 0C22     		movs	r2, #12
  583 0018 4261     		str	r2, [r0, #20]
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 23
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s 			page 23
 
 
  327:Core/Src/main.c ****   huart1.Init.OverSampling = UART_OVERSAMPLING_16;
@@ -1378,7 +1378,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 1
  158:Core/Src/main.c ****   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
  627              		.loc 1 158 1 view -0
  628              		.cfi_startproc
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 24
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s 			page 24
 
 
  629              		@ args = 0, pretend = 0, frame = 80
@@ -1438,7 +1438,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 1
  671 002c 0F33     		adds	r3, r3, #15
  672 002e 0C93     		str	r3, [sp, #48]
  169:Core/Src/main.c ****   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 25
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s 			page 25
 
 
  673              		.loc 1 169 3 is_stmt 1 view .LVU200
@@ -1498,7 +1498,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 1
  710              		.loc 1 188 3 is_stmt 1 view .LVU217
  188:Core/Src/main.c ****   PeriphClkInit.I2c1ClockSelection = RCC_I2C1CLKSOURCE_HSI;
  711              		.loc 1 188 38 is_stmt 0 view .LVU218
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 26
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s 			page 26
 
 
  712 0058 0023     		movs	r3, #0
@@ -1558,7 +1558,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 1
  758              		.cfi_def_cfa_offset 4
  759              		.cfi_offset 14, -4
  760 0002 85B0     		sub	sp, sp, #20
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 27
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s 			page 27
 
 
  761              	.LCFI10:
@@ -1618,7 +1618,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 1
  117:Core/Src/main.c ****       }
  803              		.loc 1 117 9 view .LVU241
  804 0038 0120     		movs	r0, #1
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 28
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s 			page 28
 
 
  805 003a FFF7FEFF 		bl	led_execute_sequence
@@ -1643,7 +1643,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 1
  820              	.LBE9:
  110:Core/Src/main.c ****   {
  821              		.loc 1 110 9 view .LVU246
- 111:Core/Src/main.c **** //    state_machine_update();
+ 111:Core/Src/main.c ****   //  state_machine_update();
  822              		.loc 1 111 3 is_stmt 0 view .LVU247
  823 004a 02E0     		b	.L50
  824              	.LVL57:
@@ -1668,17 +1668,17 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 1
  838              	.LBB11:
  114:Core/Src/main.c ****     if (accelerometer_read_mps2(&accel) == HAL_OK) {
  839              		.loc 1 114 5 view .LVU253
- 115:Core/Src/main.c ****       if (accel.x_mps2 > 0.5) {
+ 115:Core/Src/main.c ****       if (accel.x_mps2 > 8.0) {
  840              		.loc 1 115 5 view .LVU254
- 115:Core/Src/main.c ****       if (accel.x_mps2 > 0.5) {
+ 115:Core/Src/main.c ****       if (accel.x_mps2 > 8.0) {
  841              		.loc 1 115 9 is_stmt 0 view .LVU255
  842 0052 01A8     		add	r0, sp, #4
  843 0054 FFF7FEFF 		bl	accelerometer_read_mps2
  844              	.LVL60:
- 115:Core/Src/main.c ****       if (accel.x_mps2 > 0.5) {
+ 115:Core/Src/main.c ****       if (accel.x_mps2 > 8.0) {
  845              		.loc 1 115 8 discriminator 1 view .LVU256
  846 0058 0028     		cmp	r0, #0
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 29
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s 			page 29
 
 
  847 005a 06D1     		bne	.L42
@@ -1689,8 +1689,8 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 1
  850 005c 0198     		ldr	r0, [sp, #4]
  116:Core/Src/main.c ****         led_execute_sequence(LED_SEQ_THREE_BLINKS);
  851              		.loc 1 116 10 view .LVU259
- 852 005e FC21     		movs	r1, #252
- 853 0060 8905     		lsls	r1, r1, #22
+ 852 005e 8221     		movs	r1, #130
+ 853 0060 C905     		lsls	r1, r1, #23
  854 0062 FFF7FEFF 		bl	__aeabi_fcmpgt
  855              	.LVL61:
  856 0066 0028     		cmp	r0, #0
@@ -1738,7 +1738,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 1
  888              		.loc 1 136 17 view .LVU269
  889 008c 0320     		movs	r0, #3
  890              	.LVL67:
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 30
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s 			page 30
 
 
  136:Core/Src/main.c ****                 break;
@@ -1798,44 +1798,44 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 1
  938              		.file 18 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_tim_ex.h"
  939              		.file 19 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_i2c_ex.h"
  940              		.file 20 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_cortex.h"
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 31
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s 			page 31
 
 
  941              		.file 21 "Core/Inc/haptic_feedback_controller.h"
  942              		.file 22 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h"
  943              		.file 23 "Core/Inc/state_machine.h"
  944              		.file 24 "<built-in>"
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 32
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s 			page 32
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 main.c
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s:19     .text.MX_GPIO_Init:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s:24     .text.MX_GPIO_Init:00000000 MX_GPIO_Init
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s:191    .text.MX_GPIO_Init:000000bc $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s:197    .text.HAL_GPIO_EXTI_Callback:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s:203    .text.HAL_GPIO_EXTI_Callback:00000000 HAL_GPIO_EXTI_Callback
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s:236    .text.Error_Handler:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s:242    .text.Error_Handler:00000000 Error_Handler
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s:274    .text.MX_I2C1_Init:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s:279    .text.MX_I2C1_Init:00000000 MX_I2C1_Init
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s:365    .text.MX_I2C1_Init:0000004c $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s:919    .bss.hi2c1:00000000 hi2c1
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s:372    .text.MX_TIM16_Init:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s:377    .text.MX_TIM16_Init:00000000 MX_TIM16_Init
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s:537    .text.MX_TIM16_Init:0000009c $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s:912    .bss.htim16:00000000 htim16
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s:544    .text.MX_USART1_UART_Init:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s:549    .text.MX_USART1_UART_Init:00000000 MX_USART1_UART_Init
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s:613    .text.MX_USART1_UART_Init:00000030 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s:905    .bss.huart1:00000000 huart1
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s:619    .text.SystemClock_Config:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s:625    .text.SystemClock_Config:00000000 SystemClock_Config
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s:744    .text.main:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s:750    .text.main:00000000 main
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s:902    .bss.huart1:00000000 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s:909    .bss.htim16:00000000 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s:916    .bss.hi2c1:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s:19     .text.MX_GPIO_Init:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s:24     .text.MX_GPIO_Init:00000000 MX_GPIO_Init
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s:191    .text.MX_GPIO_Init:000000bc $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s:197    .text.HAL_GPIO_EXTI_Callback:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s:203    .text.HAL_GPIO_EXTI_Callback:00000000 HAL_GPIO_EXTI_Callback
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s:236    .text.Error_Handler:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s:242    .text.Error_Handler:00000000 Error_Handler
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s:274    .text.MX_I2C1_Init:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s:279    .text.MX_I2C1_Init:00000000 MX_I2C1_Init
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s:365    .text.MX_I2C1_Init:0000004c $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s:919    .bss.hi2c1:00000000 hi2c1
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s:372    .text.MX_TIM16_Init:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s:377    .text.MX_TIM16_Init:00000000 MX_TIM16_Init
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s:537    .text.MX_TIM16_Init:0000009c $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s:912    .bss.htim16:00000000 htim16
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s:544    .text.MX_USART1_UART_Init:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s:549    .text.MX_USART1_UART_Init:00000000 MX_USART1_UART_Init
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s:613    .text.MX_USART1_UART_Init:00000030 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s:905    .bss.huart1:00000000 huart1
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s:619    .text.SystemClock_Config:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s:625    .text.SystemClock_Config:00000000 SystemClock_Config
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s:744    .text.main:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s:750    .text.main:00000000 main
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s:902    .bss.huart1:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s:909    .bss.htim16:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s:916    .bss.hi2c1:00000000 $d
 
 UNDEFINED SYMBOLS
 memset
@@ -1865,7 +1865,7 @@ button_controller_initialize
 state_machine_initialize
 led_execute_sequence
 led_on
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc5OB0Re.s 			page 33
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccTpTWh0.s 			page 33
 
 
 accelerometer_read_mps2

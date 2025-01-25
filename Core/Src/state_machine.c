@@ -40,7 +40,7 @@ void handle_test_state() {
     led_execute_sequence(LED_SEQ_THREE_BLINKS);
 
     // Wait a moment to ensure the controller is ready
-    HAL_Delay(10000);
+    HAL_Delay(1000);
 
     led_execute_sequence(LED_SEQ_DOUBLE_BLINK);
 
