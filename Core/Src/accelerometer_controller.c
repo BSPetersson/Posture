@@ -45,7 +45,7 @@ static HAL_StatusTypeDef accel_goto_standby(void)
     HAL_StatusTypeDef status = accelerometer_read_reg(MMA8451Q_REG_CTRL_REG1, &value);
     if (status != HAL_OK) return status;
 
-    value &= ~CTRL_REG1_ACTIVE;  // clear ACTIVE bit
+    value &= 0;  // clear ACTIVE bit
     return accelerometer_write_reg(MMA8451Q_REG_CTRL_REG1, value);
 }
 
@@ -55,15 +55,8 @@ static HAL_StatusTypeDef accel_goto_active(void)
     HAL_StatusTypeDef status = accelerometer_read_reg(MMA8451Q_REG_CTRL_REG1, &value);
     if (status != HAL_OK) return status;
 
-    value |= CTRL_REG1_ACTIVE;  // set ACTIVE bit
+    value |= 1;  // set ACTIVE bit
     return accelerometer_write_reg(MMA8451Q_REG_CTRL_REG1, value);
-}
-
-static uint8_t mg_to_threshold_code(uint16_t mg)
-{
-    float counts = (float)mg / 63.0f;  // 63 mg per LSB
-    if (counts > 127.0f) counts = 127.0f;
-    return (uint8_t)(counts + 0.5f);
 }
 
 HAL_StatusTypeDef accelerometer_controller_initialize(void)
@@ -73,46 +66,56 @@ HAL_StatusTypeDef accelerometer_controller_initialize(void)
 
     // Read WHO_AM_I
     status = accelerometer_read_reg(MMA8451Q_REG_WHO_AM_I, &who_am_i);
-    if (status != HAL_OK) {
-        return status;
-    }
-    if (who_am_i != WHO_AM_I_VALUE) {
-        return HAL_ERROR; // Device not recognized
-    }
+    if (status != HAL_OK) return status;
+    if (who_am_i != WHO_AM_I_VALUE) return HAL_ERROR;
 
     // Put device into Standby
     status = accel_goto_standby();
-    if (status != HAL_OK) {
-        return status;
-    }
+    if (status != HAL_OK) return status;
 
-    // Configure g range and high-pass filter
-    status = accelerometer_write_reg(MMA8451Q_REG_XYZ_DATA_CFG, XYZ_DATA_CFG_HP_OFF_FS_2G);
-    if (status != HAL_OK) {
-        return status;
-    }
+    // Configure CTRL_REG1
+    status = accelerometer_write_reg(MMA8451Q_REG_CTRL_REG1, CTRL_REG1);
+    if (status != HAL_OK) return status;
+    
+    // Configure CTRL_REG2
+    status = accelerometer_write_reg(MMA8451Q_REG_CTRL_REG2, CTRL_REG2);
+    if (status != HAL_OK) return status;
+
+    // Configure CTRL_REG3
+    status = accelerometer_write_reg(MMA8451Q_REG_CTRL_REG3, CTRL_REG3);
+    if (status != HAL_OK) return status;
+
+    // Configure CTRL_REG4
+    status = accelerometer_write_reg(MMA8451Q_REG_CTRL_REG4, CTRL_REG4);
+    if (status != HAL_OK) return status;
+
+    // Configure CTRL_REG5
+    status = accelerometer_write_reg(MMA8451Q_REG_CTRL_REG5, CTRL_REG5);
+    if (status != HAL_OK) return status;
+
+    // Configure XYZ_DATA_CFG
+    status = accelerometer_write_reg(MMA8451Q_REG_XYZ_DATA_CFG, XYZ_DATA_CFG);
+    if (status != HAL_OK) return status;
 
     // Configure HPF cutoff
     status = accelerometer_write_reg(MMA8451Q_REG_HP_FILTER_CUTOFF, HP_FILTER_CUTOFF);
-    if (status != HAL_OK) {
-        return status;
-    }
+    if (status != HAL_OK) return status;
 
-    // /* 5) Configure FF_MT for motion detection */
-    // uint8_t ff_mt_cfg = (FF_MT_CFG_ELE | FF_MT_CFG_OAE |
-    //                      FF_MT_CFG_XEFE | FF_MT_CFG_YEFE | FF_MT_CFG_ZEFE);
-    // status = accelerometer_write_reg(MMA8451Q_REG_FF_MT_CFG, ff_mt_cfg);
-    // if (status != HAL_OK) {
-    //     return status;
-    // }
+    // Configure FF_MT_CFG
+    status = accelerometer_write_reg(MMA8451Q_REG_FF_MT_CFG, FF_MT_CFG);
+    if (status != HAL_OK) return status;
 
-    // /* 6) Set motion threshold (mg => code) and debounce */
-    // uint8_t ths_code = mg_to_threshold_code(ACCEL_MOTION_THRESHOLD_MG);
-    // status = accelerometer_write_reg(MMA8451Q_REG_FF_MT_THS, ths_code);
-    // if (status != HAL_OK) return status;
+    // Set motion detection threshold
+    status = accelerometer_write_reg(MMA8451Q_REG_FF_MT_THS, ACCEL_MOTION_THRESHOLD_VALUE);
+    if (status != HAL_OK) return status;
+    
+    // Set debounce count
+    status = accelerometer_write_reg(MMA8451Q_REG_FF_MT_COUNT, ACCEL_MOTION_DEBOUNCE_COUNT);
+    if (status != HAL_OK) return status;
 
-    // status = accelerometer_write_reg(MMA8451Q_REG_FF_MT_COUNT, ACCEL_MOTION_DEBOUNCE_COUNT);
-    // if (status != HAL_OK) return status;
+    // Set auto-sleep timeout
+    status = accelerometer_write_reg(MMA8451Q_REG_ASLP_COUNT, ASLP_COUNT);
+    if (status != HAL_OK) return status;
 
     // /* 7) Configure Tap detection for X,Y,Z single tap */
     // uint8_t pulse_cfg = (PULSE_CFG_ELE |
@@ -141,60 +144,9 @@ HAL_StatusTypeDef accelerometer_controller_initialize(void)
     // status = accelerometer_write_reg(MMA8451Q_REG_PULSE_WIND, ACCEL_TAP_WINDOW);
     // if (status != HAL_OK) return status;
 
-    // /* 8) Set auto-sleep timeout: e.g., 50 => 0.5s at 100Hz */
-    // status = accelerometer_write_reg(MMA8451Q_REG_ASLP_COUNT, 50);
-    // if (status != HAL_OK) return status;
-
-    // /* 9) CTRL_REG2: SLPE=1 => auto-sleep, normal mode */
-    // uint8_t ctrl_reg2 = CTRL_REG2_SLPE;
-    // status = accelerometer_write_reg(MMA8451Q_REG_CTRL_REG2, ctrl_reg2);
-    // if (status != HAL_OK) {
-    //     return status;
-    // }
-
-    // /* 10) CTRL_REG3: IPOL=1 => active-high, WAKE_FF_MT=1 => motion can wake */
-    // uint8_t ctrl_reg3 = (CTRL_REG3_IPOL | (1 << 3));
-    // status = accelerometer_write_reg(MMA8451Q_REG_CTRL_REG3, ctrl_reg3);
-    // if (status != HAL_OK) {
-    //     return status;
-    // }
-
-    // /* 11) CTRL_REG4: enable interrupts for FF_MT, PULSE, ASLP */
-    // uint8_t ctrl_reg4 = (CTRL_REG4_INT_EN_FF_MT |
-    //                      CTRL_REG4_INT_EN_PULSE |
-    //                      CTRL_REG4_INT_EN_ASLP);
-    // status = accelerometer_write_reg(MMA8451Q_REG_CTRL_REG4, ctrl_reg4);
-    // if (status != HAL_OK) {
-    //     return status;
-    // }
-
-    // /* 12) CTRL_REG5: route PULSE => INT1, FF_MT => INT2, ASLP => INT2 */
-    // uint8_t ctrl_reg5 = 0x00;
-    // // PULSE => bit3 = 1 => INT1
-    // ctrl_reg5 |= CTRL_REG5_INT_CFG_PULSE;  // (1 << 3)
-    // // FF_MT => bit2 = 0 => INT2
-    // // ASLP => bit7 = 0 => INT2
-    // status = accelerometer_write_reg(MMA8451Q_REG_CTRL_REG5, ctrl_reg5);
-    // if (status != HAL_OK) {
-    //     return status;
-    // }
-
-    // /* 13) CTRL_REG1: ODR=100Hz (DR=0b011), LNOISE=1, ASLP_RATE=00 => 50Hz, then ACTIVE=1 */
-    // uint8_t ctrl_reg1 = 0;
-    // // DR=0b011 => bits [5:3] = 3<<3 => 0x18
-    // // LNOISE=1 => bit2 => 0x04
-    // // ACTIVE => bit0 => 0x01
-    // ctrl_reg1 = (3 << 3) | (1 << 2) | CTRL_REG1_ACTIVE;  // 0x1D
-    // status = accelerometer_write_reg(MMA8451Q_REG_CTRL_REG1, ctrl_reg1);
-    // if (status != HAL_OK) {
-    //     return status;
-    // }
-
     // Put device into Active
     status = accel_goto_active();
-    if (status != HAL_OK) {
-        return status;
-    }
+    if (status != HAL_OK) return status;
 
     return HAL_OK;
 }
@@ -230,20 +182,33 @@ HAL_StatusTypeDef accelerometer_read_mps2(accel_data_t *data)
     return HAL_OK;
 }
 
-void accelerometer_handle_int1(void)
+bool is_accelerometer_in_sleep_mode(void)
 {
-    led_execute_sequence(LED_SEQ_THREE_BLINKS);
-    // PULSE interrupt => reading PULSE_SRC (0x22) clears
-    uint8_t dummy;
-    accelerometer_read_reg(MMA8451Q_REG_PULSE_SRC, &dummy);
+    uint8_t value;
+    HAL_StatusTypeDef status = accelerometer_read_reg(MMA8451Q_REG_SYSMOD, &value);
+    if (status != HAL_OK) return false;
+
+    // If bit1 = 0 and bit0 = 0 it is in sleep mode. Only look at bit0 and bit1
+    bool bit0 = value & 0x01;
+    bool bit1 = value & 0x02;
+    return (bit1 && !bit0);
 }
 
-void accelerometer_handle_int2(void)
+bool is_motion_detected(void)
 {
-    led_execute_sequence(LED_SEQ_FADE_IN_OUT);
-    // FF_MT / ASLP => read INT_SOURCE, then read FF_MT_SRC and/or SYSMOD
-    uint8_t dummy;
-    accelerometer_read_reg(0x0C, &dummy); // INT_SOURCE
-    accelerometer_read_reg(0x16, &dummy); // FF_MT_SRC (REG_FF_MT_CFG + 1)
-    // Possibly also read SYSMOD (0x0B) if needed for ASLP.
+    uint8_t value;
+    HAL_StatusTypeDef status = accelerometer_read_reg(MMA8451Q_REG_FF_MT_SRC, &value);
+    if (status != HAL_OK) return false;
+
+    // if bit7 = 1, motion detected
+    bool bit7 = value & 0x80;
+    return bit7;
 }
+
+// void accelerometer_handle_int1(void)
+// {
+// }
+
+// void accelerometer_handle_int2(void)
+// {
+// }

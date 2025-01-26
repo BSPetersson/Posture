@@ -107,41 +107,22 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  led_execute_sequence(LED_SEQ_THREE_BLINKS);
   while (1)
   {
   //  state_machine_update();
 
-    accel_data_t accel;
-    if (accelerometer_read_mps2(&accel) == HAL_OK) {
-      if (accel.x_mps2 > 8.0) {
-        led_execute_sequence(LED_SEQ_THREE_BLINKS);
-      }
-        // Use accel.x_mps2, accel.y_mps2, accel.z_mps2
-    }
-    
-    button_process(); // Call periodically
-    
-    button_event_t ev = button_get_event();
-    if(ev != BUTTON_EVENT_NONE)
-    {
-        switch(ev)
-        {
-            case BUTTON_EVENT_SINGLE_PRESS:
-                led_execute_sequence(LED_SEQ_THREE_BLINKS);
-                break;
-            case BUTTON_EVENT_DOUBLE_PRESS:
-                led_execute_sequence(LED_SEQ_DOUBLE_BLINK);
-                break;
-            case BUTTON_EVENT_TRIPLE_PRESS:
-                led_execute_sequence(LED_SEQ_FADE_IN_OUT);
-                break;
-            case BUTTON_EVENT_LONG_PRESS:
-                led_on(100);
-                break;
-            default:
-                break;
-        }
-    }
+  bool is_sleep = is_accelerometer_in_sleep_mode();
+
+  if (is_sleep) {
+      led_execute_sequence(LED_SEQ_THREE_BLINKS);
+  }
+
+  bool is_motion = is_motion_detected();
+
+  if (is_motion) {
+      led_execute_sequence(LED_SEQ_FADE_IN_OUT);
+  }
 
     /* USER CODE END WHILE */
 
@@ -401,12 +382,12 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     // else if (GPIO_Pin == GPIO_PIN_0)
     // {
     //     // PA0 => accelerometer INT2
-    //     accelerometer_handle_int2();
+    //     // accelerometer_handle_int2();
     // }
     // else if (GPIO_Pin == GPIO_PIN_1)
     // {
     //     // PA1 => accelerometer INT1
-    //     accelerometer_handle_int1();
+    //     // accelerometer_handle_int1();
     // }
 
     // You can handle more EXTI pins if needed
