@@ -153,28 +153,64 @@ HAL_StatusTypeDef accelerometer_controller_initialize(void)
 
 HAL_StatusTypeDef accelerometer_read_mps2(accel_data_t *data)
 {
+    HAL_StatusTypeDef status;
+
     if (!data) {
         return HAL_ERROR;
     }
 
-    // Read X, Y, Z (6 bytes)
-    uint8_t raw[6];
-    HAL_StatusTypeDef status = accelerometer_read_regs(MMA8451Q_REG_OUT_X_MSB, raw, 6);
+    uint8_t reg1_value;
+    status = accelerometer_read_reg(MMA8451Q_REG_CTRL_REG1, &reg1_value);
+
+    uint8_t xyz_status;
+    status = accelerometer_read_reg(MMA8451Q_REG_STATUS, &xyz_status);
     if (status != HAL_OK) {
         return status;
     }
 
-    // 14-bit sign-extended: (MSB << 8 | LSB) >> 2
-    int16_t x = (int16_t)((raw[0] << 8) | raw[1]);  x >>= 2;
-    int16_t y = (int16_t)((raw[2] << 8) | raw[3]);  y >>= 2;
-    int16_t z = (int16_t)((raw[4] << 8) | raw[5]);  z >>= 2;
+    if (!(xyz_status & 0x08)) {  // Check if ZYXDR bit (bit 3) is set
+        return HAL_BUSY;     // No new data available
+    }
 
-    // Convert to g
-    float x_g = (float)x / MMA8451Q_SENS_2G_14BIT;
-    float y_g = (float)y / MMA8451Q_SENS_2G_14BIT;
-    float z_g = (float)z / MMA8451Q_SENS_2G_14BIT;
+    // Read MMA8451Q_REG_XYZ_DATA_CFG to determine sensitivity
+    uint8_t xyz_data_cfg;
+    status = accelerometer_read_reg(MMA8451Q_REG_XYZ_DATA_CFG, &xyz_data_cfg);
+    if (status != HAL_OK) {
+        return status;
+    }
 
-    /* Convert to m/s^2 */
+    float sensitivity;
+    switch (xyz_data_cfg & 0x03)  // Extract the FS[1:0] bits
+    {
+        case 0x00: sensitivity = 4096.0f; break;  // ±2g mode
+        case 0x01: sensitivity = 2048.0f; break;  // ±4g mode
+        case 0x02: sensitivity = 1024.0f; break;  // ±8g mode
+        default: return HAL_ERROR;  // Unexpected value
+    }
+
+    // Read X, Y, Z (6 bytes)
+    uint8_t raw[6];
+    status = accelerometer_read_regs(MMA8451Q_REG_OUT_X_MSB, raw, 6);
+    if (status != HAL_OK) {
+        return status;
+    }
+
+    // Convert to 14-bit signed values with explicit sign extension
+    int16_t x = (int16_t)((raw[0] << 8) | raw[1]) >> 2;
+    int16_t y = (int16_t)((raw[2] << 8) | raw[3]) >> 2;
+    int16_t z = (int16_t)((raw[4] << 8) | raw[5]) >> 2;
+
+    // Sign extension for 14-bit values
+    if (x & (1 << 13)) x |= 0xC000;  // Extend sign to full 16-bit
+    if (y & (1 << 13)) y |= 0xC000;
+    if (z & (1 << 13)) z |= 0xC000;
+
+    // Convert to g using detected sensitivity
+    float x_g = (float)x / sensitivity;
+    float y_g = (float)y / sensitivity;
+    float z_g = (float)z / sensitivity;
+
+    // Convert to m/s²
     data->x_mps2 = x_g * ACCEL_G;
     data->y_mps2 = y_g * ACCEL_G;
     data->z_mps2 = z_g * ACCEL_G;
@@ -182,27 +218,40 @@ HAL_StatusTypeDef accelerometer_read_mps2(accel_data_t *data)
     return HAL_OK;
 }
 
-bool is_accelerometer_in_sleep_mode(void)
+uint8_t get_sysmod(void)
 {
     uint8_t value;
     HAL_StatusTypeDef status = accelerometer_read_reg(MMA8451Q_REG_SYSMOD, &value);
-    if (status != HAL_OK) return false;
+    if (status != HAL_OK) return -1;
 
-    // If bit1 = 0 and bit0 = 0 it is in sleep mode. Only look at bit0 and bit1
-    bool bit0 = value & 0x01;
-    bool bit1 = value & 0x02;
-    return (bit1 && !bit0);
+    return value;
 }
 
-bool is_motion_detected(void)
+uint8_t get_ff_mt_src(void)
 {
     uint8_t value;
     HAL_StatusTypeDef status = accelerometer_read_reg(MMA8451Q_REG_FF_MT_SRC, &value);
-    if (status != HAL_OK) return false;
+    if (status != HAL_OK) return -1;
 
-    // if bit7 = 1, motion detected
-    bool bit7 = value & 0x80;
-    return bit7;
+    return value;
+}
+
+uint8_t get_int_source(void)
+{
+    uint8_t value;
+    HAL_StatusTypeDef status = accelerometer_read_reg(MMA8451Q_REG_INT_SOURCE, &value);
+    if (status != HAL_OK) return -1;
+
+    return value;
+}
+
+uint8_t get_transient_src(void)
+{
+    uint8_t value;
+    HAL_StatusTypeDef status = accelerometer_read_reg(MMA8451Q_REG_TRANSIENT_SRC, &value);
+    if (status != HAL_OK) return -1;
+
+    return value;
 }
 
 // void accelerometer_handle_int1(void)

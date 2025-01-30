@@ -18,6 +18,7 @@
 #define MMA8451Q_REG_OUT_Z_MSB         0x05
 #define MMA8451Q_REG_OUT_Z_LSB         0x06
 #define MMA8451Q_REG_SYSMOD            0x0B
+#define MMA8451Q_REG_INT_SOURCE        0x0C
 #define MMA8451Q_REG_WHO_AM_I          0x0D
 #define MMA8451Q_REG_XYZ_DATA_CFG      0x0E
 #define MMA8451Q_REG_HP_FILTER_CUTOFF  0x0F
@@ -25,6 +26,7 @@
 #define MMA8451Q_REG_FF_MT_SRC         0x16
 #define MMA8451Q_REG_FF_MT_THS         0x17
 #define MMA8451Q_REG_FF_MT_COUNT       0x18
+#define MMA8451Q_REG_TRANSIENT_SRC     0x1E
 #define MMA8451Q_REG_PULSE_CFG         0x21
 #define MMA8451Q_REG_PULSE_SRC         0x22
 #define MMA8451Q_REG_PULSE_THSX        0x23
@@ -56,7 +58,7 @@
 #define CTRL_REG1 (CTRL_REG1_ASLP_RATE1 | CTRL_REG1_ASLP_RATE0 | CTRL_REG1_DR2 | CTRL_REG1_DR1 | CTRL_REG1_DR0 | CTRL_REG1_LNOISE | CTRL_REG1_F_READ | CTRL_REG1_ACTIVE)
 
 // Setting CTRL_REG2 register values
-#define CTRL_REG2_ST     (1 << 7)
+#define CTRL_REG2_ST     (0 << 7)
 #define CTRL_REG2_RST    (0 << 6)
 #define CTRL_REG2_SMODS1 (1 << 4)
 #define CTRL_REG2_SMODS0 (1 << 3)
@@ -197,8 +199,10 @@ typedef struct {
 HAL_StatusTypeDef accelerometer_controller_initialize(void);
 HAL_StatusTypeDef accelerometer_read_mps2(accel_data_t *data);
 
-bool is_accelerometer_in_sleep_mode(void);
-bool is_motion_detected(void);
+uint8_t get_sysmod(void);
+uint8_t get_ff_mt_src(void);
+uint8_t get_int_source(void);
+uint8_t get_transient_src(void);
 
 // void accelerometer_handle_int1(void);
 // void accelerometer_handle_int2(void);
