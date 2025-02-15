@@ -1,4 +1,4 @@
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccjFpo2D.s 			page 1
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccjUOCzi.s 			page 1
 
 
    1              		.cpu cortex-m0
@@ -58,7 +58,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccjFpo2D.s 			page 1
   42 0008 0221     		movs	r1, #2
   43 000a C005     		lsls	r0, r0, #23
   44 000c FFF7FEFF 		bl	HAL_GPIO_ReadPin
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccjFpo2D.s 			page 2
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccjUOCzi.s 			page 2
 
 
   45              	.LVL1:
@@ -118,7 +118,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccjFpo2D.s 			page 1
   71              		.loc 1 42 5 view .LVU12
   72 0032 FFF7FEFF 		bl	haptic_feedback_controller_initialize
   73              	.LVL7:
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccjFpo2D.s 			page 3
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccjUOCzi.s 			page 3
 
 
   43:Core/Src/sleep_controller.c **** 
@@ -178,7 +178,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccjFpo2D.s 			page 1
  116              		.file 2 "/Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/arm-none-eabi/include/machine/_defa
  117              		.file 3 "/Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/arm-none-eabi/include/sys/_stdint.h
  118              		.file 4 "Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f030x8.h"
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccjFpo2D.s 			page 4
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccjUOCzi.s 			page 4
 
 
  119              		.file 5 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_gpio.h"
@@ -186,18 +186,18 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccjFpo2D.s 			page 1
  121              		.file 7 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h"
  122              		.file 8 "Core/Inc/accelerometer_controller.h"
  123              		.file 9 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_pwr.h"
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccjFpo2D.s 			page 5
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccjUOCzi.s 			page 5
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 sleep_controller.c
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccjFpo2D.s:19     .text.sleep_controller_activate_sleep_mode:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccjFpo2D.s:25     .text.sleep_controller_activate_sleep_mode:00000000 sleep_controller_activate_sleep_mode
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccjFpo2D.s:85     .text.sleep_controller_activate_sleep_mode:0000003c $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccjFpo2D.s:112    .bss.sleep_mode_active:00000000 sleep_mode_active
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccjFpo2D.s:90     .text.sleep_controller_wake_device:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccjFpo2D.s:96     .text.sleep_controller_wake_device:00000000 sleep_controller_wake_device
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccjFpo2D.s:113    .bss.sleep_mode_active:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccjUOCzi.s:19     .text.sleep_controller_activate_sleep_mode:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccjUOCzi.s:25     .text.sleep_controller_activate_sleep_mode:00000000 sleep_controller_activate_sleep_mode
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccjUOCzi.s:85     .text.sleep_controller_activate_sleep_mode:0000003c $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccjUOCzi.s:112    .bss.sleep_mode_active:00000000 sleep_mode_active
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccjUOCzi.s:90     .text.sleep_controller_wake_device:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccjUOCzi.s:96     .text.sleep_controller_wake_device:00000000 sleep_controller_wake_device
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccjUOCzi.s:113    .bss.sleep_mode_active:00000000 $d
 
 UNDEFINED SYMBOLS
 clear_accelerometer_interrupts

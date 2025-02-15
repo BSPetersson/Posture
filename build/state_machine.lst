@@ -1,4 +1,4 @@
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc0oZJ9f.s 			page 1
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccUXSamx.s 			page 1
 
 
    1              		.cpu cortex-m0
@@ -58,7 +58,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc0oZJ9f.s 			page 1
   50              		.syntax unified
   51              		.code	16
   52              		.thumb_func
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc0oZJ9f.s 			page 2
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccUXSamx.s 			page 2
 
 
   54              	handle_test_state:
@@ -118,7 +118,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc0oZJ9f.s 			page 1
   72              		.loc 1 43 5 view .LVU7
   73 000c FA20     		movs	r0, #250
   74 000e 8000     		lsls	r0, r0, #2
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc0oZJ9f.s 			page 3
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccUXSamx.s 			page 3
 
 
   75 0010 FFF7FEFF 		bl	HAL_Delay
@@ -178,7 +178,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc0oZJ9f.s 			page 1
  111              	.L10:
  112              		.loc 1 61 5 view .LVU20
  113              	.LBE2:
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc0oZJ9f.s 			page 4
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccUXSamx.s 			page 4
 
 
   54:Core/Src/state_machine.c ****         haptic_feedback_start();
@@ -238,7 +238,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc0oZJ9f.s 			page 1
  150 0064 0028     		cmp	r0, #0
  151 0066 F1D1     		bne	.L7
   65:Core/Src/state_machine.c ****             HAL_Delay(1000); // Play for 1 second
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc0oZJ9f.s 			page 5
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccUXSamx.s 			page 5
 
 
  152              		.loc 1 65 13 is_stmt 1 view .LVU31
@@ -298,7 +298,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc0oZJ9f.s 			page 1
   76:Core/Src/state_machine.c ****         HAL_Delay(1000); // Play RTP mode for 1 second
  190              		.loc 1 76 9 is_stmt 1 view .LVU41
  191 0092 FA30     		adds	r0, r0, #250
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc0oZJ9f.s 			page 6
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccUXSamx.s 			page 6
 
 
  192 0094 8000     		lsls	r0, r0, #2
@@ -358,7 +358,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc0oZJ9f.s 			page 1
  241              	.LFE41:
  243              		.global	current_state
  244              		.section	.bss.current_state,"aw",%nobits
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc0oZJ9f.s 			page 7
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccUXSamx.s 			page 7
 
 
  247              	current_state:
@@ -372,21 +372,21 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc0oZJ9f.s 			page 1
  255              		.file 6 "Core/Inc/led_controller.h"
  256              		.file 7 "Core/Inc/state_machine.h"
  257              		.file 8 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h"
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc0oZJ9f.s 			page 8
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccUXSamx.s 			page 8
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 state_machine.c
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc0oZJ9f.s:19     .text.state_machine_initialize:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc0oZJ9f.s:25     .text.state_machine_initialize:00000000 state_machine_initialize
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc0oZJ9f.s:43     .text.state_machine_initialize:00000008 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc0oZJ9f.s:247    .bss.current_state:00000000 current_state
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc0oZJ9f.s:48     .text.handle_test_state:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc0oZJ9f.s:54     .text.handle_test_state:00000000 handle_test_state
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc0oZJ9f.s:203    .text.state_machine_update:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc0oZJ9f.s:209    .text.state_machine_update:00000000 state_machine_update
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc0oZJ9f.s:239    .text.state_machine_update:00000014 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc0oZJ9f.s:248    .bss.current_state:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccUXSamx.s:19     .text.state_machine_initialize:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccUXSamx.s:25     .text.state_machine_initialize:00000000 state_machine_initialize
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccUXSamx.s:43     .text.state_machine_initialize:00000008 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccUXSamx.s:247    .bss.current_state:00000000 current_state
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccUXSamx.s:48     .text.handle_test_state:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccUXSamx.s:54     .text.handle_test_state:00000000 handle_test_state
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccUXSamx.s:203    .text.state_machine_update:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccUXSamx.s:209    .text.state_machine_update:00000000 state_machine_update
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccUXSamx.s:239    .text.state_machine_update:00000014 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccUXSamx.s:248    .bss.current_state:00000000 $d
 
 UNDEFINED SYMBOLS
 haptic_feedback_enable

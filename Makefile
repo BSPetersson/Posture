@@ -37,6 +37,7 @@ BUILD_DIR = build
 # C sources
 C_SOURCES =  \
 Core/Src/main.c \
+Core/Src/posture_controller.c \
 Core/Src/accelerometer_controller.c \
 Core/Src/button_controller.c \
 Core/Src/haptic_feedback_controller.c \

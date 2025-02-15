@@ -1,4 +1,4 @@
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cctZ4uBc.s 			page 1
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccNdWnzT.s 			page 1
 
 
    1              		.cpu cortex-m0
@@ -58,7 +58,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cctZ4uBc.s 			page 1
   42              		@ sp needed
   43 000a 10BD     		pop	{r4, pc}
   44              	.L3:
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cctZ4uBc.s 			page 2
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccNdWnzT.s 			page 2
 
 
   45              		.align	2
@@ -118,7 +118,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cctZ4uBc.s 			page 1
   28:Core/Src/led_controller.c ****     // Update the CCR (capture compare register) for TIM16 Channel 1
   29:Core/Src/led_controller.c ****     __HAL_TIM_SET_COMPARE(&htim16, TIM_CHANNEL_1, duty_cycle);
   88              		.loc 1 29 5 is_stmt 1 view .LVU11
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cctZ4uBc.s 			page 3
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccNdWnzT.s 			page 3
 
 
   89 0012 034B     		ldr	r3, .L7
@@ -178,7 +178,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cctZ4uBc.s 			page 1
  137              		.global	led_execute_sequence
  138              		.syntax unified
  139              		.code	16
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cctZ4uBc.s 			page 4
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccNdWnzT.s 			page 4
 
 
  140              		.thumb_func
@@ -238,7 +238,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cctZ4uBc.s 			page 1
   68:Core/Src/led_controller.c ****             for(int i = 0; i < 2; i++)
   69:Core/Src/led_controller.c ****             {
   70:Core/Src/led_controller.c ****                 led_on(80);
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cctZ4uBc.s 			page 5
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccNdWnzT.s 			page 5
 
 
   71:Core/Src/led_controller.c ****                 HAL_Delay(400);
@@ -298,7 +298,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cctZ4uBc.s 			page 1
  185 0022 FFF7FEFF 		bl	HAL_Delay
  186              	.LVL12:
   55:Core/Src/led_controller.c ****             for(int i = 0; i < 3; i++)
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cctZ4uBc.s 			page 6
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccNdWnzT.s 			page 6
 
 
  187              		.loc 1 55 36 discriminator 3 view .LVU25
@@ -358,7 +358,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cctZ4uBc.s 			page 1
   68:Core/Src/led_controller.c ****             for(int i = 0; i < 2; i++)
  232              		.loc 1 68 30 is_stmt 0 discriminator 1 view .LVU35
  233              	.LBE3:
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cctZ4uBc.s 			page 7
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccNdWnzT.s 			page 7
 
 
   46:Core/Src/led_controller.c ****     switch(sequence)
@@ -418,7 +418,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cctZ4uBc.s 			page 1
  277 0076 FFF7FEFF 		bl	led_on
  278              	.LVL30:
   89:Core/Src/led_controller.c ****                 HAL_Delay(10);
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cctZ4uBc.s 			page 8
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccNdWnzT.s 			page 8
 
 
  279              		.loc 1 89 17 view .LVU47
@@ -459,22 +459,22 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cctZ4uBc.s 			page 1
  310              		.file 7 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_tim.h"
  311              		.file 8 "Core/Inc/led_controller.h"
  312              		.file 9 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h"
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cctZ4uBc.s 			page 9
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccNdWnzT.s 			page 9
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 led_controller.c
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cctZ4uBc.s:19     .text.led_controller_initialize:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cctZ4uBc.s:25     .text.led_controller_initialize:00000000 led_controller_initialize
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cctZ4uBc.s:47     .text.led_controller_initialize:0000000c $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cctZ4uBc.s:52     .text.led_on:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cctZ4uBc.s:58     .text.led_on:00000000 led_on
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cctZ4uBc.s:102    .text.led_on:00000020 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cctZ4uBc.s:107    .text.led_off:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cctZ4uBc.s:113    .text.led_off:00000000 led_off
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cctZ4uBc.s:131    .text.led_off:0000000c $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cctZ4uBc.s:136    .text.led_execute_sequence:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cctZ4uBc.s:142    .text.led_execute_sequence:00000000 led_execute_sequence
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccNdWnzT.s:19     .text.led_controller_initialize:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccNdWnzT.s:25     .text.led_controller_initialize:00000000 led_controller_initialize
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccNdWnzT.s:47     .text.led_controller_initialize:0000000c $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccNdWnzT.s:52     .text.led_on:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccNdWnzT.s:58     .text.led_on:00000000 led_on
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccNdWnzT.s:102    .text.led_on:00000020 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccNdWnzT.s:107    .text.led_off:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccNdWnzT.s:113    .text.led_off:00000000 led_off
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccNdWnzT.s:131    .text.led_off:0000000c $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccNdWnzT.s:136    .text.led_execute_sequence:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccNdWnzT.s:142    .text.led_execute_sequence:00000000 led_execute_sequence
 
 UNDEFINED SYMBOLS
 HAL_TIM_PWM_Start

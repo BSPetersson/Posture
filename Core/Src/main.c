@@ -106,6 +106,7 @@ int main(void)
   led_controller_initialize();
   button_controller_initialize();
   state_machine_initialize();
+  posture_controller_initialize();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -119,127 +120,128 @@ int main(void)
   while (1)
   {
   //  state_machine_update();
+    posture_controller_update();
 
-    if (int1_flag) {
-      led_execute_sequence(LED_SEQ_DOUBLE_BLINK);
-      int1_flag = false;
-    }
+    // if (int1_flag) {
+    //   led_execute_sequence(LED_SEQ_DOUBLE_BLINK);
+    //   int1_flag = false;
+    // }
 
-    if (int2_flag) {
-      led_execute_sequence(LED_SEQ_FADE_IN_OUT);
-      int2_flag = false;
-    }
+    // if (int2_flag) {
+    //   led_execute_sequence(LED_SEQ_FADE_IN_OUT);
+    //   int2_flag = false;
+    // }
 
-    // HAL_Delay(1000);
+    // // HAL_Delay(1000);
 
-    // Fetch data from all relevant registers
-    uint8_t sysmod = get_sysmod();
-    uint8_t ff_mt_src = get_ff_mt_src();
-    uint8_t int_source = get_int_source();
-    uint8_t transient_src = get_transient_src();
-    accelerometer_read_mps2(&accel_data);
+    // // Fetch data from all relevant registers
+    // uint8_t sysmod = get_sysmod();
+    // uint8_t ff_mt_src = get_ff_mt_src();
+    // uint8_t int_source = get_int_source();
+    // uint8_t transient_src = get_transient_src();
+    // accelerometer_read_mps2(&accel_data);
 
-    clear_accelerometer_interrupts();
-    sleep_controller_activate_sleep_mode();
+    // clear_accelerometer_interrupts();
+    // sleep_controller_activate_sleep_mode();
 
-    led_execute_sequence(LED_SEQ_THREE_BLINKS);
-    led_execute_sequence(LED_SEQ_DOUBLE_BLINK);
-    led_execute_sequence(LED_SEQ_FADE_IN_OUT);
-    led_execute_sequence(LED_SEQ_THREE_BLINKS);
+    // led_execute_sequence(LED_SEQ_THREE_BLINKS);
+    // led_execute_sequence(LED_SEQ_DOUBLE_BLINK);
+    // led_execute_sequence(LED_SEQ_FADE_IN_OUT);
+    // led_execute_sequence(LED_SEQ_THREE_BLINKS);
 
-    // Format SYSMOD
-    uart_buffer[0] = '\0';
-    offset = 0;
-    offset += snprintf(uart_buffer + offset, UART_BUFFER_SIZE - offset,
-                       "SYSMOD: 0x%02X\r\n", sysmod);
-    offset += snprintf(uart_buffer + offset, UART_BUFFER_SIZE - offset,
-                       "  - Mode: %s\r\n", (sysmod & 0x03) == 0 ? "Standby" :
-                                          (sysmod & 0x03) == 1 ? "Wake" : "Sleep");
-    HAL_UART_Transmit(&huart1, (uint8_t *)uart_buffer, strlen(uart_buffer), HAL_MAX_DELAY);
+    // // Format SYSMOD
+    // uart_buffer[0] = '\0';
+    // offset = 0;
+    // offset += snprintf(uart_buffer + offset, UART_BUFFER_SIZE - offset,
+    //                    "SYSMOD: 0x%02X\r\n", sysmod);
+    // offset += snprintf(uart_buffer + offset, UART_BUFFER_SIZE - offset,
+    //                    "  - Mode: %s\r\n", (sysmod & 0x03) == 0 ? "Standby" :
+    //                                       (sysmod & 0x03) == 1 ? "Wake" : "Sleep");
+    // HAL_UART_Transmit(&huart1, (uint8_t *)uart_buffer, strlen(uart_buffer), HAL_MAX_DELAY);
 
-    // Format FF_MT_SRC
-    offset = 0;
-    uart_buffer[0] = '\0';
-    offset += snprintf(uart_buffer + offset, UART_BUFFER_SIZE - offset,
-                       "FF_MT_SRC: 0x%02X\r\n", ff_mt_src);
-    offset += snprintf(uart_buffer + offset, UART_BUFFER_SIZE - offset,
-                       "  - Motion/Freefall detected: %s\r\n", (ff_mt_src & 0x80) ? "True" : "False");
-    offset += snprintf(uart_buffer + offset, UART_BUFFER_SIZE - offset,
-                       "  - X motion: %s\r\n", (ff_mt_src & 0x02) ? "True" : "False");
-    offset += snprintf(uart_buffer + offset, UART_BUFFER_SIZE - offset,
-                       "  - Y motion: %s\r\n", (ff_mt_src & 0x04) ? "True" : "False");
-    offset += snprintf(uart_buffer + offset, UART_BUFFER_SIZE - offset,
-                       "  - Z motion: %s\r\n", (ff_mt_src & 0x08) ? "True" : "False");
-    HAL_UART_Transmit(&huart1, (uint8_t *)uart_buffer, strlen(uart_buffer), HAL_MAX_DELAY);
+    // // Format FF_MT_SRC
+    // offset = 0;
+    // uart_buffer[0] = '\0';
+    // offset += snprintf(uart_buffer + offset, UART_BUFFER_SIZE - offset,
+    //                    "FF_MT_SRC: 0x%02X\r\n", ff_mt_src);
+    // offset += snprintf(uart_buffer + offset, UART_BUFFER_SIZE - offset,
+    //                    "  - Motion/Freefall detected: %s\r\n", (ff_mt_src & 0x80) ? "True" : "False");
+    // offset += snprintf(uart_buffer + offset, UART_BUFFER_SIZE - offset,
+    //                    "  - X motion: %s\r\n", (ff_mt_src & 0x02) ? "True" : "False");
+    // offset += snprintf(uart_buffer + offset, UART_BUFFER_SIZE - offset,
+    //                    "  - Y motion: %s\r\n", (ff_mt_src & 0x04) ? "True" : "False");
+    // offset += snprintf(uart_buffer + offset, UART_BUFFER_SIZE - offset,
+    //                    "  - Z motion: %s\r\n", (ff_mt_src & 0x08) ? "True" : "False");
+    // HAL_UART_Transmit(&huart1, (uint8_t *)uart_buffer, strlen(uart_buffer), HAL_MAX_DELAY);
 
-    // Format INT_SOURCE
-    offset = 0;
-    uart_buffer[0] = '\0';
-    offset += snprintf(uart_buffer + offset, UART_BUFFER_SIZE - offset,
-                       "INT_SOURCE: 0x%02X\r\n", int_source);
-    offset += snprintf(uart_buffer + offset, UART_BUFFER_SIZE - offset,
-                       "  - Data Ready: %s\r\n", (int_source & 0x01) ? "True" : "False");
-    offset += snprintf(uart_buffer + offset, UART_BUFFER_SIZE - offset,
-                       "  - Motion/Freefall: %s\r\n", (int_source & 0x04) ? "True" : "False");
-    offset += snprintf(uart_buffer + offset, UART_BUFFER_SIZE - offset,
-                       "  - Transient: %s\r\n", (int_source & 0x20) ? "True" : "False");
-    HAL_UART_Transmit(&huart1, (uint8_t *)uart_buffer, strlen(uart_buffer), HAL_MAX_DELAY);
+    // // Format INT_SOURCE
+    // offset = 0;
+    // uart_buffer[0] = '\0';
+    // offset += snprintf(uart_buffer + offset, UART_BUFFER_SIZE - offset,
+    //                    "INT_SOURCE: 0x%02X\r\n", int_source);
+    // offset += snprintf(uart_buffer + offset, UART_BUFFER_SIZE - offset,
+    //                    "  - Data Ready: %s\r\n", (int_source & 0x01) ? "True" : "False");
+    // offset += snprintf(uart_buffer + offset, UART_BUFFER_SIZE - offset,
+    //                    "  - Motion/Freefall: %s\r\n", (int_source & 0x04) ? "True" : "False");
+    // offset += snprintf(uart_buffer + offset, UART_BUFFER_SIZE - offset,
+    //                    "  - Transient: %s\r\n", (int_source & 0x20) ? "True" : "False");
+    // HAL_UART_Transmit(&huart1, (uint8_t *)uart_buffer, strlen(uart_buffer), HAL_MAX_DELAY);
 
-    // Format TRANSIENT_SRC
-    offset = 0;
-    uart_buffer[0] = '\0';
-    offset += snprintf(uart_buffer + offset, UART_BUFFER_SIZE - offset,
-                       "TRANSIENT_SRC: 0x%02X\r\n", transient_src);
-    offset += snprintf(uart_buffer + offset, UART_BUFFER_SIZE - offset,
-                       "  - Transient detected: %s\r\n", (transient_src & 0x40) ? "True" : "False");
-    offset += snprintf(uart_buffer + offset, UART_BUFFER_SIZE - offset,
-                       "  - X transient: %s\r\n", (transient_src & 0x02) ? "True" : "False");
-    offset += snprintf(uart_buffer + offset, UART_BUFFER_SIZE - offset,
-                       "  - Y transient: %s\r\n", (transient_src & 0x04) ? "True" : "False");
-    offset += snprintf(uart_buffer + offset, UART_BUFFER_SIZE - offset,
-                       "  - Z transient: %s\r\n", (transient_src & 0x08) ? "True" : "False");
-    HAL_UART_Transmit(&huart1, (uint8_t *)uart_buffer, strlen(uart_buffer), HAL_MAX_DELAY);
+    // // Format TRANSIENT_SRC
+    // offset = 0;
+    // uart_buffer[0] = '\0';
+    // offset += snprintf(uart_buffer + offset, UART_BUFFER_SIZE - offset,
+    //                    "TRANSIENT_SRC: 0x%02X\r\n", transient_src);
+    // offset += snprintf(uart_buffer + offset, UART_BUFFER_SIZE - offset,
+    //                    "  - Transient detected: %s\r\n", (transient_src & 0x40) ? "True" : "False");
+    // offset += snprintf(uart_buffer + offset, UART_BUFFER_SIZE - offset,
+    //                    "  - X transient: %s\r\n", (transient_src & 0x02) ? "True" : "False");
+    // offset += snprintf(uart_buffer + offset, UART_BUFFER_SIZE - offset,
+    //                    "  - Y transient: %s\r\n", (transient_src & 0x04) ? "True" : "False");
+    // offset += snprintf(uart_buffer + offset, UART_BUFFER_SIZE - offset,
+    //                    "  - Z transient: %s\r\n", (transient_src & 0x08) ? "True" : "False");
+    // HAL_UART_Transmit(&huart1, (uint8_t *)uart_buffer, strlen(uart_buffer), HAL_MAX_DELAY);
 
-    // Format Accelerometer Data
-    // Scale the float values by 100 to preserve two decimal places
-    int32_t x_scaled = (int32_t)(accel_data.x_mps2 * 100);
-    int32_t y_scaled = (int32_t)(accel_data.y_mps2 * 100);
-    int32_t z_scaled = (int32_t)(accel_data.z_mps2 * 100);
+    // // Format Accelerometer Data
+    // // Scale the float values by 100 to preserve two decimal places
+    // int32_t x_scaled = (int32_t)(accel_data.x_mps2 * 100);
+    // int32_t y_scaled = (int32_t)(accel_data.y_mps2 * 100);
+    // int32_t z_scaled = (int32_t)(accel_data.z_mps2 * 100);
 
-    // Construct the UART message
-    offset = 0;
-    uart_buffer[0] = '\0';
+    // // Construct the UART message
+    // offset = 0;
+    // uart_buffer[0] = '\0';
 
-    // Header
-    offset += snprintf(uart_buffer + offset, UART_BUFFER_SIZE - offset,
-                        "Accelerometer Data:\r\n");
+    // // Header
+    // offset += snprintf(uart_buffer + offset, UART_BUFFER_SIZE - offset,
+    //                     "Accelerometer Data:\r\n");
 
-    // X-axis
-    offset += snprintf(uart_buffer + offset, UART_BUFFER_SIZE - offset,
-                        "  - X: %ld.%02ld m/s^2\r\n",
-                        x_scaled / 100,
-                        (x_scaled < 0 ? -(x_scaled % 100) : (x_scaled % 100)));
+    // // X-axis
+    // offset += snprintf(uart_buffer + offset, UART_BUFFER_SIZE - offset,
+    //                     "  - X: %ld.%02ld m/s^2\r\n",
+    //                     x_scaled / 100,
+    //                     (x_scaled < 0 ? -(x_scaled % 100) : (x_scaled % 100)));
 
-    // Y-axis
-    offset += snprintf(uart_buffer + offset, UART_BUFFER_SIZE - offset,
-                        "  - Y: %ld.%02ld m/s^2\r\n",
-                        y_scaled / 100,
-                        (y_scaled < 0 ? -(y_scaled % 100) : (y_scaled % 100)));
+    // // Y-axis
+    // offset += snprintf(uart_buffer + offset, UART_BUFFER_SIZE - offset,
+    //                     "  - Y: %ld.%02ld m/s^2\r\n",
+    //                     y_scaled / 100,
+    //                     (y_scaled < 0 ? -(y_scaled % 100) : (y_scaled % 100)));
 
-    // Z-axis
-    offset += snprintf(uart_buffer + offset, UART_BUFFER_SIZE - offset,
-                        "  - Z: %ld.%02ld m/s^2\r\n",
-                        z_scaled / 100,
-                        (z_scaled < 0 ? -(z_scaled % 100) : (z_scaled % 100)));
+    // // Z-axis
+    // offset += snprintf(uart_buffer + offset, UART_BUFFER_SIZE - offset,
+    //                     "  - Z: %ld.%02ld m/s^2\r\n",
+    //                     z_scaled / 100,
+    //                     (z_scaled < 0 ? -(z_scaled % 100) : (z_scaled % 100)));
 
-    // Delimiter
-    offset += snprintf(uart_buffer + offset, UART_BUFFER_SIZE - offset,
-                        "---\r\n");
+    // // Delimiter
+    // offset += snprintf(uart_buffer + offset, UART_BUFFER_SIZE - offset,
+    //                     "---\r\n");
     
-    // Transmit the message
-    HAL_UART_Transmit(&huart1, (uint8_t *)uart_buffer, strlen(uart_buffer), HAL_MAX_DELAY);
+    // // Transmit the message
+    // HAL_UART_Transmit(&huart1, (uint8_t *)uart_buffer, strlen(uart_buffer), HAL_MAX_DELAY);
 
-    HAL_Delay(500);
+    // HAL_Delay(500);
 
   // bool is_sleep = is_accelerometer_in_sleep_mode();
 
