@@ -59,7 +59,7 @@ void handle_test_state() {
     led_execute_sequence(LED_SEQ_FADE_IN_OUT);
 
     for (int i = 0; i <= 123; i++) {
-        led_on(i);
+        // led_on(i);
         // Play a different waveform
         if (haptic_feedback_play_waveform(i) == HAL_OK) { // Play waveform index 2
             haptic_feedback_start();

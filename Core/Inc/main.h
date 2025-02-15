@@ -36,6 +36,7 @@ extern "C" {
 #include "accelerometer_controller.h"
 #include "led_controller.h"
 #include "button_controller.h"
+#include "sleep_controller.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

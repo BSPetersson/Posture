@@ -1,4 +1,4 @@
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s 			page 1
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s 			page 1
 
 
    1              		.cpu cortex-m0
@@ -58,7 +58,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s 			page 1
   31:Core/Src/button_controller.c **** 
   32:Core/Src/button_controller.c **** // ------------------------------
   33:Core/Src/button_controller.c **** // Helper Functions
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s 			page 2
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s 			page 2
 
 
   34:Core/Src/button_controller.c **** // ------------------------------
@@ -118,7 +118,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s 			page 1
   64              		.loc 1 51 1 is_stmt 1 view -0
   65              		.cfi_startproc
   66              		@ args = 0, pretend = 0, frame = 0
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s 			page 3
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s 			page 3
 
 
   67              		@ frame_needed = 0, uses_anonymous_args = 0
@@ -178,7 +178,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s 			page 1
  112 002c 00000000 		.word	button_changed
  113 0030 00000000 		.word	press_start_time
  114 0034 00000000 		.word	last_release_time
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s 			page 4
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s 			page 4
 
 
  115 0038 00000000 		.word	press_count
@@ -238,7 +238,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s 			page 1
   75:Core/Src/button_controller.c **** {
  159              		.loc 1 75 1 is_stmt 1 view -0
  160              		.cfi_startproc
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s 			page 5
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s 			page 5
 
 
  161              		@ args = 0, pretend = 0, frame = 0
@@ -298,7 +298,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s 			page 1
  201 0024 1E4B     		ldr	r3, .L17+12
  202 0026 1B68     		ldr	r3, [r3]
  203              		.loc 1 89 18 view .LVU42
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s 			page 6
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s 			page 6
 
 
  204 0028 C31A     		subs	r3, r0, r3
@@ -358,7 +358,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s 			page 1
  245              	.LBB3:
  103:Core/Src/button_controller.c ****     {
  104:Core/Src/button_controller.c ****         // Time since last release
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s 			page 7
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s 			page 7
 
 
  105:Core/Src/button_controller.c ****         uint32_t delta = now - last_release_time;
@@ -418,7 +418,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s 			page 1
  278 0078 1A70     		strb	r2, [r3]
  279              	.LVL7:
  280              	.L10:
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s 			page 8
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s 			page 8
 
 
  281              		.loc 1 126 25 view .LVU69
@@ -478,7 +478,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s 			page 1
  323              	.LBE4:
  324              		.cfi_endproc
  325              	.LFE43:
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s 			page 9
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s 			page 9
 
 
  327              		.section	.text.button_get_event,"ax",%progbits
@@ -538,7 +538,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s 			page 1
  142:Core/Src/button_controller.c **** // EXTI Callback
  143:Core/Src/button_controller.c **** // ------------------------------
  144:Core/Src/button_controller.c **** /**
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s 			page 10
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s 			page 10
 
 
  145:Core/Src/button_controller.c ****  * @brief Called by HAL when an EXTI interrupt occurs on GPIO pin PB5.
@@ -598,7 +598,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s 			page 1
  183:Core/Src/button_controller.c ****         button_pressed = false;
  184:Core/Src/button_controller.c ****         last_release_time = now;
  185:Core/Src/button_controller.c **** 
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s 			page 11
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s 			page 11
 
 
  186:Core/Src/button_controller.c ****         // If we released but the press was short (< LONG_PRESS_TIME_MS),
@@ -658,7 +658,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s 			page 1
  170:Core/Src/button_controller.c ****     if (!button_pressed && raw_state)
  424              		.loc 1 170 25 discriminator 1 view .LVU106
  425 0028 002C     		cmp	r4, #0
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s 			page 12
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s 			page 12
 
 
  426 002a 0CD0     		beq	.L24
@@ -718,7 +718,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s 			page 1
  184:Core/Src/button_controller.c ****         last_release_time = now;
  465              		.loc 1 184 27 is_stmt 0 view .LVU122
  466 0058 064A     		ldr	r2, .L26+20
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s 			page 13
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s 			page 13
 
 
  467 005a 1060     		str	r0, [r2]
@@ -773,47 +773,47 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s 			page 1
  535              		.file 5 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_gpio.h"
  536              		.file 6 "Core/Inc/button_controller.h"
  537              		.file 7 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h"
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s 			page 14
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s 			page 14
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 button_controller.c
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s:19     .text.read_raw_button_state:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s:24     .text.read_raw_button_state:00000000 read_raw_button_state
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s:51     .text.read_raw_button_state:00000014 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s:56     .text.button_controller_initialize:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s:62     .text.button_controller_initialize:00000000 button_controller_initialize
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s:111    .text.button_controller_initialize:00000028 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s:528    .bss.button_pressed:00000000 button_pressed
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s:523    .bss.button_changed:00000000 button_changed
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s:518    .bss.press_start_time:00000000 press_start_time
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s:512    .bss.last_release_time:00000000 last_release_time
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s:506    .bss.press_count:00000000 press_count
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s:501    .bss.long_press_reported:00000000 long_press_reported
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s:496    .bss.latest_event:00000000 latest_event
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s:122    .text.button_is_pressed:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s:128    .text.button_is_pressed:00000000 button_is_pressed
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s:146    .text.button_is_pressed:00000008 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s:151    .text.button_process:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s:157    .text.button_process:00000000 button_process
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s:315    .text.button_process:00000094 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s:491    .bss.last_check_time.1:00000000 last_check_time.1
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s:328    .text.button_get_event:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s:334    .text.button_get_event:00000000 button_get_event
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s:358    .text.button_get_event:0000000c $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s:363    .text.button_handle_exti:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s:369    .text.button_handle_exti:00000000 button_handle_exti
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s:472    .text.button_handle_exti:00000060 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s:485    .bss.last_interrupt_time.0:00000000 last_interrupt_time.0
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s:482    .bss.last_interrupt_time.0:00000000 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s:488    .bss.last_check_time.1:00000000 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s:497    .bss.latest_event:00000000 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s:502    .bss.long_press_reported:00000000 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s:507    .bss.press_count:00000000 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s:509    .bss.last_release_time:00000000 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s:515    .bss.press_start_time:00000000 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s:524    .bss.button_changed:00000000 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccDZmEjt.s:529    .bss.button_pressed:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s:19     .text.read_raw_button_state:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s:24     .text.read_raw_button_state:00000000 read_raw_button_state
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s:51     .text.read_raw_button_state:00000014 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s:56     .text.button_controller_initialize:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s:62     .text.button_controller_initialize:00000000 button_controller_initialize
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s:111    .text.button_controller_initialize:00000028 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s:528    .bss.button_pressed:00000000 button_pressed
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s:523    .bss.button_changed:00000000 button_changed
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s:518    .bss.press_start_time:00000000 press_start_time
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s:512    .bss.last_release_time:00000000 last_release_time
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s:506    .bss.press_count:00000000 press_count
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s:501    .bss.long_press_reported:00000000 long_press_reported
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s:496    .bss.latest_event:00000000 latest_event
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s:122    .text.button_is_pressed:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s:128    .text.button_is_pressed:00000000 button_is_pressed
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s:146    .text.button_is_pressed:00000008 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s:151    .text.button_process:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s:157    .text.button_process:00000000 button_process
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s:315    .text.button_process:00000094 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s:491    .bss.last_check_time.1:00000000 last_check_time.1
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s:328    .text.button_get_event:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s:334    .text.button_get_event:00000000 button_get_event
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s:358    .text.button_get_event:0000000c $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s:363    .text.button_handle_exti:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s:369    .text.button_handle_exti:00000000 button_handle_exti
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s:472    .text.button_handle_exti:00000060 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s:485    .bss.last_interrupt_time.0:00000000 last_interrupt_time.0
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s:482    .bss.last_interrupt_time.0:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s:488    .bss.last_check_time.1:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s:497    .bss.latest_event:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s:502    .bss.long_press_reported:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s:507    .bss.press_count:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s:509    .bss.last_release_time:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s:515    .bss.press_start_time:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s:524    .bss.button_changed:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccoTzMMO.s:529    .bss.button_pressed:00000000 $d
 
 UNDEFINED SYMBOLS
 HAL_GPIO_ReadPin

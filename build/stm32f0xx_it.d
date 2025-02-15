@@ -28,7 +28,8 @@ build/stm32f0xx_it.o: Core/Src/stm32f0xx_it.c Core/Inc/main.h \
  Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart_ex.h \
  Core/Inc/state_machine.h Core/Inc/haptic_feedback_controller.h \
  Core/Inc/led_controller.h Core/Inc/accelerometer_controller.h \
- Core/Inc/button_controller.h Core/Inc/stm32f0xx_it.h
+ Core/Inc/button_controller.h Core/Inc/sleep_controller.h \
+ Core/Inc/stm32f0xx_it.h
 Core/Inc/main.h:
 Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h:
 Core/Inc/stm32f0xx_hal_conf.h:
@@ -64,4 +65,5 @@ Core/Inc/haptic_feedback_controller.h:
 Core/Inc/led_controller.h:
 Core/Inc/accelerometer_controller.h:
 Core/Inc/button_controller.h:
+Core/Inc/sleep_controller.h:
 Core/Inc/stm32f0xx_it.h:

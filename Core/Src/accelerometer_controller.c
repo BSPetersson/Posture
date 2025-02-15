@@ -1,10 +1,12 @@
 // TODO:
 // use MMA8451Q_REG_STATUS
 
-
 #include "accelerometer_controller.h"
 #include "peripherals.h"
 #include "led_controller.h"
+
+volatile bool int1_flag = false;
+volatile bool int2_flag = false;
 
 static HAL_StatusTypeDef accelerometer_write_reg(uint8_t reg, uint8_t value)
 {
@@ -117,6 +119,15 @@ HAL_StatusTypeDef accelerometer_controller_initialize(void)
     status = accelerometer_write_reg(MMA8451Q_REG_ASLP_COUNT, ASLP_COUNT);
     if (status != HAL_OK) return status;
 
+    // Configure Transient detection
+    status = accelerometer_write_reg(MMA8451Q_REG_TRANSIENT_CFG, TRANSIENT_CFG);
+
+    // Set transient threshold
+    status = accelerometer_write_reg(MMA8451Q_REG_TRANSIENT_THS, TRANSIENT_THRESHOLD_VALUE);
+
+    // Set transient debounce count
+    status = accelerometer_write_reg(MMA8451Q_REG_TRANSIENT_COUNT, ACCEL_TRANSIENT_DEBOUNCE_COUNT);
+
     // /* 7) Configure Tap detection for X,Y,Z single tap */
     // uint8_t pulse_cfg = (PULSE_CFG_ELE |
     //                      PULSE_CFG_XSPEFE |
@@ -218,6 +229,52 @@ HAL_StatusTypeDef accelerometer_read_mps2(accel_data_t *data)
     return HAL_OK;
 }
 
+void clear_accelerometer_interrupts(void)
+{   
+    HAL_StatusTypeDef status;
+    uint8_t int_source;
+
+    // Read INT_SOURCE (0x0C) to determine which interrupt(s) triggered
+    status = accelerometer_read_reg(MMA8451Q_REG_INT_SOURCE, &int_source);
+    if (status != HAL_OK) return;
+
+    // Motion/Freefall interrupt (FF_MT_SRC - 0x16)
+    if (int_source & 0x04)  // Motion/Freefall interrupt
+    {
+        uint8_t ff_mt_src;
+        status = accelerometer_read_reg(MMA8451Q_REG_FF_MT_SRC, &ff_mt_src);
+        if (status != HAL_OK) return;
+    }
+
+    // Transient Motion interrupt (TRANSIENT_SRC - 0x1E)
+    if (int_source & 0x20)  // Transient Motion interrupt
+    {
+        uint8_t transient_src;
+        status = accelerometer_read_reg(MMA8451Q_REG_TRANSIENT_SRC, &transient_src);
+    }
+
+    // Orientation Change interrupt (PL_STATUS - 0x10)
+    if (int_source & 0x10)  // Orientation Change interrupt
+    {
+        uint8_t pl_status;
+        status = accelerometer_read_reg(MMA8451Q_REG_PL_STATUS, &pl_status);
+    }
+
+    // Pulse detection interrupt (PULSE_SRC - 0x22)
+    if (int_source & 0x08)  // Pulse interrupt
+    {
+        uint8_t pulse_src;
+        status = accelerometer_read_reg(MMA8451Q_REG_PULSE_SRC, &pulse_src);
+    }
+
+    // Data Ready interrupt (Read X, Y, Z registers: 0x01 to 0x06)
+    if (int_source & 0x01)  // Data Ready interrupt
+    {
+        uint8_t data[6];
+        status = accelerometer_read_regs(MMA8451Q_REG_OUT_X_MSB, data, 6);
+    }
+}
+
 uint8_t get_sysmod(void)
 {
     uint8_t value;
@@ -254,10 +311,26 @@ uint8_t get_transient_src(void)
     return value;
 }
 
-// void accelerometer_handle_int1(void)
-// {
-// }
+void accelerometer_handle_int1(void)
+{
+    // // Clear the interrupt
+    // uint8_t int_source;
+    // accelerometer_read_reg(MMA8451Q_REG_INT_SOURCE, &int_source);
 
-// void accelerometer_handle_int2(void)
-// {
-// }
+    // // FF_MT_THS
+    // uint8_t ff_mt_src;
+    // accelerometer_read_reg(MMA8451Q_REG_FF_MT_SRC, &ff_mt_src);
+
+    // Handle the interrupt
+    int1_flag = true;
+}
+
+void accelerometer_handle_int2(void)
+{
+    // Clear the interrupt
+    // uint8_t int_source;
+    // accelerometer_read_reg(MMA8451Q_REG_INT_SOURCE, &int_source);
+
+    // Handle the interrupt
+    int2_flag = true;
+}

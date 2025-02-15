@@ -22,11 +22,16 @@
 #define MMA8451Q_REG_WHO_AM_I          0x0D
 #define MMA8451Q_REG_XYZ_DATA_CFG      0x0E
 #define MMA8451Q_REG_HP_FILTER_CUTOFF  0x0F
+#define MMA8451Q_REG_PL_STATUS         0x10
+#define MMA8451Q_REG_PL_CFG            0x11
 #define MMA8451Q_REG_FF_MT_CFG         0x15
 #define MMA8451Q_REG_FF_MT_SRC         0x16
 #define MMA8451Q_REG_FF_MT_THS         0x17
 #define MMA8451Q_REG_FF_MT_COUNT       0x18
+#define MMA8451Q_REG_TRANSIENT_CFG     0x1D
 #define MMA8451Q_REG_TRANSIENT_SRC     0x1E
+#define MMA8451Q_REG_TRANSIENT_THS     0x1F
+#define MMA8451Q_REG_TRANSIENT_COUNT   0x20
 #define MMA8451Q_REG_PULSE_CFG         0x21
 #define MMA8451Q_REG_PULSE_SRC         0x22
 #define MMA8451Q_REG_PULSE_THSX        0x23
@@ -48,11 +53,11 @@
 
 // Setting CTRL_REG1 register values
 #define CTRL_REG1_ASLP_RATE1 (0 << 7)
-#define CTRL_REG1_ASLP_RATE0 (0 << 6)
+#define CTRL_REG1_ASLP_RATE0 (1 << 6)
 #define CTRL_REG1_DR2        (0 << 5)
 #define CTRL_REG1_DR1        (1 << 4)
 #define CTRL_REG1_DR0        (1 << 3)
-#define CTRL_REG1_LNOISE     (0 << 2)
+#define CTRL_REG1_LNOISE     (1 << 2)
 #define CTRL_REG1_F_READ     (0 << 1)
 #define CTRL_REG1_ACTIVE     (0 << 0)
 #define CTRL_REG1 (CTRL_REG1_ASLP_RATE1 | CTRL_REG1_ASLP_RATE0 | CTRL_REG1_DR2 | CTRL_REG1_DR1 | CTRL_REG1_DR0 | CTRL_REG1_LNOISE | CTRL_REG1_F_READ | CTRL_REG1_ACTIVE)
@@ -70,7 +75,7 @@
 // Setting CTRL_REG3 register values
 #define CTRL_REG3_FIFO_GATE (0 << 7)
 #define CTRL_REG3_WAKE_TRANS (1 << 6)
-#define CTRL_REG3_WAKE_LNDPRT (0 << 5)
+#define CTRL_REG3_WAKE_LNDPRT (1 << 5)
 #define CTRL_REG3_WAKE_PULSE (1 << 4)
 #define CTRL_REG3_WAKE_FF_MT (1 << 3)
 #define CTRL_REG3_IPOL (1 << 1)
@@ -78,27 +83,27 @@
 #define CTRL_REG3 (CTRL_REG3_FIFO_GATE | CTRL_REG3_WAKE_TRANS | CTRL_REG3_WAKE_LNDPRT | CTRL_REG3_WAKE_PULSE | CTRL_REG3_WAKE_FF_MT | CTRL_REG3_IPOL | CTRL_REG3_PP_OD)
 
 // Setting CTRL_REG4 register values
-#define CTRL_REG4_INT_EN_ASLP    (1 << 7)
+#define CTRL_REG4_INT_EN_ASLP    (0 << 7)
 #define CTRL_REG4_INT_EN_FIFO    (0 << 6)
-#define CTRL_REG4_INT_EN_TRANS   (0 << 5)
-#define CTRL_REG4_INT_EN_LNDPRT  (0 << 4)
-#define CTRL_REG4_INT_EN_PULSE   (0 << 3)
+#define CTRL_REG4_INT_EN_TRANS   (1 << 5)
+#define CTRL_REG4_INT_EN_LNDPRT  (1 << 4)
+#define CTRL_REG4_INT_EN_PULSE   (1 << 3)
 #define CTRL_REG4_INT_EN_FF_MT   (1 << 2)
 #define CTRL_REG4_INT_EN_DRDY    (0 << 0)
 #define CTRL_REG4 (CTRL_REG4_INT_EN_ASLP | CTRL_REG4_INT_EN_FIFO | CTRL_REG4_INT_EN_TRANS | CTRL_REG4_INT_EN_LNDPRT | CTRL_REG4_INT_EN_PULSE | CTRL_REG4_INT_EN_FF_MT | CTRL_REG4_INT_EN_DRDY)
 
 // Setting CTRL_REG5 register values
-#define CTRL_REG5_INT_CFG_ASLP   (1 << 7)
+#define CTRL_REG5_INT_CFG_ASLP   (0 << 7)
 #define CTRL_REG5_INT_CFG_FIFO   (0 << 6)
-#define CTRL_REG5_INT_CFG_TRANS  (0 << 5)
-#define CTRL_REG5_INT_CFG_LNDPRT (0 << 4)
-#define CTRL_REG5_INT_CFG_PULSE  (0 << 3)
+#define CTRL_REG5_INT_CFG_TRANS  (1 << 5)
+#define CTRL_REG5_INT_CFG_LNDPRT (1 << 4)
+#define CTRL_REG5_INT_CFG_PULSE  (1 << 3)
 #define CTRL_REG5_INT_CFG_FF_MT  (1 << 2)
 #define CTRL_REG5_INT_CFG_DRDY   (0 << 0)
 #define CTRL_REG5 (CTRL_REG5_INT_CFG_ASLP | CTRL_REG5_INT_CFG_FIFO | CTRL_REG5_INT_CFG_TRANS | CTRL_REG5_INT_CFG_LNDPRT | CTRL_REG5_INT_CFG_PULSE | CTRL_REG5_INT_CFG_FF_MT | CTRL_REG5_INT_CFG_DRDY)
 
 // Setting XYZ_DATA_CFG register values
-#define XYZ_DATA_CFG_HPF_OUT    (0 << 4)
+#define XYZ_DATA_CFG_HPF_OUT    (1 << 4)
 #define XYZ_DATA_CFG_FS1        (0 << 1)
 #define XYZ_DATA_CFG_FS0        (0 << 0)
 #define XYZ_DATA_CFG (XYZ_DATA_CFG_HPF_OUT | XYZ_DATA_CFG_FS1 | XYZ_DATA_CFG_FS0)
@@ -118,19 +123,37 @@
 #define FF_MT_CFG_XEFE      (1 << 3)
 #define FF_MT_CFG (FF_MT_CFG_ELE | FF_MT_CFG_OAE | FF_MT_CFG_ZEFE | FF_MT_CFG_YEFE | FF_MT_CFG_XEFE)
 
+// Setting Transient_CFG register
+#define TRANSIENT_CFG_ELE   (0 << 4)
+#define TRANSIENT_CFG_ZTEFE (1 << 3)
+#define TRANSIENT_CFG_YTEFE (1 << 2)
+#define TRANSIENT_CFG_XTEFE (1 << 1)
+#define TRANSIENT_CFG_HPF_BYP (0 << 0)
+#define TRANSIENT_CFG (TRANSIENT_CFG_ELE | TRANSIENT_CFG_ZTEFE | TRANSIENT_CFG_YTEFE | TRANSIENT_CFG_XTEFE | TRANSIENT_CFG_HPF_BYP)
+
+// Setting TRANSIENT_THS register
+#define TRANSIENT_THS_THRESHOLD  1 // Range: 0-127 (0-8g)
+#define TRANSIENT_THS_DBCNTM (0 << 7)
+#define TRANSIENT_THRESHOLD_VALUE (TRANSIENT_THS_DBCNTM | (TRANSIENT_THS_THRESHOLD << 1))
+
 // Accelerometer Motion Detection Threshold (mg). ACCEL_MOTION_THRESHOLD_MG * 0.063 mg/LSB = threshold in mg
-#define ACCEL_MOTION_THRESHOLD 6
+#define ACCEL_MOTION_THRESHOLD 9 // Range: 0-127 (0-8g)
 #define ACCEL_MOTION_DBCNTM (0 << 7)
 #define ACCEL_MOTION_THRESHOLD_VALUE (ACCEL_MOTION_DBCNTM | (ACCEL_MOTION_THRESHOLD << 1))
 
 // Accelerometer Motion Debounce Count
 #ifndef ACCEL_MOTION_DEBOUNCE_COUNT
-#define ACCEL_MOTION_DEBOUNCE_COUNT  3
+#define ACCEL_MOTION_DEBOUNCE_COUNT  1
 #endif
 
-// Auto-Sleep Timeout
+// Accelerometer Transient Debounce Count
+#ifndef ACCEL_TRANSIENT_DEBOUNCE_COUNT
+#define ACCEL_TRANSIENT_DEBOUNCE_COUNT  1
+#endif
+
+// Auto-Sleep Timeout (MAX: 255 * 8 seconds)
 #ifndef ASLP_COUNT
-#define ASLP_COUNT 50
+#define ASLP_COUNT 255
 #endif
 
 // -----------------------------
@@ -189,6 +212,10 @@
 #define ACCEL_TAP_WINDOW            80
 #endif
 
+// Interrupt flags
+extern volatile bool int1_flag;
+extern volatile bool int2_flag;
+
 // Accelerometer Data Structure
 typedef struct {
     float x_mps2;
@@ -199,12 +226,14 @@ typedef struct {
 HAL_StatusTypeDef accelerometer_controller_initialize(void);
 HAL_StatusTypeDef accelerometer_read_mps2(accel_data_t *data);
 
+void clear_accelerometer_interrupts(void);
+
 uint8_t get_sysmod(void);
 uint8_t get_ff_mt_src(void);
 uint8_t get_int_source(void);
 uint8_t get_transient_src(void);
 
-// void accelerometer_handle_int1(void);
-// void accelerometer_handle_int2(void);
+void accelerometer_handle_int1(void);
+void accelerometer_handle_int2(void);
 
 #endif // ACCELEROMETER_CONTROLLER_H

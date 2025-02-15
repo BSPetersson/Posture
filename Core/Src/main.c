@@ -120,12 +120,32 @@ int main(void)
   {
   //  state_machine_update();
 
+    if (int1_flag) {
+      led_execute_sequence(LED_SEQ_DOUBLE_BLINK);
+      int1_flag = false;
+    }
+
+    if (int2_flag) {
+      led_execute_sequence(LED_SEQ_FADE_IN_OUT);
+      int2_flag = false;
+    }
+
+    // HAL_Delay(1000);
+
     // Fetch data from all relevant registers
     uint8_t sysmod = get_sysmod();
     uint8_t ff_mt_src = get_ff_mt_src();
     uint8_t int_source = get_int_source();
     uint8_t transient_src = get_transient_src();
     accelerometer_read_mps2(&accel_data);
+
+    clear_accelerometer_interrupts();
+    sleep_controller_activate_sleep_mode();
+
+    led_execute_sequence(LED_SEQ_THREE_BLINKS);
+    led_execute_sequence(LED_SEQ_DOUBLE_BLINK);
+    led_execute_sequence(LED_SEQ_FADE_IN_OUT);
+    led_execute_sequence(LED_SEQ_THREE_BLINKS);
 
     // Format SYSMOD
     uart_buffer[0] = '\0';
@@ -492,12 +512,13 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     // else if (GPIO_Pin == GPIO_PIN_0)
     // {
     //     // PA0 => accelerometer INT2
-    //     // accelerometer_handle_int2();
+
+    //     accelerometer_handle_int2();
     // }
     // else if (GPIO_Pin == GPIO_PIN_1)
     // {
     //     // PA1 => accelerometer INT1
-    //     // accelerometer_handle_int1();
+    //     accelerometer_handle_int1();
     // }
 
     // You can handle more EXTI pins if needed
