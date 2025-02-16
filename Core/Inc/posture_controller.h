@@ -9,28 +9,39 @@
 extern "C" {
 #endif
 
-typedef enum {
-    POSTURE_STATE_MONITORING,
-    POSTURE_STATE_ALERT,
-    POSTURE_STATE_LEARNING,
-    POSTURE_STATE_CALIBRATION
-} posture_state_t;
-
 /**
- * @brief Initializes the posture controller.
- *
- * Reads an initial accelerometer sample to set the reference posture.
+ * @brief Initialize the posture controller.
  */
 void posture_controller_initialize(void);
 
 /**
- * @brief Updates the posture controller.
+ * @brief Non-blocking update function.
  *
- * Reads the accelerometer, computes the deviation from the reference posture,
- * and, based on the current state, either triggers an alert,
- * waits for a stable correction, updates the reference posture, or performs a calibration.
+ * This function must be called continuously (e.g. in your main loop) to update
+ * the posture state.
  */
 void posture_controller_update(void);
+
+/**
+ * @brief Returns true if the current posture is considered correct.
+ *
+ * Posture is considered incorrect if the angular deviation has exceeded the threshold
+ * continuously for a set duration.
+ */
+bool posture_controller_is_posture_correct(void);
+
+/**
+ * @brief Returns true if a sustained bad posture has been detected and handled.
+ *
+ * When this condition is met the reference posture vector is updated and haptic feedback is triggered.
+ */
+bool posture_controller_handle_bad_posture(void);
+
+/**
+ * @brief Calibrates the posture controller by resetting the reference vector to the current reading.
+ * @return true if calibration was successful.
+ */
+void posture_controller_calibrate(void);
 
 #ifdef __cplusplus
 }

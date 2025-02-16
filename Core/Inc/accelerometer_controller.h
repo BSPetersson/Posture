@@ -7,9 +7,8 @@
 #include <math.h>
 
 // -----------------------------
-// Register Addresses
+// Register Addresses and Macros
 // -----------------------------
-
 #define MMA8451Q_REG_STATUS            0x00
 #define MMA8451Q_REG_OUT_X_MSB         0x01
 #define MMA8451Q_REG_OUT_X_LSB         0x02
@@ -170,11 +169,7 @@
 #define MMA8451Q_I2C_ADDR   (0x1C << 1)
 #endif
 
-// -----------------------------
-// Constants
-// -----------------------------
-
-// 14-bit ±2g => 4096 counts/g
+// 14-bit ±2g sensitivity: 4096 counts/g
 #ifndef MMA8451Q_SENS_2G_14BIT
 #define MMA8451Q_SENS_2G_14BIT  4096.0f
 #endif
@@ -184,46 +179,20 @@
 #define ACCEL_G 9.80665f
 #endif
 
-#define PULSE_CFG_ELE       (1 << 6)
-#define PULSE_CFG_ZSPEFE    (1 << 3)
-#define PULSE_CFG_YSPEFE    (1 << 1)
-#define PULSE_CFG_XSPEFE    (1 << 0)
-
-
-
-
-
-
-
-
-#ifndef ACCEL_TAP_THRESHOLD_MG
-#define ACCEL_TAP_THRESHOLD_MG     600
-#endif
-
-#ifndef ACCEL_TAP_TIME_LIMIT
-#define ACCEL_TAP_TIME_LIMIT        10
-#endif
-
-#ifndef ACCEL_TAP_LATENCY
-#define ACCEL_TAP_LATENCY           20
-#endif
-
-#ifndef ACCEL_TAP_WINDOW
-#define ACCEL_TAP_WINDOW            80
-#endif
-
-// Interrupt flags
-extern volatile bool int1_flag;
-extern volatile bool int2_flag;
-
-// Accelerometer Data Structure
+// -----------------------------
+// Data Structures
+// -----------------------------
 typedef struct {
     float x_mps2;
     float y_mps2;
     float z_mps2;
 } accel_data_t;
 
+// -----------------------------
+// Function Prototypes
+// -----------------------------
 HAL_StatusTypeDef accelerometer_controller_initialize(void);
+void accelerometer_controller_update(void);
 HAL_StatusTypeDef accelerometer_read_mps2(accel_data_t *data);
 
 void clear_accelerometer_interrupts(void);
@@ -235,5 +204,21 @@ uint8_t get_transient_src(void);
 
 void accelerometer_handle_int1(void);
 void accelerometer_handle_int2(void);
+
+// New independent functions for motion detection
+bool accelerometer_controller_is_in_motion(void);
+bool accelerometer_controller_no_motion(void);
+accel_data_t accelerometer_controller_get_latest_data(void);
+
+// -----------------------------
+// Motion Detection Configuration
+// -----------------------------
+// If the net acceleration magnitude deviates from ACCEL_G by more than this value,
+// it is considered a candidate for motion.
+#define ACCEL_DEVIATION_THRESHOLD (0.1f * ACCEL_G) // Adjust as needed
+
+// Time (in milliseconds) that the deviation must persist to confirm each condition.
+#define MOTION_TIME_THRESHOLD_MS    1000  // e.g., 1 second for motion detection
+#define NO_MOTION_TIME_THRESHOLD_MS 1000  // e.g., 1 second for no-motion detection
 
 #endif // ACCELEROMETER_CONTROLLER_H

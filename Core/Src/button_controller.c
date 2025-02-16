@@ -71,7 +71,7 @@ bool button_is_pressed(void)
  * @brief Should be called periodically (10–20 ms).
  *        Handles long-press detection and multi-press logic.
  */
-void button_process(void)
+void button_controller_update(void)
 {
     static uint32_t last_check_time = 0;
     uint32_t now = HAL_GetTick();
@@ -131,7 +131,7 @@ void button_process(void)
 /**
  * @brief Returns the latest detected event and clears it from internal storage.
  */
-button_event_t button_get_event(void)
+button_event_t button_controller_get_event(void)
 {
     button_event_t ev = latest_event;
     latest_event = BUTTON_EVENT_NONE;
@@ -145,12 +145,8 @@ button_event_t button_get_event(void)
  * @brief Called by HAL when an EXTI interrupt occurs on GPIO pin PB5.
  *        We use this for immediate detection of press/release edges.
  */
-void button_handle_exti(uint16_t GPIO_Pin)
+void button_handle_exti()
 {
-    if (GPIO_Pin != GPIO_PIN_5) {
-        return;  // Not our button
-    }
-
     // Read the raw hardware state
     bool raw_state = read_raw_button_state();
 

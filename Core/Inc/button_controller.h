@@ -35,7 +35,7 @@ bool button_is_pressed(void);
  *        Handles time-based logic (like 3s long press).
  *        Call it at least every 10-20 ms for stable results.
  */
-void button_process(void);
+void button_controller_update(void);
 
 /**
  * @brief Returns the most recent button event (single/double/triple/long).
@@ -43,8 +43,8 @@ void button_process(void);
  *
  * @return The event that was detected since last call, or BUTTON_EVENT_NONE if none.
  */
-button_event_t button_get_event(void);
+button_event_t button_controller_get_event(void);
 
-void button_handle_exti(uint16_t GPIO_Pin);
+void button_handle_exti();
 
 #endif // BUTTON_CONTROLLER_H

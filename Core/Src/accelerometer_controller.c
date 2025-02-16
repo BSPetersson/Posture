@@ -1,12 +1,10 @@
-// TODO:
-// use MMA8451Q_REG_STATUS
-
 #include "accelerometer_controller.h"
 #include "peripherals.h"
 #include "led_controller.h"
 
 volatile bool int1_flag = false;
 volatile bool int2_flag = false;
+volatile accel_data_t latest_accel_data;
 
 static HAL_StatusTypeDef accelerometer_write_reg(uint8_t reg, uint8_t value)
 {
@@ -47,7 +45,7 @@ static HAL_StatusTypeDef accel_goto_standby(void)
     HAL_StatusTypeDef status = accelerometer_read_reg(MMA8451Q_REG_CTRL_REG1, &value);
     if (status != HAL_OK) return status;
 
-    value &= 0;  // clear ACTIVE bit
+    value &= ~0x01;  // Clear ACTIVE bit
     return accelerometer_write_reg(MMA8451Q_REG_CTRL_REG1, value);
 }
 
@@ -57,10 +55,24 @@ static HAL_StatusTypeDef accel_goto_active(void)
     HAL_StatusTypeDef status = accelerometer_read_reg(MMA8451Q_REG_CTRL_REG1, &value);
     if (status != HAL_OK) return status;
 
-    value |= 1;  // set ACTIVE bit
+    value |= 0x01;  // Set ACTIVE bit
     return accelerometer_write_reg(MMA8451Q_REG_CTRL_REG1, value);
 }
 
+// -----------------------------
+// Global Variables for Motion State Detection
+// -----------------------------
+// Independent flags for motion and no-motion conditions.
+static volatile bool g_motion_detected = false;
+static volatile bool g_no_motion_detected = false;
+
+// Independent timers (0 means not started).
+static uint32_t motion_timer_start = 0;
+static uint32_t no_motion_timer_start = 0;
+
+// -----------------------------
+// Initialization Function
+// -----------------------------
 HAL_StatusTypeDef accelerometer_controller_initialize(void)
 {
     HAL_StatusTypeDef status;
@@ -128,40 +140,86 @@ HAL_StatusTypeDef accelerometer_controller_initialize(void)
     // Set transient debounce count
     status = accelerometer_write_reg(MMA8451Q_REG_TRANSIENT_COUNT, ACCEL_TRANSIENT_DEBOUNCE_COUNT);
 
-    // /* 7) Configure Tap detection for X,Y,Z single tap */
-    // uint8_t pulse_cfg = (PULSE_CFG_ELE |
-    //                      PULSE_CFG_XSPEFE |
-    //                      PULSE_CFG_YSPEFE |
-    //                      PULSE_CFG_ZSPEFE);
-    // status = accelerometer_write_reg(MMA8451Q_REG_PULSE_CFG, pulse_cfg);
-    // if (status != HAL_OK) {
-    //     return status;
-    // }
-
-    // /* Tap thresholds */
-    // uint8_t tap_ths = mg_to_threshold_code(ACCEL_TAP_THRESHOLD_MG);
-    // status = accelerometer_write_reg(MMA8451Q_REG_PULSE_THSX, tap_ths);
-    // if (status != HAL_OK) return status;
-    // status = accelerometer_write_reg(MMA8451Q_REG_PULSE_THSY, tap_ths);
-    // if (status != HAL_OK) return status;
-    // status = accelerometer_write_reg(MMA8451Q_REG_PULSE_THSZ, tap_ths);
-    // if (status != HAL_OK) return status;
-
-    // /* Tap timing: TMLT, LTCY, WIND */
-    // status = accelerometer_write_reg(MMA8451Q_REG_PULSE_TMLT, ACCEL_TAP_TIME_LIMIT);
-    // if (status != HAL_OK) return status;
-    // status = accelerometer_write_reg(MMA8451Q_REG_PULSE_LTCY, ACCEL_TAP_LATENCY);
-    // if (status != HAL_OK) return status;
-    // status = accelerometer_write_reg(MMA8451Q_REG_PULSE_WIND, ACCEL_TAP_WINDOW);
-    // if (status != HAL_OK) return status;
-
-    // Put device into Active
+    // Put device into Active mode
     status = accel_goto_active();
     if (status != HAL_OK) return status;
+
+    // Initialize independent state variables.
+    g_motion_detected = false;
+    g_no_motion_detected = false;
+    motion_timer_start = 0;
+    no_motion_timer_start = 0;
 
     return HAL_OK;
 }
 
+// -----------------------------
+// Update Function
+// -----------------------------
+// This function reads the latest acceleration data and independently updates the
+// "in motion" and "no motion" flags using separate timers.
+// - If the net acceleration deviates from ACCEL_G by more than ACCEL_DEVIATION_THRESHOLD
+//   continuously for MOTION_TIME_THRESHOLD_MS, g_motion_detected is set.
+// - Separately, if the deviation stays below ACCEL_DEVIATION_THRESHOLD continuously for
+//   NO_MOTION_TIME_THRESHOLD_MS, g_no_motion_detected is set.
+void accelerometer_controller_update(void)
+{
+    accel_data_t data;
+    HAL_StatusTypeDef status = accelerometer_read_mps2(&data);
+    if (status != HAL_OK)
+    {
+        return;
+    }
+
+    latest_accel_data = data;
+
+    // Calculate net acceleration magnitude.
+    float mag = sqrtf(data.x_mps2 * data.x_mps2 +
+                      data.y_mps2 * data.y_mps2 +
+                      data.z_mps2 * data.z_mps2);
+
+    // Compute absolute deviation from gravitational acceleration.
+    float deviation = fabsf(mag - ACCEL_G);
+    uint32_t now = HAL_GetTick();
+
+    // Check candidate for motion.
+    if (deviation > ACCEL_DEVIATION_THRESHOLD)
+    {
+        // Start (or continue) the motion timer if not already started.
+        if (motion_timer_start == 0)
+        {
+            motion_timer_start = now;
+        }
+        // If the condition persists, mark motion detected.
+        if ((now - motion_timer_start) >= MOTION_TIME_THRESHOLD_MS)
+        {
+            g_motion_detected = true;
+        }
+        // Since there is significant movement, reset no-motion timer and flag.
+        no_motion_timer_start = 0;
+        g_no_motion_detected = false;
+    }
+    else // Candidate for no motion.
+    {
+        // Start (or continue) the no-motion timer if not already started.
+        if (no_motion_timer_start == 0)
+        {
+            no_motion_timer_start = now;
+        }
+        // If the condition persists, mark no motion detected.
+        if ((now - no_motion_timer_start) >= NO_MOTION_TIME_THRESHOLD_MS)
+        {
+            g_no_motion_detected = true;
+        }
+        // Since the acceleration is steady, reset the motion timer and flag.
+        motion_timer_start = 0;
+        g_motion_detected = false;
+    }
+}
+
+// -----------------------------
+// Read Acceleration Data
+// -----------------------------
 HAL_StatusTypeDef accelerometer_read_mps2(accel_data_t *data)
 {
     HAL_StatusTypeDef status;
@@ -229,6 +287,9 @@ HAL_StatusTypeDef accelerometer_read_mps2(accel_data_t *data)
     return HAL_OK;
 }
 
+// -----------------------------
+// Clear Interrupts (unchanged)
+// -----------------------------
 void clear_accelerometer_interrupts(void)
 {   
     HAL_StatusTypeDef status;
@@ -275,62 +336,33 @@ void clear_accelerometer_interrupts(void)
     }
 }
 
-uint8_t get_sysmod(void)
-{
-    uint8_t value;
-    HAL_StatusTypeDef status = accelerometer_read_reg(MMA8451Q_REG_SYSMOD, &value);
-    if (status != HAL_OK) return -1;
-
-    return value;
-}
-
-uint8_t get_ff_mt_src(void)
-{
-    uint8_t value;
-    HAL_StatusTypeDef status = accelerometer_read_reg(MMA8451Q_REG_FF_MT_SRC, &value);
-    if (status != HAL_OK) return -1;
-
-    return value;
-}
-
-uint8_t get_int_source(void)
-{
-    uint8_t value;
-    HAL_StatusTypeDef status = accelerometer_read_reg(MMA8451Q_REG_INT_SOURCE, &value);
-    if (status != HAL_OK) return -1;
-
-    return value;
-}
-
-uint8_t get_transient_src(void)
-{
-    uint8_t value;
-    HAL_StatusTypeDef status = accelerometer_read_reg(MMA8451Q_REG_TRANSIENT_SRC, &value);
-    if (status != HAL_OK) return -1;
-
-    return value;
-}
-
+// -----------------------------
+// Interrupt Handlers
+// -----------------------------
 void accelerometer_handle_int1(void)
 {
-    // // Clear the interrupt
-    // uint8_t int_source;
-    // accelerometer_read_reg(MMA8451Q_REG_INT_SOURCE, &int_source);
-
-    // // FF_MT_THS
-    // uint8_t ff_mt_src;
-    // accelerometer_read_reg(MMA8451Q_REG_FF_MT_SRC, &ff_mt_src);
-
-    // Handle the interrupt
     int1_flag = true;
 }
 
 void accelerometer_handle_int2(void)
 {
-    // Clear the interrupt
-    // uint8_t int_source;
-    // accelerometer_read_reg(MMA8451Q_REG_INT_SOURCE, &int_source);
-
-    // Handle the interrupt
     int2_flag = true;
+}
+
+// -----------------------------
+// Independent Getter Functions for Motion State
+// -----------------------------
+bool accelerometer_controller_is_in_motion(void)
+{
+    return g_motion_detected;
+}
+
+bool accelerometer_controller_no_motion(void)
+{
+    return g_no_motion_detected;
+}
+
+accel_data_t accelerometer_controller_get_latest_data(void)
+{
+    return latest_accel_data;
 }

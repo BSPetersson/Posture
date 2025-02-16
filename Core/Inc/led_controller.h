@@ -5,39 +5,22 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-/**
- * @brief Initializes the LED (starts PWM on TIM16_CH1).
- */
-void led_controller_initialize(void);
-
-/**
- * @brief Turns on the LED at the specified brightness percentage.
- * @param percent A value from 0 to 100.
- *                - 0% = off
- *                - 100% = maximum brightness
- */
-void led_on(uint8_t percent);
-
-/**
- * @brief Turns off the LED.
- */
-void led_off(void);
-
-/**
- * @brief Enumeration of predefined LED sequences.
- */
 typedef enum {
     LED_SEQ_NONE = 0,
-    LED_SEQ_THREE_BLINKS,
-    LED_SEQ_DOUBLE_BLINK,
-    LED_SEQ_FADE_IN_OUT,
-    // Add more custom sequences here
+    LED_SEQ_THREE_BLINKS,  // Three blinks: on for 200ms, off for 200ms at 50% brightness.
+    LED_SEQ_DOUBLE_BLINK,  // Two blinks: on for 400ms, off for 400ms at 80% brightness.
+    LED_SEQ_FADE_IN_OUT    // Fade in from 0% to 100% then fade out back to 0%.
+    // Add more custom sequences here.
 } led_sequence_t;
 
-/**
- * @brief Executes a predefined sequence/pattern in a blocking manner.
- * @param sequence The sequence to execute.
- */
+void led_controller_initialize(void);
+
+void led_controller_update(void);
+
+void led_on(uint8_t percent);
+
+void led_off(void);
+
 void led_execute_sequence(led_sequence_t sequence);
 
 #endif // LED_CONTROLLER_H
