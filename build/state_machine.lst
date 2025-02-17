@@ -1,0 +1,550 @@
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s 			page 1
+
+
+   1              		.cpu cortex-m0
+   2              		.arch armv6s-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 0
+  12              		.eabi_attribute 18, 4
+  13              		.file	"state_machine.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.file 1 "Core/Src/state_machine.c"
+  18              		.section	.text.state_machine_initialize,"ax",%progbits
+  19              		.align	1
+  20              		.global	state_machine_initialize
+  21              		.syntax unified
+  22              		.code	16
+  23              		.thumb_func
+  25              	state_machine_initialize:
+  26              	.LFB40:
+   1:Core/Src/state_machine.c **** #include "state_machine.h"
+   2:Core/Src/state_machine.c **** 
+   3:Core/Src/state_machine.c **** device_state_t current_state;
+   4:Core/Src/state_machine.c **** 
+   5:Core/Src/state_machine.c **** void state_machine_initialize() {
+  27              		.loc 1 5 33 view -0
+  28              		.cfi_startproc
+  29              		@ args = 0, pretend = 0, frame = 0
+  30              		@ frame_needed = 0, uses_anonymous_args = 0
+  31              		@ link register save eliminated.
+   6:Core/Src/state_machine.c ****     current_state = DEVICE_STATE_MONITORING_STATE;
+  32              		.loc 1 6 5 view .LVU1
+  33              		.loc 1 6 19 is_stmt 0 view .LVU2
+  34 0000 014B     		ldr	r3, .L2
+  35 0002 0022     		movs	r2, #0
+  36 0004 1A70     		strb	r2, [r3]
+   7:Core/Src/state_machine.c **** }
+  37              		.loc 1 7 1 view .LVU3
+  38              		@ sp needed
+  39 0006 7047     		bx	lr
+  40              	.L3:
+  41              		.align	2
+  42              	.L2:
+  43 0008 00000000 		.word	current_state
+  44              		.cfi_endproc
+  45              	.LFE40:
+  47              		.section	.text.handle_monitoring_state,"ax",%progbits
+  48              		.align	1
+  49              		.global	handle_monitoring_state
+  50              		.syntax unified
+  51              		.code	16
+  52              		.thumb_func
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s 			page 2
+
+
+  54              	handle_monitoring_state:
+  55              	.LFB42:
+   8:Core/Src/state_machine.c **** 
+   9:Core/Src/state_machine.c **** void state_machine_update() {
+  10:Core/Src/state_machine.c ****     // If button is long pressed, calibrate the accelerometer
+  11:Core/Src/state_machine.c ****     if (button_controller_get_event() == BUTTON_EVENT_LONG_PRESS) {
+  12:Core/Src/state_machine.c ****         current_state = DEVICE_STATE_CALIBRATION_STATE;
+  13:Core/Src/state_machine.c ****     }
+  14:Core/Src/state_machine.c **** 
+  15:Core/Src/state_machine.c ****     // If the accelerometer detects motion, switch to activity state
+  16:Core/Src/state_machine.c ****     if (accelerometer_controller_is_in_motion()) {
+  17:Core/Src/state_machine.c ****         current_state = DEVICE_STATE_ACTIVITY_STATE;
+  18:Core/Src/state_machine.c ****     }
+  19:Core/Src/state_machine.c **** 
+  20:Core/Src/state_machine.c ****     // If the accelerometer detects no motion, switch to sleep state
+  21:Core/Src/state_machine.c ****     if (accelerometer_controller_no_motion()) {
+  22:Core/Src/state_machine.c ****         current_state = DEVICE_STATE_SLEEP_STATE;
+  23:Core/Src/state_machine.c ****     }
+  24:Core/Src/state_machine.c **** 
+  25:Core/Src/state_machine.c ****     switch (current_state) {
+  26:Core/Src/state_machine.c ****         case DEVICE_STATE_MONITORING_STATE:
+  27:Core/Src/state_machine.c ****             handle_monitoring_state();
+  28:Core/Src/state_machine.c ****             break;
+  29:Core/Src/state_machine.c ****         case DEVICE_STATE_BAD_POSTURE_STATE:
+  30:Core/Src/state_machine.c ****             handle_bad_posture_state();
+  31:Core/Src/state_machine.c ****             break;
+  32:Core/Src/state_machine.c ****         case DEVICE_STATE_CALIBRATION_STATE:
+  33:Core/Src/state_machine.c ****             handle_calibration_state();
+  34:Core/Src/state_machine.c ****             break;
+  35:Core/Src/state_machine.c ****         case DEVICE_STATE_ACTIVITY_STATE:
+  36:Core/Src/state_machine.c ****             handle_activity_state();
+  37:Core/Src/state_machine.c ****             break;
+  38:Core/Src/state_machine.c ****         case DEVICE_STATE_SLEEP_STATE:
+  39:Core/Src/state_machine.c ****             handle_sleep_state();
+  40:Core/Src/state_machine.c ****             break;
+  41:Core/Src/state_machine.c ****         case TEST_STATE:
+  42:Core/Src/state_machine.c ****             handle_test_state();
+  43:Core/Src/state_machine.c ****             break;
+  44:Core/Src/state_machine.c ****     }
+  45:Core/Src/state_machine.c **** }
+  46:Core/Src/state_machine.c **** 
+  47:Core/Src/state_machine.c **** void handle_monitoring_state() {
+  56              		.loc 1 47 32 is_stmt 1 view -0
+  57              		.cfi_startproc
+  58              		@ args = 0, pretend = 0, frame = 0
+  59              		@ frame_needed = 0, uses_anonymous_args = 0
+  60 0000 10B5     		push	{r4, lr}
+  61              	.LCFI0:
+  62              		.cfi_def_cfa_offset 8
+  63              		.cfi_offset 4, -8
+  64              		.cfi_offset 14, -4
+  48:Core/Src/state_machine.c ****     if (!posture_controller_is_posture_correct()) {
+  65              		.loc 1 48 5 view .LVU5
+  66              		.loc 1 48 10 is_stmt 0 view .LVU6
+  67 0002 FFF7FEFF 		bl	posture_controller_is_posture_correct
+  68              	.LVL0:
+  69              		.loc 1 48 8 discriminator 1 view .LVU7
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s 			page 3
+
+
+  70 0006 0028     		cmp	r0, #0
+  71 0008 02D1     		bne	.L4
+  49:Core/Src/state_machine.c ****         current_state = DEVICE_STATE_BAD_POSTURE_STATE;
+  72              		.loc 1 49 9 is_stmt 1 view .LVU8
+  73              		.loc 1 49 23 is_stmt 0 view .LVU9
+  74 000a 024B     		ldr	r3, .L6
+  75 000c 0122     		movs	r2, #1
+  76 000e 1A70     		strb	r2, [r3]
+  77              	.L4:
+  50:Core/Src/state_machine.c ****     }
+  51:Core/Src/state_machine.c **** }
+  78              		.loc 1 51 1 view .LVU10
+  79              		@ sp needed
+  80 0010 10BD     		pop	{r4, pc}
+  81              	.L7:
+  82 0012 C046     		.align	2
+  83              	.L6:
+  84 0014 00000000 		.word	current_state
+  85              		.cfi_endproc
+  86              	.LFE42:
+  88              		.section	.text.handle_bad_posture_state,"ax",%progbits
+  89              		.align	1
+  90              		.global	handle_bad_posture_state
+  91              		.syntax unified
+  92              		.code	16
+  93              		.thumb_func
+  95              	handle_bad_posture_state:
+  96              	.LFB43:
+  52:Core/Src/state_machine.c **** 
+  53:Core/Src/state_machine.c **** void handle_bad_posture_state() {
+  97              		.loc 1 53 33 is_stmt 1 view -0
+  98              		.cfi_startproc
+  99              		@ args = 0, pretend = 0, frame = 0
+ 100              		@ frame_needed = 0, uses_anonymous_args = 0
+ 101 0000 10B5     		push	{r4, lr}
+ 102              	.LCFI1:
+ 103              		.cfi_def_cfa_offset 8
+ 104              		.cfi_offset 4, -8
+ 105              		.cfi_offset 14, -4
+  54:Core/Src/state_machine.c ****     if (posture_controller_handle_bad_posture()) {
+ 106              		.loc 1 54 5 view .LVU12
+ 107              		.loc 1 54 9 is_stmt 0 view .LVU13
+ 108 0002 FFF7FEFF 		bl	posture_controller_handle_bad_posture
+ 109              	.LVL1:
+ 110              		.loc 1 54 8 discriminator 1 view .LVU14
+ 111 0006 0028     		cmp	r0, #0
+ 112 0008 02D0     		beq	.L8
+  55:Core/Src/state_machine.c ****         current_state = DEVICE_STATE_MONITORING_STATE;
+ 113              		.loc 1 55 9 is_stmt 1 view .LVU15
+ 114              		.loc 1 55 23 is_stmt 0 view .LVU16
+ 115 000a 024B     		ldr	r3, .L10
+ 116 000c 0022     		movs	r2, #0
+ 117 000e 1A70     		strb	r2, [r3]
+ 118              	.L8:
+  56:Core/Src/state_machine.c ****     }
+  57:Core/Src/state_machine.c **** }
+ 119              		.loc 1 57 1 view .LVU17
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s 			page 4
+
+
+ 120              		@ sp needed
+ 121 0010 10BD     		pop	{r4, pc}
+ 122              	.L11:
+ 123 0012 C046     		.align	2
+ 124              	.L10:
+ 125 0014 00000000 		.word	current_state
+ 126              		.cfi_endproc
+ 127              	.LFE43:
+ 129              		.section	.text.handle_calibration_state,"ax",%progbits
+ 130              		.align	1
+ 131              		.global	handle_calibration_state
+ 132              		.syntax unified
+ 133              		.code	16
+ 134              		.thumb_func
+ 136              	handle_calibration_state:
+ 137              	.LFB44:
+  58:Core/Src/state_machine.c **** 
+  59:Core/Src/state_machine.c **** void handle_calibration_state() {
+ 138              		.loc 1 59 33 is_stmt 1 view -0
+ 139              		.cfi_startproc
+ 140              		@ args = 0, pretend = 0, frame = 0
+ 141              		@ frame_needed = 0, uses_anonymous_args = 0
+ 142 0000 10B5     		push	{r4, lr}
+ 143              	.LCFI2:
+ 144              		.cfi_def_cfa_offset 8
+ 145              		.cfi_offset 4, -8
+ 146              		.cfi_offset 14, -4
+  60:Core/Src/state_machine.c ****     posture_controller_calibrate();
+ 147              		.loc 1 60 5 view .LVU19
+ 148 0002 FFF7FEFF 		bl	posture_controller_calibrate
+ 149              	.LVL2:
+  61:Core/Src/state_machine.c ****     current_state = DEVICE_STATE_MONITORING_STATE;
+ 150              		.loc 1 61 5 view .LVU20
+ 151              		.loc 1 61 19 is_stmt 0 view .LVU21
+ 152 0006 024B     		ldr	r3, .L13
+ 153 0008 0022     		movs	r2, #0
+ 154 000a 1A70     		strb	r2, [r3]
+  62:Core/Src/state_machine.c **** }
+ 155              		.loc 1 62 1 view .LVU22
+ 156              		@ sp needed
+ 157 000c 10BD     		pop	{r4, pc}
+ 158              	.L14:
+ 159 000e C046     		.align	2
+ 160              	.L13:
+ 161 0010 00000000 		.word	current_state
+ 162              		.cfi_endproc
+ 163              	.LFE44:
+ 165              		.section	.text.handle_activity_state,"ax",%progbits
+ 166              		.align	1
+ 167              		.global	handle_activity_state
+ 168              		.syntax unified
+ 169              		.code	16
+ 170              		.thumb_func
+ 172              	handle_activity_state:
+ 173              	.LFB45:
+  63:Core/Src/state_machine.c **** 
+  64:Core/Src/state_machine.c **** void handle_activity_state() {
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s 			page 5
+
+
+ 174              		.loc 1 64 30 is_stmt 1 view -0
+ 175              		.cfi_startproc
+ 176              		@ args = 0, pretend = 0, frame = 0
+ 177              		@ frame_needed = 0, uses_anonymous_args = 0
+ 178 0000 10B5     		push	{r4, lr}
+ 179              	.LCFI3:
+ 180              		.cfi_def_cfa_offset 8
+ 181              		.cfi_offset 4, -8
+ 182              		.cfi_offset 14, -4
+  65:Core/Src/state_machine.c ****     if (!accelerometer_controller_is_in_motion()) {
+ 183              		.loc 1 65 5 view .LVU24
+ 184              		.loc 1 65 10 is_stmt 0 view .LVU25
+ 185 0002 FFF7FEFF 		bl	accelerometer_controller_is_in_motion
+ 186              	.LVL3:
+ 187              		.loc 1 65 8 discriminator 1 view .LVU26
+ 188 0006 0028     		cmp	r0, #0
+ 189 0008 02D1     		bne	.L15
+  66:Core/Src/state_machine.c ****         current_state = DEVICE_STATE_MONITORING_STATE;
+ 190              		.loc 1 66 9 is_stmt 1 view .LVU27
+ 191              		.loc 1 66 23 is_stmt 0 view .LVU28
+ 192 000a 024B     		ldr	r3, .L17
+ 193 000c 0022     		movs	r2, #0
+ 194 000e 1A70     		strb	r2, [r3]
+ 195              	.L15:
+  67:Core/Src/state_machine.c ****     }
+  68:Core/Src/state_machine.c **** }
+ 196              		.loc 1 68 1 view .LVU29
+ 197              		@ sp needed
+ 198 0010 10BD     		pop	{r4, pc}
+ 199              	.L18:
+ 200 0012 C046     		.align	2
+ 201              	.L17:
+ 202 0014 00000000 		.word	current_state
+ 203              		.cfi_endproc
+ 204              	.LFE45:
+ 206              		.section	.text.handle_sleep_state,"ax",%progbits
+ 207              		.align	1
+ 208              		.global	handle_sleep_state
+ 209              		.syntax unified
+ 210              		.code	16
+ 211              		.thumb_func
+ 213              	handle_sleep_state:
+ 214              	.LFB46:
+  69:Core/Src/state_machine.c **** 
+  70:Core/Src/state_machine.c **** void handle_sleep_state() {
+ 215              		.loc 1 70 27 is_stmt 1 view -0
+ 216              		.cfi_startproc
+ 217              		@ args = 0, pretend = 0, frame = 0
+ 218              		@ frame_needed = 0, uses_anonymous_args = 0
+ 219 0000 10B5     		push	{r4, lr}
+ 220              	.LCFI4:
+ 221              		.cfi_def_cfa_offset 8
+ 222              		.cfi_offset 4, -8
+ 223              		.cfi_offset 14, -4
+  71:Core/Src/state_machine.c ****     sleep_controller_activate_sleep_mode();
+ 224              		.loc 1 71 5 view .LVU31
+ 225 0002 FFF7FEFF 		bl	sleep_controller_activate_sleep_mode
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s 			page 6
+
+
+ 226              	.LVL4:
+  72:Core/Src/state_machine.c **** 
+  73:Core/Src/state_machine.c ****     // When this function returns, the device has woken up
+  74:Core/Src/state_machine.c ****     current_state = DEVICE_STATE_MONITORING_STATE;
+ 227              		.loc 1 74 5 view .LVU32
+ 228              		.loc 1 74 19 is_stmt 0 view .LVU33
+ 229 0006 024B     		ldr	r3, .L20
+ 230 0008 0022     		movs	r2, #0
+ 231 000a 1A70     		strb	r2, [r3]
+  75:Core/Src/state_machine.c **** }
+ 232              		.loc 1 75 1 view .LVU34
+ 233              		@ sp needed
+ 234 000c 10BD     		pop	{r4, pc}
+ 235              	.L21:
+ 236 000e C046     		.align	2
+ 237              	.L20:
+ 238 0010 00000000 		.word	current_state
+ 239              		.cfi_endproc
+ 240              	.LFE46:
+ 242              		.section	.text.state_machine_update,"ax",%progbits
+ 243              		.align	1
+ 244              		.global	state_machine_update
+ 245              		.syntax unified
+ 246              		.code	16
+ 247              		.thumb_func
+ 249              	state_machine_update:
+ 250              	.LFB41:
+   9:Core/Src/state_machine.c ****     // If button is long pressed, calibrate the accelerometer
+ 251              		.loc 1 9 29 is_stmt 1 view -0
+ 252              		.cfi_startproc
+ 253              		@ args = 0, pretend = 0, frame = 0
+ 254              		@ frame_needed = 0, uses_anonymous_args = 0
+ 255 0000 10B5     		push	{r4, lr}
+ 256              	.LCFI5:
+ 257              		.cfi_def_cfa_offset 8
+ 258              		.cfi_offset 4, -8
+ 259              		.cfi_offset 14, -4
+  11:Core/Src/state_machine.c ****         current_state = DEVICE_STATE_CALIBRATION_STATE;
+ 260              		.loc 1 11 5 view .LVU36
+  11:Core/Src/state_machine.c ****         current_state = DEVICE_STATE_CALIBRATION_STATE;
+ 261              		.loc 1 11 9 is_stmt 0 view .LVU37
+ 262 0002 FFF7FEFF 		bl	button_controller_get_event
+ 263              	.LVL5:
+  11:Core/Src/state_machine.c ****         current_state = DEVICE_STATE_CALIBRATION_STATE;
+ 264              		.loc 1 11 8 discriminator 1 view .LVU38
+ 265 0006 0428     		cmp	r0, #4
+ 266 0008 15D0     		beq	.L33
+ 267              	.L23:
+  16:Core/Src/state_machine.c ****         current_state = DEVICE_STATE_ACTIVITY_STATE;
+ 268              		.loc 1 16 5 is_stmt 1 view .LVU39
+  16:Core/Src/state_machine.c ****         current_state = DEVICE_STATE_ACTIVITY_STATE;
+ 269              		.loc 1 16 9 is_stmt 0 view .LVU40
+ 270 000a FFF7FEFF 		bl	accelerometer_controller_is_in_motion
+ 271              	.LVL6:
+  16:Core/Src/state_machine.c ****         current_state = DEVICE_STATE_ACTIVITY_STATE;
+ 272              		.loc 1 16 8 discriminator 1 view .LVU41
+ 273 000e 0028     		cmp	r0, #0
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s 			page 7
+
+
+ 274 0010 02D0     		beq	.L24
+  17:Core/Src/state_machine.c ****     }
+ 275              		.loc 1 17 9 is_stmt 1 view .LVU42
+  17:Core/Src/state_machine.c ****     }
+ 276              		.loc 1 17 23 is_stmt 0 view .LVU43
+ 277 0012 124B     		ldr	r3, .L34
+ 278 0014 0322     		movs	r2, #3
+ 279 0016 1A70     		strb	r2, [r3]
+ 280              	.L24:
+  21:Core/Src/state_machine.c ****         current_state = DEVICE_STATE_SLEEP_STATE;
+ 281              		.loc 1 21 5 is_stmt 1 view .LVU44
+  21:Core/Src/state_machine.c ****         current_state = DEVICE_STATE_SLEEP_STATE;
+ 282              		.loc 1 21 9 is_stmt 0 view .LVU45
+ 283 0018 FFF7FEFF 		bl	accelerometer_controller_no_motion
+ 284              	.LVL7:
+  21:Core/Src/state_machine.c ****         current_state = DEVICE_STATE_SLEEP_STATE;
+ 285              		.loc 1 21 8 discriminator 1 view .LVU46
+ 286 001c 0028     		cmp	r0, #0
+ 287 001e 02D0     		beq	.L25
+  22:Core/Src/state_machine.c ****     }
+ 288              		.loc 1 22 9 is_stmt 1 view .LVU47
+  22:Core/Src/state_machine.c ****     }
+ 289              		.loc 1 22 23 is_stmt 0 view .LVU48
+ 290 0020 0E4B     		ldr	r3, .L34
+ 291 0022 0422     		movs	r2, #4
+ 292 0024 1A70     		strb	r2, [r3]
+ 293              	.L25:
+  25:Core/Src/state_machine.c ****         case DEVICE_STATE_MONITORING_STATE:
+ 294              		.loc 1 25 5 is_stmt 1 view .LVU49
+ 295 0026 0D4B     		ldr	r3, .L34
+ 296 0028 1A78     		ldrb	r2, [r3]
+ 297 002a 042A     		cmp	r2, #4
+ 298 002c 09D8     		bhi	.L22
+ 299 002e 9300     		lsls	r3, r2, #2
+ 300 0030 0B4A     		ldr	r2, .L34+4
+ 301 0032 D358     		ldr	r3, [r2, r3]
+ 302 0034 9F46     		mov	pc, r3
+ 303              		.section	.rodata.state_machine_update,"a",%progbits
+ 304              		.align	2
+ 305              	.L28:
+ 306 0000 3E000000 		.word	.L32
+ 307 0004 44000000 		.word	.L31
+ 308 0008 4A000000 		.word	.L30
+ 309 000c 50000000 		.word	.L29
+ 310 0010 56000000 		.word	.L27
+ 311              		.section	.text.state_machine_update
+ 312              	.L33:
+  12:Core/Src/state_machine.c ****     }
+ 313              		.loc 1 12 9 view .LVU50
+  12:Core/Src/state_machine.c ****     }
+ 314              		.loc 1 12 23 is_stmt 0 view .LVU51
+ 315 0036 094B     		ldr	r3, .L34
+ 316 0038 0222     		movs	r2, #2
+ 317 003a 1A70     		strb	r2, [r3]
+ 318 003c E5E7     		b	.L23
+ 319              	.L32:
+  27:Core/Src/state_machine.c ****             break;
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s 			page 8
+
+
+ 320              		.loc 1 27 13 is_stmt 1 view .LVU52
+ 321 003e FFF7FEFF 		bl	handle_monitoring_state
+ 322              	.LVL8:
+  28:Core/Src/state_machine.c ****         case DEVICE_STATE_BAD_POSTURE_STATE:
+ 323              		.loc 1 28 13 view .LVU53
+ 324              	.L22:
+  45:Core/Src/state_machine.c **** 
+ 325              		.loc 1 45 1 is_stmt 0 view .LVU54
+ 326              		@ sp needed
+ 327 0042 10BD     		pop	{r4, pc}
+ 328              	.L31:
+  30:Core/Src/state_machine.c ****             break;
+ 329              		.loc 1 30 13 is_stmt 1 view .LVU55
+ 330 0044 FFF7FEFF 		bl	handle_bad_posture_state
+ 331              	.LVL9:
+  31:Core/Src/state_machine.c ****         case DEVICE_STATE_CALIBRATION_STATE:
+ 332              		.loc 1 31 13 view .LVU56
+ 333 0048 FBE7     		b	.L22
+ 334              	.L30:
+  33:Core/Src/state_machine.c ****             break;
+ 335              		.loc 1 33 13 view .LVU57
+ 336 004a FFF7FEFF 		bl	handle_calibration_state
+ 337              	.LVL10:
+  34:Core/Src/state_machine.c ****         case DEVICE_STATE_ACTIVITY_STATE:
+ 338              		.loc 1 34 13 view .LVU58
+ 339 004e F8E7     		b	.L22
+ 340              	.L29:
+  36:Core/Src/state_machine.c ****             break;
+ 341              		.loc 1 36 13 view .LVU59
+ 342 0050 FFF7FEFF 		bl	handle_activity_state
+ 343              	.LVL11:
+  37:Core/Src/state_machine.c ****         case DEVICE_STATE_SLEEP_STATE:
+ 344              		.loc 1 37 13 view .LVU60
+ 345 0054 F5E7     		b	.L22
+ 346              	.L27:
+  39:Core/Src/state_machine.c ****             break;
+ 347              		.loc 1 39 13 view .LVU61
+ 348 0056 FFF7FEFF 		bl	handle_sleep_state
+ 349              	.LVL12:
+  40:Core/Src/state_machine.c ****         case TEST_STATE:
+ 350              		.loc 1 40 13 view .LVU62
+  45:Core/Src/state_machine.c **** 
+ 351              		.loc 1 45 1 is_stmt 0 view .LVU63
+ 352 005a F2E7     		b	.L22
+ 353              	.L35:
+ 354              		.align	2
+ 355              	.L34:
+ 356 005c 00000000 		.word	current_state
+ 357 0060 00000000 		.word	.L28
+ 358              		.cfi_endproc
+ 359              	.LFE41:
+ 361              		.section	.text.handle_test_state,"ax",%progbits
+ 362              		.align	1
+ 363              		.global	handle_test_state
+ 364              		.syntax unified
+ 365              		.code	16
+ 366              		.thumb_func
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s 			page 9
+
+
+ 368              	handle_test_state:
+ 369              	.LFB47:
+  76:Core/Src/state_machine.c **** 
+  77:Core/Src/state_machine.c **** void handle_test_state() {
+ 370              		.loc 1 77 26 is_stmt 1 view -0
+ 371              		.cfi_startproc
+ 372              		@ args = 0, pretend = 0, frame = 0
+ 373              		@ frame_needed = 0, uses_anonymous_args = 0
+ 374              		@ link register save eliminated.
+  78:Core/Src/state_machine.c ****     // Do nothing
+  79:Core/Src/state_machine.c **** }...
+ 375              		.loc 1 79 1 view .LVU65
+ 376              		@ sp needed
+ 377 0000 7047     		bx	lr
+ 378              		.cfi_endproc
+ 379              	.LFE47:
+ 381              		.global	current_state
+ 382              		.section	.bss.current_state,"aw",%nobits
+ 385              	current_state:
+ 386 0000 00       		.space	1
+ 387              		.text
+ 388              	.Letext0:
+ 389              		.file 2 "Core/Inc/button_controller.h"
+ 390              		.file 3 "Core/Inc/state_machine.h"
+ 391              		.file 4 "Core/Inc/sleep_controller.h"
+ 392              		.file 5 "Core/Inc/posture_controller.h"
+ 393              		.file 6 "Core/Inc/accelerometer_controller.h"
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s 			page 10
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 state_machine.c
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:19     .text.state_machine_initialize:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:25     .text.state_machine_initialize:00000000 state_machine_initialize
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:43     .text.state_machine_initialize:00000008 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:385    .bss.current_state:00000000 current_state
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:48     .text.handle_monitoring_state:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:54     .text.handle_monitoring_state:00000000 handle_monitoring_state
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:84     .text.handle_monitoring_state:00000014 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:89     .text.handle_bad_posture_state:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:95     .text.handle_bad_posture_state:00000000 handle_bad_posture_state
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:125    .text.handle_bad_posture_state:00000014 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:130    .text.handle_calibration_state:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:136    .text.handle_calibration_state:00000000 handle_calibration_state
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:161    .text.handle_calibration_state:00000010 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:166    .text.handle_activity_state:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:172    .text.handle_activity_state:00000000 handle_activity_state
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:202    .text.handle_activity_state:00000014 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:207    .text.handle_sleep_state:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:213    .text.handle_sleep_state:00000000 handle_sleep_state
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:238    .text.handle_sleep_state:00000010 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:243    .text.state_machine_update:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:249    .text.state_machine_update:00000000 state_machine_update
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:304    .rodata.state_machine_update:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:356    .text.state_machine_update:0000005c $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:362    .text.handle_test_state:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:368    .text.handle_test_state:00000000 handle_test_state
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:386    .bss.current_state:00000000 $d
+
+UNDEFINED SYMBOLS
+posture_controller_is_posture_correct
+posture_controller_handle_bad_posture
+posture_controller_calibrate
+accelerometer_controller_is_in_motion
+sleep_controller_activate_sleep_mode
+button_controller_get_event
+accelerometer_controller_no_motion

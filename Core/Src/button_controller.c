@@ -18,7 +18,6 @@
 // ------------------------------
 
 static volatile bool button_pressed = false;        // Current stable state
-static volatile bool button_changed = false;        // Track if pin just changed
 
 static uint32_t press_start_time = 0;              // Timestamp when button was pressed
 static uint32_t last_release_time = 0;             // For single/double/triple press detection
@@ -51,7 +50,6 @@ void button_controller_initialize(void)
 {
     // Initialize internal state:
     button_pressed   = read_raw_button_state();
-    button_changed   = false;
     press_start_time = 0;
     last_release_time = 0;
     press_count       = 0;
@@ -72,14 +70,41 @@ bool button_is_pressed(void)
  *        Handles long-press detection and multi-press logic.
  */
 void button_controller_update(void)
-{
+{   
     static uint32_t last_check_time = 0;
     uint32_t now = HAL_GetTick();
-
     // If we haven't waited enough to avoid excessive checking, skip
-    if ((now - last_check_time) < 10U)
+    if ((now - last_check_time) < 10U) {
         return;
+    }
     last_check_time = now;
+    
+    bool button_pressed_before = button_pressed;
+    button_pressed = read_raw_button_state();
+
+    if (button_pressed_before != button_pressed)
+    {
+        uint32_t now = HAL_GetTick();
+        if ((now - press_start_time) < DEBOUNCE_TIME_MS)
+        {
+            // If we haven't waited enough, skip
+            return;
+        }
+    }
+
+    // If changed from not pressed to pressed, record the time
+    if (!button_pressed_before && button_pressed)
+    {
+        press_start_time = HAL_GetTick();
+        press_count++;
+    }
+
+    // If changed from pressed to not pressed, record the time
+    if (button_pressed_before && !button_pressed)
+    {
+        last_release_time = HAL_GetTick();
+        long_press_reported = false;
+    }
 
     // 1) Long press detection
     //    If the button is pressed and we haven't yet reported a long press,
@@ -145,41 +170,7 @@ button_event_t button_controller_get_event(void)
  * @brief Called by HAL when an EXTI interrupt occurs on GPIO pin PB5.
  *        We use this for immediate detection of press/release edges.
  */
-void button_handle_exti()
-{
-    // Read the raw hardware state
-    bool raw_state = read_raw_button_state();
-
-    // Debounce logic: we skip if the state is the same as we have recorded
-    // but let's store a timestamp and do a minimal check
-    static uint32_t last_interrupt_time = 0;
-    uint32_t now = HAL_GetTick();
-
-    // If the interrupt occurred too soon after the last one, ignore (debouncing)
-    if ((now - last_interrupt_time) < DEBOUNCE_TIME_MS)
-    {
-        return;
-    }
-    last_interrupt_time = now;
-
-    // If we detect a change from not pressed -> pressed
-    if (!button_pressed && raw_state)
-    {
-        // Pressed
-        button_pressed = true;
-        press_start_time = now;
-        long_press_reported = false;
-        // Increment the press_count (for multi-press logic),
-        // but only if we haven't reported a long press yet.
-        press_count++;
-    }
-    else if (button_pressed && !raw_state)
-    {
-        // Released
-        button_pressed = false;
-        last_release_time = now;
-
-        // If we released but the press was short (< LONG_PRESS_TIME_MS),
-        // we rely on button_process() to figure out single/double/triple press
-    }
-}
+// void button_handle_exti()
+// {
+    
+// }

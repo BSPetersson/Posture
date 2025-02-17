@@ -1,0 +1,787 @@
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccekZCRE.s 			page 1
+
+
+   1              		.cpu cortex-m0
+   2              		.arch armv6s-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 0
+  12              		.eabi_attribute 18, 4
+  13              		.file	"button_controller.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.file 1 "Core/Src/button_controller.c"
+  18              		.section	.text.read_raw_button_state,"ax",%progbits
+  19              		.align	1
+  20              		.syntax unified
+  21              		.code	16
+  22              		.thumb_func
+  24              	read_raw_button_state:
+  25              	.LFB40:
+   1:Core/Src/button_controller.c **** #include "button_controller.h"
+   2:Core/Src/button_controller.c **** 
+   3:Core/Src/button_controller.c **** // ------------------------------
+   4:Core/Src/button_controller.c **** // Configuration Constants
+   5:Core/Src/button_controller.c **** // ------------------------------
+   6:Core/Src/button_controller.c **** 
+   7:Core/Src/button_controller.c **** // Debounce time (ms) for press/release transitions
+   8:Core/Src/button_controller.c **** #define DEBOUNCE_TIME_MS       50U
+   9:Core/Src/button_controller.c **** 
+  10:Core/Src/button_controller.c **** // Max gap between presses for them to be considered a multi-press
+  11:Core/Src/button_controller.c **** #define MULTI_PRESS_GAP_MS    500U
+  12:Core/Src/button_controller.c **** 
+  13:Core/Src/button_controller.c **** // Minimum time (ms) for a press to be considered "long"
+  14:Core/Src/button_controller.c **** #define LONG_PRESS_TIME_MS   3000U
+  15:Core/Src/button_controller.c **** 
+  16:Core/Src/button_controller.c **** // ------------------------------
+  17:Core/Src/button_controller.c **** // Internal State Variables
+  18:Core/Src/button_controller.c **** // ------------------------------
+  19:Core/Src/button_controller.c **** 
+  20:Core/Src/button_controller.c **** static volatile bool button_pressed = false;        // Current stable state
+  21:Core/Src/button_controller.c **** 
+  22:Core/Src/button_controller.c **** static uint32_t press_start_time = 0;              // Timestamp when button was pressed
+  23:Core/Src/button_controller.c **** static uint32_t last_release_time = 0;             // For single/double/triple press detection
+  24:Core/Src/button_controller.c **** 
+  25:Core/Src/button_controller.c **** static uint8_t  press_count = 0;                   // How many short presses so far
+  26:Core/Src/button_controller.c **** static bool     long_press_reported = false;       // Did we already report a long press?
+  27:Core/Src/button_controller.c **** 
+  28:Core/Src/button_controller.c **** // Store the latest button event
+  29:Core/Src/button_controller.c **** static volatile button_event_t latest_event = BUTTON_EVENT_NONE;
+  30:Core/Src/button_controller.c **** 
+  31:Core/Src/button_controller.c **** // ------------------------------
+  32:Core/Src/button_controller.c **** // Helper Functions
+  33:Core/Src/button_controller.c **** // ------------------------------
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccekZCRE.s 			page 2
+
+
+  34:Core/Src/button_controller.c **** 
+  35:Core/Src/button_controller.c **** /**
+  36:Core/Src/button_controller.c ****  * @brief Read the raw hardware pin state (true = pressed).
+  37:Core/Src/button_controller.c ****  *        PB5 is active low: so pressed = (pin == 0).
+  38:Core/Src/button_controller.c ****  */
+  39:Core/Src/button_controller.c **** static bool read_raw_button_state(void)
+  40:Core/Src/button_controller.c **** {
+  26              		.loc 1 40 1 view -0
+  27              		.cfi_startproc
+  28              		@ args = 0, pretend = 0, frame = 0
+  29              		@ frame_needed = 0, uses_anonymous_args = 0
+  30 0000 10B5     		push	{r4, lr}
+  31              	.LCFI0:
+  32              		.cfi_def_cfa_offset 8
+  33              		.cfi_offset 4, -8
+  34              		.cfi_offset 14, -4
+  41:Core/Src/button_controller.c ****     // Because the button is active low, invert the read:
+  42:Core/Src/button_controller.c ****     return (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_5) == GPIO_PIN_RESET);
+  35              		.loc 1 42 5 view .LVU1
+  36              		.loc 1 42 13 is_stmt 0 view .LVU2
+  37 0002 2021     		movs	r1, #32
+  38 0004 0348     		ldr	r0, .L2
+  39 0006 FFF7FEFF 		bl	HAL_GPIO_ReadPin
+  40              	.LVL0:
+  41              		.loc 1 42 49 discriminator 1 view .LVU3
+  42 000a 4342     		rsbs	r3, r0, #0
+  43 000c 5841     		adcs	r0, r0, r3
+  44 000e C0B2     		uxtb	r0, r0
+  43:Core/Src/button_controller.c **** }
+  45              		.loc 1 43 1 view .LVU4
+  46              		@ sp needed
+  47 0010 10BD     		pop	{r4, pc}
+  48              	.L3:
+  49 0012 C046     		.align	2
+  50              	.L2:
+  51 0014 00040048 		.word	1207960576
+  52              		.cfi_endproc
+  53              	.LFE40:
+  55              		.section	.text.button_controller_initialize,"ax",%progbits
+  56              		.align	1
+  57              		.global	button_controller_initialize
+  58              		.syntax unified
+  59              		.code	16
+  60              		.thumb_func
+  62              	button_controller_initialize:
+  63              	.LFB41:
+  44:Core/Src/button_controller.c **** 
+  45:Core/Src/button_controller.c **** // ------------------------------
+  46:Core/Src/button_controller.c **** // Public API
+  47:Core/Src/button_controller.c **** // ------------------------------
+  48:Core/Src/button_controller.c **** 
+  49:Core/Src/button_controller.c **** void button_controller_initialize(void)
+  50:Core/Src/button_controller.c **** {
+  64              		.loc 1 50 1 is_stmt 1 view -0
+  65              		.cfi_startproc
+  66              		@ args = 0, pretend = 0, frame = 0
+  67              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccekZCRE.s 			page 3
+
+
+  68 0000 10B5     		push	{r4, lr}
+  69              	.LCFI1:
+  70              		.cfi_def_cfa_offset 8
+  71              		.cfi_offset 4, -8
+  72              		.cfi_offset 14, -4
+  51:Core/Src/button_controller.c ****     // Initialize internal state:
+  52:Core/Src/button_controller.c ****     button_pressed   = read_raw_button_state();
+  73              		.loc 1 52 5 view .LVU6
+  74              		.loc 1 52 24 is_stmt 0 view .LVU7
+  75 0002 FFF7FEFF 		bl	read_raw_button_state
+  76              	.LVL1:
+  77              		.loc 1 52 22 discriminator 1 view .LVU8
+  78 0006 074B     		ldr	r3, .L5
+  79 0008 1870     		strb	r0, [r3]
+  53:Core/Src/button_controller.c ****     press_start_time = 0;
+  80              		.loc 1 53 5 is_stmt 1 view .LVU9
+  81              		.loc 1 53 22 is_stmt 0 view .LVU10
+  82 000a 074A     		ldr	r2, .L5+4
+  83 000c 0023     		movs	r3, #0
+  84 000e 1360     		str	r3, [r2]
+  54:Core/Src/button_controller.c ****     last_release_time = 0;
+  85              		.loc 1 54 5 is_stmt 1 view .LVU11
+  86              		.loc 1 54 23 is_stmt 0 view .LVU12
+  87 0010 064A     		ldr	r2, .L5+8
+  88 0012 1360     		str	r3, [r2]
+  55:Core/Src/button_controller.c ****     press_count       = 0;
+  89              		.loc 1 55 5 is_stmt 1 view .LVU13
+  90              		.loc 1 55 23 is_stmt 0 view .LVU14
+  91 0014 064A     		ldr	r2, .L5+12
+  92 0016 1370     		strb	r3, [r2]
+  56:Core/Src/button_controller.c ****     long_press_reported = false;
+  93              		.loc 1 56 5 is_stmt 1 view .LVU15
+  94              		.loc 1 56 25 is_stmt 0 view .LVU16
+  95 0018 064A     		ldr	r2, .L5+16
+  96 001a 1370     		strb	r3, [r2]
+  57:Core/Src/button_controller.c ****     latest_event      = BUTTON_EVENT_NONE;
+  97              		.loc 1 57 5 is_stmt 1 view .LVU17
+  98              		.loc 1 57 23 is_stmt 0 view .LVU18
+  99 001c 064A     		ldr	r2, .L5+20
+ 100 001e 1370     		strb	r3, [r2]
+  58:Core/Src/button_controller.c **** }
+ 101              		.loc 1 58 1 view .LVU19
+ 102              		@ sp needed
+ 103 0020 10BD     		pop	{r4, pc}
+ 104              	.L6:
+ 105 0022 C046     		.align	2
+ 106              	.L5:
+ 107 0024 00000000 		.word	button_pressed
+ 108 0028 00000000 		.word	press_start_time
+ 109 002c 00000000 		.word	last_release_time
+ 110 0030 00000000 		.word	press_count
+ 111 0034 00000000 		.word	long_press_reported
+ 112 0038 00000000 		.word	latest_event
+ 113              		.cfi_endproc
+ 114              	.LFE41:
+ 116              		.section	.text.button_is_pressed,"ax",%progbits
+ 117              		.align	1
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccekZCRE.s 			page 4
+
+
+ 118              		.global	button_is_pressed
+ 119              		.syntax unified
+ 120              		.code	16
+ 121              		.thumb_func
+ 123              	button_is_pressed:
+ 124              	.LFB42:
+  59:Core/Src/button_controller.c **** 
+  60:Core/Src/button_controller.c **** /**
+  61:Core/Src/button_controller.c ****  * @brief Indicates if the button is currently held down (after debounce).
+  62:Core/Src/button_controller.c ****  */
+  63:Core/Src/button_controller.c **** bool button_is_pressed(void)
+  64:Core/Src/button_controller.c **** {
+ 125              		.loc 1 64 1 is_stmt 1 view -0
+ 126              		.cfi_startproc
+ 127              		@ args = 0, pretend = 0, frame = 0
+ 128              		@ frame_needed = 0, uses_anonymous_args = 0
+ 129              		@ link register save eliminated.
+  65:Core/Src/button_controller.c ****     return button_pressed;
+ 130              		.loc 1 65 5 view .LVU21
+ 131              		.loc 1 65 12 is_stmt 0 view .LVU22
+ 132 0000 014B     		ldr	r3, .L8
+ 133 0002 1878     		ldrb	r0, [r3]
+ 134 0004 C0B2     		uxtb	r0, r0
+  66:Core/Src/button_controller.c **** }
+ 135              		.loc 1 66 1 view .LVU23
+ 136              		@ sp needed
+ 137 0006 7047     		bx	lr
+ 138              	.L9:
+ 139              		.align	2
+ 140              	.L8:
+ 141 0008 00000000 		.word	button_pressed
+ 142              		.cfi_endproc
+ 143              	.LFE42:
+ 145              		.section	.text.button_controller_update,"ax",%progbits
+ 146              		.align	1
+ 147              		.global	button_controller_update
+ 148              		.syntax unified
+ 149              		.code	16
+ 150              		.thumb_func
+ 152              	button_controller_update:
+ 153              	.LFB43:
+  67:Core/Src/button_controller.c **** 
+  68:Core/Src/button_controller.c **** /**
+  69:Core/Src/button_controller.c ****  * @brief Should be called periodically (10–20 ms).
+  70:Core/Src/button_controller.c ****  *        Handles long-press detection and multi-press logic.
+  71:Core/Src/button_controller.c ****  */
+  72:Core/Src/button_controller.c **** void button_controller_update(void)
+  73:Core/Src/button_controller.c **** {   
+ 154              		.loc 1 73 1 is_stmt 1 view -0
+ 155              		.cfi_startproc
+ 156              		@ args = 0, pretend = 0, frame = 0
+ 157              		@ frame_needed = 0, uses_anonymous_args = 0
+ 158 0000 70B5     		push	{r4, r5, r6, lr}
+ 159              	.LCFI2:
+ 160              		.cfi_def_cfa_offset 16
+ 161              		.cfi_offset 4, -16
+ 162              		.cfi_offset 5, -12
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccekZCRE.s 			page 5
+
+
+ 163              		.cfi_offset 6, -8
+ 164              		.cfi_offset 14, -4
+  74:Core/Src/button_controller.c ****     static uint32_t last_check_time = 0;
+ 165              		.loc 1 74 5 view .LVU25
+  75:Core/Src/button_controller.c ****     uint32_t now = HAL_GetTick();
+ 166              		.loc 1 75 5 view .LVU26
+ 167              		.loc 1 75 20 is_stmt 0 view .LVU27
+ 168 0002 FFF7FEFF 		bl	HAL_GetTick
+ 169              	.LVL2:
+ 170 0006 0400     		movs	r4, r0
+ 171              	.LVL3:
+  76:Core/Src/button_controller.c ****     // If we haven't waited enough to avoid excessive checking, skip
+  77:Core/Src/button_controller.c ****     if ((now - last_check_time) < 10U) {
+ 172              		.loc 1 77 5 is_stmt 1 view .LVU28
+ 173              		.loc 1 77 14 is_stmt 0 view .LVU29
+ 174 0008 394B     		ldr	r3, .L25
+ 175 000a 1B68     		ldr	r3, [r3]
+ 176 000c C31A     		subs	r3, r0, r3
+ 177              		.loc 1 77 8 view .LVU30
+ 178 000e 092B     		cmp	r3, #9
+ 179 0010 00D8     		bhi	.L22
+ 180              	.LVL4:
+ 181              	.L10:
+  78:Core/Src/button_controller.c ****         return;
+  79:Core/Src/button_controller.c ****     }
+  80:Core/Src/button_controller.c ****     last_check_time = now;
+  81:Core/Src/button_controller.c ****     
+  82:Core/Src/button_controller.c ****     bool button_pressed_before = button_pressed;
+  83:Core/Src/button_controller.c ****     button_pressed = read_raw_button_state();
+  84:Core/Src/button_controller.c **** 
+  85:Core/Src/button_controller.c ****     if (button_pressed_before != button_pressed)
+  86:Core/Src/button_controller.c ****     {
+  87:Core/Src/button_controller.c ****         uint32_t now = HAL_GetTick();
+  88:Core/Src/button_controller.c ****         if ((now - press_start_time) < DEBOUNCE_TIME_MS)
+  89:Core/Src/button_controller.c ****         {
+  90:Core/Src/button_controller.c ****             // If we haven't waited enough, skip
+  91:Core/Src/button_controller.c ****             return;
+  92:Core/Src/button_controller.c ****         }
+  93:Core/Src/button_controller.c ****     }
+  94:Core/Src/button_controller.c **** 
+  95:Core/Src/button_controller.c ****     // If changed from not pressed to pressed, record the time
+  96:Core/Src/button_controller.c ****     if (!button_pressed_before && button_pressed)
+  97:Core/Src/button_controller.c ****     {
+  98:Core/Src/button_controller.c ****         press_start_time = HAL_GetTick();
+  99:Core/Src/button_controller.c ****         press_count++;
+ 100:Core/Src/button_controller.c ****     }
+ 101:Core/Src/button_controller.c **** 
+ 102:Core/Src/button_controller.c ****     // If changed from pressed to not pressed, record the time
+ 103:Core/Src/button_controller.c ****     if (button_pressed_before && !button_pressed)
+ 104:Core/Src/button_controller.c ****     {
+ 105:Core/Src/button_controller.c ****         last_release_time = HAL_GetTick();
+ 106:Core/Src/button_controller.c ****         long_press_reported = false;
+ 107:Core/Src/button_controller.c ****     }
+ 108:Core/Src/button_controller.c **** 
+ 109:Core/Src/button_controller.c ****     // 1) Long press detection
+ 110:Core/Src/button_controller.c ****     //    If the button is pressed and we haven't yet reported a long press,
+ 111:Core/Src/button_controller.c ****     //    check if the pressed duration > LONG_PRESS_TIME_MS
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccekZCRE.s 			page 6
+
+
+ 112:Core/Src/button_controller.c ****     if (button_pressed && !long_press_reported)
+ 113:Core/Src/button_controller.c ****     {
+ 114:Core/Src/button_controller.c ****         uint32_t pressed_duration = now - press_start_time;
+ 115:Core/Src/button_controller.c ****         if (pressed_duration >= LONG_PRESS_TIME_MS)
+ 116:Core/Src/button_controller.c ****         {
+ 117:Core/Src/button_controller.c ****             long_press_reported = true;
+ 118:Core/Src/button_controller.c ****             latest_event = BUTTON_EVENT_LONG_PRESS;
+ 119:Core/Src/button_controller.c ****             // Because it's a long press, we reset multi-press logic:
+ 120:Core/Src/button_controller.c ****             press_count = 0;
+ 121:Core/Src/button_controller.c ****         }
+ 122:Core/Src/button_controller.c ****     }
+ 123:Core/Src/button_controller.c **** 
+ 124:Core/Src/button_controller.c ****     // 2) Multi-press detection
+ 125:Core/Src/button_controller.c ****     //    If the button is currently not pressed, and we have a press_count,
+ 126:Core/Src/button_controller.c ****     //    check if enough time has passed since the last release to finalize the event.
+ 127:Core/Src/button_controller.c ****     if (!button_pressed && press_count > 0)
+ 128:Core/Src/button_controller.c ****     {
+ 129:Core/Src/button_controller.c ****         // Time since last release
+ 130:Core/Src/button_controller.c ****         uint32_t delta = now - last_release_time;
+ 131:Core/Src/button_controller.c **** 
+ 132:Core/Src/button_controller.c ****         if (delta >= MULTI_PRESS_GAP_MS)
+ 133:Core/Src/button_controller.c ****         {
+ 134:Core/Src/button_controller.c ****             // If we get here, no additional press happened within the multi-press gap
+ 135:Core/Src/button_controller.c ****             switch (press_count)
+ 136:Core/Src/button_controller.c ****             {
+ 137:Core/Src/button_controller.c ****                 case 1:
+ 138:Core/Src/button_controller.c ****                     latest_event = BUTTON_EVENT_SINGLE_PRESS;
+ 139:Core/Src/button_controller.c ****                     break;
+ 140:Core/Src/button_controller.c ****                 case 2:
+ 141:Core/Src/button_controller.c ****                     latest_event = BUTTON_EVENT_DOUBLE_PRESS;
+ 142:Core/Src/button_controller.c ****                     break;
+ 143:Core/Src/button_controller.c ****                 case 3:
+ 144:Core/Src/button_controller.c ****                     latest_event = BUTTON_EVENT_TRIPLE_PRESS;
+ 145:Core/Src/button_controller.c ****                     break;
+ 146:Core/Src/button_controller.c ****                 default:
+ 147:Core/Src/button_controller.c ****                     // If more presses than 3, do whatever you want:
+ 148:Core/Src/button_controller.c ****                     latest_event = BUTTON_EVENT_TRIPLE_PRESS;
+ 149:Core/Src/button_controller.c ****                     break;
+ 150:Core/Src/button_controller.c ****             }
+ 151:Core/Src/button_controller.c ****             press_count = 0; // Reset
+ 152:Core/Src/button_controller.c ****         }
+ 153:Core/Src/button_controller.c ****     }
+ 154:Core/Src/button_controller.c **** }
+ 182              		.loc 1 154 1 view .LVU31
+ 183              		@ sp needed
+ 184 0012 70BD     		pop	{r4, r5, r6, pc}
+ 185              	.LVL5:
+ 186              	.L22:
+  80:Core/Src/button_controller.c ****     
+ 187              		.loc 1 80 5 is_stmt 1 view .LVU32
+  80:Core/Src/button_controller.c ****     
+ 188              		.loc 1 80 21 is_stmt 0 view .LVU33
+ 189 0014 364B     		ldr	r3, .L25
+ 190 0016 1860     		str	r0, [r3]
+  82:Core/Src/button_controller.c ****     button_pressed = read_raw_button_state();
+ 191              		.loc 1 82 5 is_stmt 1 view .LVU34
+  82:Core/Src/button_controller.c ****     button_pressed = read_raw_button_state();
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccekZCRE.s 			page 7
+
+
+ 192              		.loc 1 82 10 is_stmt 0 view .LVU35
+ 193 0018 364E     		ldr	r6, .L25+4
+ 194 001a 3578     		ldrb	r5, [r6]
+ 195 001c EDB2     		uxtb	r5, r5
+ 196              	.LVL6:
+  83:Core/Src/button_controller.c **** 
+ 197              		.loc 1 83 5 is_stmt 1 view .LVU36
+  83:Core/Src/button_controller.c **** 
+ 198              		.loc 1 83 22 is_stmt 0 view .LVU37
+ 199 001e FFF7FEFF 		bl	read_raw_button_state
+ 200              	.LVL7:
+  83:Core/Src/button_controller.c **** 
+ 201              		.loc 1 83 20 discriminator 1 view .LVU38
+ 202 0022 3070     		strb	r0, [r6]
+  85:Core/Src/button_controller.c ****     {
+ 203              		.loc 1 85 5 is_stmt 1 view .LVU39
+  85:Core/Src/button_controller.c ****     {
+ 204              		.loc 1 85 31 is_stmt 0 view .LVU40
+ 205 0024 3378     		ldrb	r3, [r6]
+  85:Core/Src/button_controller.c ****     {
+ 206              		.loc 1 85 8 view .LVU41
+ 207 0026 AB42     		cmp	r3, r5
+ 208 0028 39D1     		bne	.L23
+ 209              	.L12:
+  96:Core/Src/button_controller.c ****     {
+ 210              		.loc 1 96 5 is_stmt 1 view .LVU42
+  96:Core/Src/button_controller.c ****     {
+ 211              		.loc 1 96 8 is_stmt 0 view .LVU43
+ 212 002a 002D     		cmp	r5, #0
+ 213 002c 3FD0     		beq	.L13
+ 103:Core/Src/button_controller.c ****     {
+ 214              		.loc 1 103 5 is_stmt 1 view .LVU44
+ 103:Core/Src/button_controller.c ****     {
+ 215              		.loc 1 103 34 is_stmt 0 discriminator 1 view .LVU45
+ 216 002e 314B     		ldr	r3, .L25+4
+ 217 0030 1B78     		ldrb	r3, [r3]
+ 103:Core/Src/button_controller.c ****     {
+ 218              		.loc 1 103 31 discriminator 1 view .LVU46
+ 219 0032 002B     		cmp	r3, #0
+ 220 0034 48D0     		beq	.L24
+ 221              	.L14:
+ 112:Core/Src/button_controller.c ****     {
+ 222              		.loc 1 112 5 is_stmt 1 view .LVU47
+ 112:Core/Src/button_controller.c ****     {
+ 223              		.loc 1 112 9 is_stmt 0 view .LVU48
+ 224 0036 2F4B     		ldr	r3, .L25+4
+ 225 0038 1B78     		ldrb	r3, [r3]
+ 112:Core/Src/button_controller.c ****     {
+ 226              		.loc 1 112 8 view .LVU49
+ 227 003a 002B     		cmp	r3, #0
+ 228 003c 12D0     		beq	.L16
+ 112:Core/Src/button_controller.c ****     {
+ 229              		.loc 1 112 27 discriminator 1 view .LVU50
+ 230 003e 2E4B     		ldr	r3, .L25+8
+ 231 0040 1B78     		ldrb	r3, [r3]
+ 112:Core/Src/button_controller.c ****     {
+ 232              		.loc 1 112 24 discriminator 1 view .LVU51
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccekZCRE.s 			page 8
+
+
+ 233 0042 002B     		cmp	r3, #0
+ 234 0044 0ED1     		bne	.L16
+ 235              	.LBB2:
+ 114:Core/Src/button_controller.c ****         if (pressed_duration >= LONG_PRESS_TIME_MS)
+ 236              		.loc 1 114 9 is_stmt 1 view .LVU52
+ 114:Core/Src/button_controller.c ****         if (pressed_duration >= LONG_PRESS_TIME_MS)
+ 237              		.loc 1 114 41 is_stmt 0 view .LVU53
+ 238 0046 2D4B     		ldr	r3, .L25+12
+ 239 0048 1B68     		ldr	r3, [r3]
+ 114:Core/Src/button_controller.c ****         if (pressed_duration >= LONG_PRESS_TIME_MS)
+ 240              		.loc 1 114 18 view .LVU54
+ 241 004a E31A     		subs	r3, r4, r3
+ 242              	.LVL8:
+ 115:Core/Src/button_controller.c ****         {
+ 243              		.loc 1 115 9 is_stmt 1 view .LVU55
+ 115:Core/Src/button_controller.c ****         {
+ 244              		.loc 1 115 12 is_stmt 0 view .LVU56
+ 245 004c 2C4A     		ldr	r2, .L25+16
+ 246 004e 9342     		cmp	r3, r2
+ 247 0050 08D9     		bls	.L16
+ 117:Core/Src/button_controller.c ****             latest_event = BUTTON_EVENT_LONG_PRESS;
+ 248              		.loc 1 117 13 is_stmt 1 view .LVU57
+ 117:Core/Src/button_controller.c ****             latest_event = BUTTON_EVENT_LONG_PRESS;
+ 249              		.loc 1 117 33 is_stmt 0 view .LVU58
+ 250 0052 294B     		ldr	r3, .L25+8
+ 251              	.LVL9:
+ 117:Core/Src/button_controller.c ****             latest_event = BUTTON_EVENT_LONG_PRESS;
+ 252              		.loc 1 117 33 view .LVU59
+ 253 0054 0122     		movs	r2, #1
+ 254 0056 1A70     		strb	r2, [r3]
+ 118:Core/Src/button_controller.c ****             // Because it's a long press, we reset multi-press logic:
+ 255              		.loc 1 118 13 is_stmt 1 view .LVU60
+ 118:Core/Src/button_controller.c ****             // Because it's a long press, we reset multi-press logic:
+ 256              		.loc 1 118 26 is_stmt 0 view .LVU61
+ 257 0058 2A4B     		ldr	r3, .L25+20
+ 258 005a 0332     		adds	r2, r2, #3
+ 259 005c 1A70     		strb	r2, [r3]
+ 120:Core/Src/button_controller.c ****         }
+ 260              		.loc 1 120 13 is_stmt 1 view .LVU62
+ 120:Core/Src/button_controller.c ****         }
+ 261              		.loc 1 120 25 is_stmt 0 view .LVU63
+ 262 005e 2A4B     		ldr	r3, .L25+24
+ 263 0060 0022     		movs	r2, #0
+ 264 0062 1A70     		strb	r2, [r3]
+ 265              	.LVL10:
+ 266              	.L16:
+ 120:Core/Src/button_controller.c ****         }
+ 267              		.loc 1 120 25 view .LVU64
+ 268              	.LBE2:
+ 127:Core/Src/button_controller.c ****     {
+ 269              		.loc 1 127 5 is_stmt 1 view .LVU65
+ 127:Core/Src/button_controller.c ****     {
+ 270              		.loc 1 127 9 is_stmt 0 view .LVU66
+ 271 0064 234B     		ldr	r3, .L25+4
+ 272 0066 1B78     		ldrb	r3, [r3]
+ 127:Core/Src/button_controller.c ****     {
+ 273              		.loc 1 127 8 view .LVU67
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccekZCRE.s 			page 9
+
+
+ 274 0068 002B     		cmp	r3, #0
+ 275 006a D2D1     		bne	.L10
+ 127:Core/Src/button_controller.c ****     {
+ 276              		.loc 1 127 40 discriminator 1 view .LVU68
+ 277 006c 264B     		ldr	r3, .L25+24
+ 278 006e 1B78     		ldrb	r3, [r3]
+ 127:Core/Src/button_controller.c ****     {
+ 279              		.loc 1 127 25 discriminator 1 view .LVU69
+ 280 0070 002B     		cmp	r3, #0
+ 281 0072 CED0     		beq	.L10
+ 282              	.LBB3:
+ 130:Core/Src/button_controller.c **** 
+ 283              		.loc 1 130 9 is_stmt 1 view .LVU70
+ 130:Core/Src/button_controller.c **** 
+ 284              		.loc 1 130 30 is_stmt 0 view .LVU71
+ 285 0074 254A     		ldr	r2, .L25+28
+ 286 0076 1268     		ldr	r2, [r2]
+ 130:Core/Src/button_controller.c **** 
+ 287              		.loc 1 130 18 view .LVU72
+ 288 0078 A41A     		subs	r4, r4, r2
+ 289              	.LVL11:
+ 132:Core/Src/button_controller.c ****         {
+ 290              		.loc 1 132 9 is_stmt 1 view .LVU73
+ 132:Core/Src/button_controller.c ****         {
+ 291              		.loc 1 132 12 is_stmt 0 view .LVU74
+ 292 007a FA22     		movs	r2, #250
+ 293 007c 5200     		lsls	r2, r2, #1
+ 294 007e 9442     		cmp	r4, r2
+ 295 0080 C7D3     		bcc	.L10
+ 135:Core/Src/button_controller.c ****             {
+ 296              		.loc 1 135 13 is_stmt 1 view .LVU75
+ 297 0082 022B     		cmp	r3, #2
+ 298 0084 28D0     		beq	.L17
+ 299 0086 032B     		cmp	r3, #3
+ 300 0088 2AD0     		beq	.L18
+ 301 008a 012B     		cmp	r3, #1
+ 302 008c 2CD1     		bne	.L19
+ 138:Core/Src/button_controller.c ****                     break;
+ 303              		.loc 1 138 21 view .LVU76
+ 138:Core/Src/button_controller.c ****                     break;
+ 304              		.loc 1 138 34 is_stmt 0 view .LVU77
+ 305 008e 1D4B     		ldr	r3, .L25+20
+ 306 0090 F43A     		subs	r2, r2, #244
+ 307 0092 FF3A     		subs	r2, r2, #255
+ 308 0094 1A70     		strb	r2, [r3]
+ 139:Core/Src/button_controller.c ****                 case 2:
+ 309              		.loc 1 139 21 is_stmt 1 view .LVU78
+ 310              	.L20:
+ 151:Core/Src/button_controller.c ****         }
+ 311              		.loc 1 151 13 view .LVU79
+ 151:Core/Src/button_controller.c ****         }
+ 312              		.loc 1 151 25 is_stmt 0 view .LVU80
+ 313 0096 1C4B     		ldr	r3, .L25+24
+ 314 0098 0022     		movs	r2, #0
+ 315 009a 1A70     		strb	r2, [r3]
+ 316 009c B9E7     		b	.L10
+ 317              	.LVL12:
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccekZCRE.s 			page 10
+
+
+ 318              	.L23:
+ 151:Core/Src/button_controller.c ****         }
+ 319              		.loc 1 151 25 view .LVU81
+ 320              	.LBE3:
+ 321              	.LBB4:
+  87:Core/Src/button_controller.c ****         if ((now - press_start_time) < DEBOUNCE_TIME_MS)
+ 322              		.loc 1 87 9 is_stmt 1 view .LVU82
+  87:Core/Src/button_controller.c ****         if ((now - press_start_time) < DEBOUNCE_TIME_MS)
+ 323              		.loc 1 87 24 is_stmt 0 view .LVU83
+ 324 009e FFF7FEFF 		bl	HAL_GetTick
+ 325              	.LVL13:
+  88:Core/Src/button_controller.c ****         {
+ 326              		.loc 1 88 9 is_stmt 1 view .LVU84
+  88:Core/Src/button_controller.c ****         {
+ 327              		.loc 1 88 18 is_stmt 0 view .LVU85
+ 328 00a2 164B     		ldr	r3, .L25+12
+ 329 00a4 1B68     		ldr	r3, [r3]
+ 330 00a6 C01A     		subs	r0, r0, r3
+ 331              	.LVL14:
+  88:Core/Src/button_controller.c ****         {
+ 332              		.loc 1 88 12 view .LVU86
+ 333 00a8 3128     		cmp	r0, #49
+ 334 00aa BED8     		bhi	.L12
+ 335 00ac B1E7     		b	.L10
+ 336              	.LVL15:
+ 337              	.L13:
+  88:Core/Src/button_controller.c ****         {
+ 338              		.loc 1 88 12 view .LVU87
+ 339              	.LBE4:
+  96:Core/Src/button_controller.c ****     {
+ 340              		.loc 1 96 32 discriminator 1 view .LVU88
+ 341 00ae 114B     		ldr	r3, .L25+4
+ 342 00b0 1B78     		ldrb	r3, [r3]
+ 343 00b2 002B     		cmp	r3, #0
+ 344 00b4 BFD0     		beq	.L14
+  98:Core/Src/button_controller.c ****         press_count++;
+ 345              		.loc 1 98 9 is_stmt 1 view .LVU89
+  98:Core/Src/button_controller.c ****         press_count++;
+ 346              		.loc 1 98 28 is_stmt 0 view .LVU90
+ 347 00b6 FFF7FEFF 		bl	HAL_GetTick
+ 348              	.LVL16:
+  98:Core/Src/button_controller.c ****         press_count++;
+ 349              		.loc 1 98 26 discriminator 1 view .LVU91
+ 350 00ba 104B     		ldr	r3, .L25+12
+ 351 00bc 1860     		str	r0, [r3]
+  99:Core/Src/button_controller.c ****     }
+ 352              		.loc 1 99 9 is_stmt 1 view .LVU92
+  99:Core/Src/button_controller.c ****     }
+ 353              		.loc 1 99 20 is_stmt 0 view .LVU93
+ 354 00be 124A     		ldr	r2, .L25+24
+ 355 00c0 1378     		ldrb	r3, [r2]
+ 356 00c2 0133     		adds	r3, r3, #1
+ 357 00c4 1370     		strb	r3, [r2]
+ 358 00c6 B6E7     		b	.L14
+ 359              	.L24:
+ 105:Core/Src/button_controller.c ****         long_press_reported = false;
+ 360              		.loc 1 105 9 is_stmt 1 view .LVU94
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccekZCRE.s 			page 11
+
+
+ 105:Core/Src/button_controller.c ****         long_press_reported = false;
+ 361              		.loc 1 105 29 is_stmt 0 view .LVU95
+ 362 00c8 FFF7FEFF 		bl	HAL_GetTick
+ 363              	.LVL17:
+ 105:Core/Src/button_controller.c ****         long_press_reported = false;
+ 364              		.loc 1 105 27 discriminator 1 view .LVU96
+ 365 00cc 0F4B     		ldr	r3, .L25+28
+ 366 00ce 1860     		str	r0, [r3]
+ 106:Core/Src/button_controller.c ****     }
+ 367              		.loc 1 106 9 is_stmt 1 view .LVU97
+ 106:Core/Src/button_controller.c ****     }
+ 368              		.loc 1 106 29 is_stmt 0 view .LVU98
+ 369 00d0 094B     		ldr	r3, .L25+8
+ 370 00d2 0022     		movs	r2, #0
+ 371 00d4 1A70     		strb	r2, [r3]
+ 372 00d6 AEE7     		b	.L14
+ 373              	.LVL18:
+ 374              	.L17:
+ 375              	.LBB5:
+ 141:Core/Src/button_controller.c ****                     break;
+ 376              		.loc 1 141 21 is_stmt 1 view .LVU99
+ 141:Core/Src/button_controller.c ****                     break;
+ 377              		.loc 1 141 34 is_stmt 0 view .LVU100
+ 378 00d8 0A4B     		ldr	r3, .L25+20
+ 379 00da 0222     		movs	r2, #2
+ 380 00dc 1A70     		strb	r2, [r3]
+ 142:Core/Src/button_controller.c ****                 case 3:
+ 381              		.loc 1 142 21 is_stmt 1 view .LVU101
+ 382 00de DAE7     		b	.L20
+ 383              	.L18:
+ 144:Core/Src/button_controller.c ****                     break;
+ 384              		.loc 1 144 21 view .LVU102
+ 144:Core/Src/button_controller.c ****                     break;
+ 385              		.loc 1 144 34 is_stmt 0 view .LVU103
+ 386 00e0 084B     		ldr	r3, .L25+20
+ 387 00e2 0322     		movs	r2, #3
+ 388 00e4 1A70     		strb	r2, [r3]
+ 145:Core/Src/button_controller.c ****                 default:
+ 389              		.loc 1 145 21 is_stmt 1 view .LVU104
+ 390 00e6 D6E7     		b	.L20
+ 391              	.L19:
+ 148:Core/Src/button_controller.c ****                     break;
+ 392              		.loc 1 148 21 view .LVU105
+ 148:Core/Src/button_controller.c ****                     break;
+ 393              		.loc 1 148 34 is_stmt 0 view .LVU106
+ 394 00e8 064B     		ldr	r3, .L25+20
+ 395 00ea 0322     		movs	r2, #3
+ 396 00ec 1A70     		strb	r2, [r3]
+ 149:Core/Src/button_controller.c ****             }
+ 397              		.loc 1 149 21 is_stmt 1 view .LVU107
+ 398 00ee D2E7     		b	.L20
+ 399              	.L26:
+ 400              		.align	2
+ 401              	.L25:
+ 402 00f0 00000000 		.word	last_check_time.0
+ 403 00f4 00000000 		.word	button_pressed
+ 404 00f8 00000000 		.word	long_press_reported
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccekZCRE.s 			page 12
+
+
+ 405 00fc 00000000 		.word	press_start_time
+ 406 0100 B70B0000 		.word	2999
+ 407 0104 00000000 		.word	latest_event
+ 408 0108 00000000 		.word	press_count
+ 409 010c 00000000 		.word	last_release_time
+ 410              	.LBE5:
+ 411              		.cfi_endproc
+ 412              	.LFE43:
+ 414              		.section	.text.button_controller_get_event,"ax",%progbits
+ 415              		.align	1
+ 416              		.global	button_controller_get_event
+ 417              		.syntax unified
+ 418              		.code	16
+ 419              		.thumb_func
+ 421              	button_controller_get_event:
+ 422              	.LFB44:
+ 155:Core/Src/button_controller.c **** 
+ 156:Core/Src/button_controller.c **** /**
+ 157:Core/Src/button_controller.c ****  * @brief Returns the latest detected event and clears it from internal storage.
+ 158:Core/Src/button_controller.c ****  */
+ 159:Core/Src/button_controller.c **** button_event_t button_controller_get_event(void)
+ 160:Core/Src/button_controller.c **** {
+ 423              		.loc 1 160 1 view -0
+ 424              		.cfi_startproc
+ 425              		@ args = 0, pretend = 0, frame = 0
+ 426              		@ frame_needed = 0, uses_anonymous_args = 0
+ 427              		@ link register save eliminated.
+ 161:Core/Src/button_controller.c ****     button_event_t ev = latest_event;
+ 428              		.loc 1 161 5 view .LVU109
+ 429              		.loc 1 161 20 is_stmt 0 view .LVU110
+ 430 0000 024B     		ldr	r3, .L28
+ 431 0002 1878     		ldrb	r0, [r3]
+ 432 0004 C0B2     		uxtb	r0, r0
+ 433              	.LVL19:
+ 162:Core/Src/button_controller.c ****     latest_event = BUTTON_EVENT_NONE;
+ 434              		.loc 1 162 5 is_stmt 1 view .LVU111
+ 435              		.loc 1 162 18 is_stmt 0 view .LVU112
+ 436 0006 0022     		movs	r2, #0
+ 437 0008 1A70     		strb	r2, [r3]
+ 163:Core/Src/button_controller.c ****     return ev;
+ 438              		.loc 1 163 5 is_stmt 1 view .LVU113
+ 164:Core/Src/button_controller.c **** }
+ 439              		.loc 1 164 1 is_stmt 0 view .LVU114
+ 440              		@ sp needed
+ 441 000a 7047     		bx	lr
+ 442              	.L29:
+ 443              		.align	2
+ 444              	.L28:
+ 445 000c 00000000 		.word	latest_event
+ 446              		.cfi_endproc
+ 447              	.LFE44:
+ 449              		.section	.bss.last_check_time.0,"aw",%nobits
+ 450              		.align	2
+ 453              	last_check_time.0:
+ 454 0000 00000000 		.space	4
+ 455              		.section	.bss.latest_event,"aw",%nobits
+ 458              	latest_event:
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccekZCRE.s 			page 13
+
+
+ 459 0000 00       		.space	1
+ 460              		.section	.bss.long_press_reported,"aw",%nobits
+ 463              	long_press_reported:
+ 464 0000 00       		.space	1
+ 465              		.section	.bss.press_count,"aw",%nobits
+ 468              	press_count:
+ 469 0000 00       		.space	1
+ 470              		.section	.bss.last_release_time,"aw",%nobits
+ 471              		.align	2
+ 474              	last_release_time:
+ 475 0000 00000000 		.space	4
+ 476              		.section	.bss.press_start_time,"aw",%nobits
+ 477              		.align	2
+ 480              	press_start_time:
+ 481 0000 00000000 		.space	4
+ 482              		.section	.bss.button_pressed,"aw",%nobits
+ 485              	button_pressed:
+ 486 0000 00       		.space	1
+ 487              		.text
+ 488              	.Letext0:
+ 489              		.file 2 "/Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/arm-none-eabi/include/machine/_defa
+ 490              		.file 3 "/Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/arm-none-eabi/include/sys/_stdint.h
+ 491              		.file 4 "Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f030x8.h"
+ 492              		.file 5 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_gpio.h"
+ 493              		.file 6 "Core/Inc/button_controller.h"
+ 494              		.file 7 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h"
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccekZCRE.s 			page 14
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 button_controller.c
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccekZCRE.s:19     .text.read_raw_button_state:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccekZCRE.s:24     .text.read_raw_button_state:00000000 read_raw_button_state
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccekZCRE.s:51     .text.read_raw_button_state:00000014 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccekZCRE.s:56     .text.button_controller_initialize:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccekZCRE.s:62     .text.button_controller_initialize:00000000 button_controller_initialize
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccekZCRE.s:107    .text.button_controller_initialize:00000024 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccekZCRE.s:485    .bss.button_pressed:00000000 button_pressed
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccekZCRE.s:480    .bss.press_start_time:00000000 press_start_time
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccekZCRE.s:474    .bss.last_release_time:00000000 last_release_time
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccekZCRE.s:468    .bss.press_count:00000000 press_count
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccekZCRE.s:463    .bss.long_press_reported:00000000 long_press_reported
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccekZCRE.s:458    .bss.latest_event:00000000 latest_event
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccekZCRE.s:117    .text.button_is_pressed:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccekZCRE.s:123    .text.button_is_pressed:00000000 button_is_pressed
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccekZCRE.s:141    .text.button_is_pressed:00000008 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccekZCRE.s:146    .text.button_controller_update:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccekZCRE.s:152    .text.button_controller_update:00000000 button_controller_update
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccekZCRE.s:402    .text.button_controller_update:000000f0 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccekZCRE.s:453    .bss.last_check_time.0:00000000 last_check_time.0
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccekZCRE.s:415    .text.button_controller_get_event:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccekZCRE.s:421    .text.button_controller_get_event:00000000 button_controller_get_event
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccekZCRE.s:445    .text.button_controller_get_event:0000000c $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccekZCRE.s:450    .bss.last_check_time.0:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccekZCRE.s:459    .bss.latest_event:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccekZCRE.s:464    .bss.long_press_reported:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccekZCRE.s:469    .bss.press_count:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccekZCRE.s:471    .bss.last_release_time:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccekZCRE.s:477    .bss.press_start_time:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccekZCRE.s:486    .bss.button_pressed:00000000 $d
+
+UNDEFINED SYMBOLS
+HAL_GPIO_ReadPin
+HAL_GetTick

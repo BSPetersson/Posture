@@ -3,6 +3,7 @@
 
 #include "accelerometer_controller.h"
 #include "button_controller.h"
+#include "led_controller.h"
 #include <stdbool.h>
 
 #ifdef __cplusplus

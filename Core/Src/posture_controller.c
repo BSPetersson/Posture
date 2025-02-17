@@ -6,8 +6,8 @@
 #include <math.h>
 
 // Constants
-#define DEFAULT_THRESHOLD_ANGLE_RAD (15.0f * (M_PI / 180.0f))  // 15 degrees (in radians)
-#define EMA_ALPHA                   0.2f    // Weight for exponential moving average update
+#define DEFAULT_THRESHOLD_ANGLE_RAD (20.0f * (M_PI / 180.0f))  // 15 degrees (in radians)
+#define EMA_ALPHA                   0.5f    // Weight for exponential moving average update
 
 // Internal state variables
 static float measured_vector[3];
@@ -72,17 +72,19 @@ void posture_controller_update(void) {
         last_good_posture_time = now;
     }
 
-    if (last_good_posture_time > last_bad_posture_time && (last_good_posture_time - last_bad_posture_time) > 5000) {
+    if (last_good_posture_time > last_bad_posture_time && (last_good_posture_time - last_bad_posture_time) > 1000 && !is_posture_correct) {
         is_posture_correct = true;
+        update_reference_vector();
     }
 
-    if (last_bad_posture_time > last_good_posture_time && (last_bad_posture_time - last_good_posture_time) > 5000) {
+    if (last_bad_posture_time > last_good_posture_time && (last_bad_posture_time - last_good_posture_time) > 1000 && is_posture_correct) {
         is_posture_correct = false;
     }
 }
 
 bool posture_controller_is_posture_correct(void) {
     haptic_feedback_disable();
+    led_off();
     return is_posture_correct;
 }
 
@@ -90,6 +92,7 @@ bool posture_controller_handle_bad_posture(void) {
     // Trigger hapic feedback constantly
     haptic_feedback_play_waveform(0x01);
     haptic_feedback_start();
+    led_on(100);
     return is_posture_correct;
 }
 

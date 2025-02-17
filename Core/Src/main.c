@@ -356,11 +356,11 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-    if (GPIO_Pin == GPIO_PIN_5)
-    {
-        button_handle_exti();
-    }
-    else if (GPIO_Pin == GPIO_PIN_0)
+    // if (GPIO_Pin == GPIO_PIN_5)
+    // {
+    //     button_handle_exti();
+    // }
+    if (GPIO_Pin == GPIO_PIN_0)
     {
         accelerometer_handle_int2();
     }

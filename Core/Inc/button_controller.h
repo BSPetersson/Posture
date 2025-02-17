@@ -45,6 +45,6 @@ void button_controller_update(void);
  */
 button_event_t button_controller_get_event(void);
 
-void button_handle_exti();
+// void button_handle_exti();
 
 #endif // BUTTON_CONTROLLER_H

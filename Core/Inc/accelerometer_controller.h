@@ -218,7 +218,7 @@ accel_data_t accelerometer_controller_get_latest_data(void);
 #define ACCEL_DEVIATION_THRESHOLD (0.1f * ACCEL_G) // Adjust as needed
 
 // Time (in milliseconds) that the deviation must persist to confirm each condition.
-#define MOTION_TIME_THRESHOLD_MS    1000  // e.g., 1 second for motion detection
-#define NO_MOTION_TIME_THRESHOLD_MS 1000  // e.g., 1 second for no-motion detection
+#define MOTION_TIME_THRESHOLD_MS    10000  // e.g., 1 second for motion detection
+#define NO_MOTION_TIME_THRESHOLD_MS 300000 // e.g., 5 minutes for no-motion detection
 
 #endif // ACCELEROMETER_CONTROLLER_H
