@@ -101,12 +101,37 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    // Update all controllers
-    accelerometer_controller_update();
-    led_controller_update();
-    button_controller_update();
-    posture_controller_update();
-    state_machine_update();
+    uint32_t now = HAL_GetTick();
+    static uint32_t last_acc_update = 0;
+    static uint32_t last_led_update = 0;
+    static uint32_t last_button_update = 0;
+    static uint32_t last_posture_update = 0;
+    static uint32_t last_state_machine_update = 0;
+
+    if ((now - last_acc_update) >= ACCELEROMETER_UPDATE_THROTTLE_MS) {
+        accelerometer_controller_update();
+        last_acc_update = now;
+    }
+
+    if ((now - last_led_update) >= LED_UPDATE_THROTTLE_MS) {
+        led_controller_update();
+        last_led_update = now;
+    }
+
+    if ((now - last_button_update) >= BUTTON_UPDATE_THROTTLE_MS) {
+        button_controller_update();
+        last_button_update = now;
+    }
+
+    if ((now - last_posture_update) >= POSTURE_UPDATE_THROTTLE_MS) {
+        posture_controller_update();
+        last_posture_update = now;
+    }
+
+    if ((now - last_state_machine_update) >= STATE_MACHINE_UPDATE_THROTTLE_MS) {
+        state_machine_update();
+        last_state_machine_update = now;
+    }
 
     /* USER CODE END WHILE */
 

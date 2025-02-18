@@ -62,13 +62,7 @@ bool button_is_pressed(void)
  */
 void button_controller_update(void)
 {   
-    static uint32_t last_check_time = 0;
     uint32_t now = HAL_GetTick();
-    // If we haven't waited enough to avoid excessive checking, skip
-    if ((now - last_check_time) < 10U) {
-        return;
-    }
-    last_check_time = now;
     
     bool button_pressed_before = button_pressed;
     button_pressed = read_raw_button_state();

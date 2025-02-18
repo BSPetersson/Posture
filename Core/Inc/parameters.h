@@ -50,4 +50,11 @@
 #define POSTURE_EMA_ALPHA                    0.5f
 #define POSTURE_TRANSITION_TIME_MS           1000U
 
+/* Update Throttle Parameters */
+#define ACCELEROMETER_UPDATE_THROTTLE_MS 20U
+#define LED_UPDATE_THROTTLE_MS             10U
+#define BUTTON_UPDATE_THROTTLE_MS          10U
+#define POSTURE_UPDATE_THROTTLE_MS         20U
+#define STATE_MACHINE_UPDATE_THROTTLE_MS   20U
+
 #endif // PARAMETERS_H 
