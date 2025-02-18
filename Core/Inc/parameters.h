@@ -48,7 +48,8 @@
 /* Posture Controller Parameters */
 #define POSTURE_DEFAULT_THRESHOLD_ANGLE_RAD (20.0f * (M_PI / 180.0f))
 #define POSTURE_EMA_ALPHA                    0.5f
-#define POSTURE_TRANSITION_TIME_MS           1000U
+#define POSTURE_GOOD_TRANSITION_TIME_MS      1000U
+#define POSTURE_BAD_TRANSITION_TIME_MS       1000U
 
 /* Update Throttle Parameters */
 #define ACCELEROMETER_UPDATE_THROTTLE_MS 20U
