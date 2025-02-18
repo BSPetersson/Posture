@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <math.h>
+#include "parameters.h"
 
 // -----------------------------
 // Register Addresses and Macros

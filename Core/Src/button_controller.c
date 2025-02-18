@@ -4,15 +4,6 @@
 // Configuration Constants
 // ------------------------------
 
-// Debounce time (ms) for press/release transitions
-#define DEBOUNCE_TIME_MS       50U
-
-// Max gap between presses for them to be considered a multi-press
-#define MULTI_PRESS_GAP_MS    500U
-
-// Minimum time (ms) for a press to be considered "long"
-#define LONG_PRESS_TIME_MS   3000U
-
 // ------------------------------
 // Internal State Variables
 // ------------------------------
@@ -85,7 +76,7 @@ void button_controller_update(void)
     if (button_pressed_before != button_pressed)
     {
         uint32_t now = HAL_GetTick();
-        if ((now - press_start_time) < DEBOUNCE_TIME_MS)
+        if ((now - press_start_time) < BUTTON_DEBOUNCE_TIME_MS)
         {
             // If we haven't waited enough, skip
             return;
@@ -108,11 +99,11 @@ void button_controller_update(void)
 
     // 1) Long press detection
     //    If the button is pressed and we haven't yet reported a long press,
-    //    check if the pressed duration > LONG_PRESS_TIME_MS
+    //    check if the pressed duration > BUTTON_LONG_PRESS_TIME_MS
     if (button_pressed && !long_press_reported)
     {
         uint32_t pressed_duration = now - press_start_time;
-        if (pressed_duration >= LONG_PRESS_TIME_MS)
+        if (pressed_duration >= BUTTON_LONG_PRESS_TIME_MS)
         {
             long_press_reported = true;
             latest_event = BUTTON_EVENT_LONG_PRESS;
@@ -129,7 +120,7 @@ void button_controller_update(void)
         // Time since last release
         uint32_t delta = now - last_release_time;
 
-        if (delta >= MULTI_PRESS_GAP_MS)
+        if (delta >= BUTTON_MULTI_PRESS_GAP_MS)
         {
             // If we get here, no additional press happened within the multi-press gap
             switch (press_count)

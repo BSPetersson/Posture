@@ -1,5 +1,6 @@
 #include "led_controller.h"
 #include "main.h"  // For external reference to htim16
+#include "parameters.h"
 
 // External TIM handle from main.c
 extern TIM_HandleTypeDef htim16;
@@ -91,26 +92,22 @@ void led_controller_update(void)
     switch (led_state.sequence)
     {
         case LED_SEQ_THREE_BLINKS:
-            // Blink: 200ms on at 50%, 200ms off.
             if (now >= led_state.next_update)
             {
                 if (led_state.substate == 0)
                 {
-                    // Turn LED on at 50%.
-                    update_pwm(50);
-                    led_state.next_update = now + 200;
+                    update_pwm(LED_THREE_BLINKS_BRIGHTNESS);
+                    led_state.next_update = now + LED_THREE_BLINKS_ON_TIME_MS;
                     led_state.substate = 1;
                 }
                 else // substate == 1
                 {
-                    // Turn LED off.
                     update_pwm(0);
-                    led_state.next_update = now + 200;
+                    led_state.next_update = now + LED_THREE_BLINKS_OFF_TIME_MS;
                     led_state.substate = 0;
                     led_state.current_blink++;
-                    if (led_state.current_blink >= 3)
+                    if (led_state.current_blink >= LED_THREE_BLINKS_COUNT)
                     {
-                        // Sequence complete.
                         led_state.sequence = LED_SEQ_NONE;
                         led_state.active = false;
                     }
@@ -119,22 +116,21 @@ void led_controller_update(void)
             break;
 
         case LED_SEQ_DOUBLE_BLINK:
-            // Blink: 400ms on at 80%, 400ms off.
             if (now >= led_state.next_update)
             {
                 if (led_state.substate == 0)
                 {
-                    update_pwm(80);
-                    led_state.next_update = now + 400;
+                    update_pwm(LED_DOUBLE_BLINK_BRIGHTNESS);
+                    led_state.next_update = now + LED_DOUBLE_BLINK_ON_TIME_MS;
                     led_state.substate = 1;
                 }
                 else // substate == 1
                 {
                     update_pwm(0);
-                    led_state.next_update = now + 400;
+                    led_state.next_update = now + LED_DOUBLE_BLINK_OFF_TIME_MS;
                     led_state.substate = 0;
                     led_state.current_blink++;
-                    if (led_state.current_blink >= 2)
+                    if (led_state.current_blink >= LED_DOUBLE_BLINK_COUNT)
                     {
                         led_state.sequence = LED_SEQ_NONE;
                         led_state.active = false;
@@ -144,22 +140,18 @@ void led_controller_update(void)
             break;
 
         case LED_SEQ_FADE_IN_OUT:
-            // Fade in from 0 to 100, then fade out back to 0.
             if (now >= led_state.next_update)
             {
                 update_pwm(led_state.brightness);
-                led_state.next_update = now + 10;  // Update every 10ms.
-                // Update brightness.
+                led_state.next_update = now + LED_FADE_UPDATE_TIME_MS;
                 led_state.brightness += led_state.fade_direction;
-                // Check bounds.
-                if (led_state.brightness >= 100 && led_state.fade_direction > 0)
+                if (led_state.brightness >= LED_FADE_MAX_BRIGHTNESS && led_state.fade_direction > 0)
                 {
-                    led_state.brightness = 100;
+                    led_state.brightness = LED_FADE_MAX_BRIGHTNESS;
                     led_state.fade_direction = -1;
                 }
                 else if (led_state.brightness == 0 && led_state.fade_direction < 0)
                 {
-                    // Sequence complete.
                     update_pwm(0);
                     led_state.sequence = LED_SEQ_NONE;
                     led_state.active = false;

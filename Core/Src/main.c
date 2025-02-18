@@ -8,8 +8,7 @@
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
 #include "string.h"
-
-#define UART_BUFFER_SIZE 256
+#include "parameters.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
