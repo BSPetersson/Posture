@@ -1,6 +1,9 @@
 {
     "workspaceKeybindings.firmwareTasks.enabled": true,
     "files.associations": {
-        "stm32f0xx_hal.h": "c"
+        "stm32f0xx_hal.h": "c",
+        "button_controller.h": "c",
+        "haptic_feedback_controller.h": "c",
+        "posture_controller.h": "c"
     }
 }

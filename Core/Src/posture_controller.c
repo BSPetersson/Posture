@@ -15,7 +15,7 @@
 // Internal state variables
 static float measured_vector[3];
 static float reference_vector[3];
-static float threshold_angle = DEFAULT_THRESHOLD_ANGLE_RAD;
+static float threshold_angle = POSTURE_DEFAULT_THRESHOLD_ANGLE_RAD;
 static float current_angle = 0.0f;
 static bool is_posture_correct = true;
 uint32_t last_bad_posture_time = 0;
@@ -86,9 +86,9 @@ static float compute_angle_variance(void) {
 // High variance implies low confidence so we update more aggressively.
 static float compute_adaptive_alpha(void) {
     float var = compute_angle_variance();
-    float adaptive_alpha = MAX_LEARNING_ALPHA;
+    float adaptive_alpha = MIN_LEARNING_ALPHA;
     if (var > 0.0f) {
-        adaptive_alpha = (VARIANCE_CONFIDENCE_SCALING / (var + VARIANCE_CONFIDENCE_SCALING)) * MAX_LEARNING_ALPHA;
+        adaptive_alpha = (var / (var + VARIANCE_CONFIDENCE_SCALING)) * MAX_LEARNING_ALPHA;
     }
     if (adaptive_alpha < MIN_LEARNING_ALPHA)
         adaptive_alpha = MIN_LEARNING_ALPHA;
@@ -143,7 +143,7 @@ static float get_angle(void) {
 // ---------------------------------------------------------------------------
 // posture_controller_initialize: Sets the initial reference and resets state.
 void posture_controller_initialize(void) {
-    threshold_angle = DEFAULT_THRESHOLD_ANGLE_RAD;
+    threshold_angle = POSTURE_DEFAULT_THRESHOLD_ANGLE_RAD;
     
     accel_data_t data = accelerometer_controller_get_latest_data();
     reference_vector[0] = data.x_mps2;
@@ -204,7 +204,7 @@ void posture_controller_update(void) {
     if (is_posture_correct) {
         float adaptive_alpha = compute_adaptive_alpha();
         float stddev = sqrtf(compute_angle_variance());
-        float target_threshold = DEFAULT_THRESHOLD_ANGLE_RAD + THRESHOLD_VARIANCE_MULTIPLIER * stddev;
+        float target_threshold = POSTURE_DEFAULT_THRESHOLD_ANGLE_RAD + THRESHOLD_VARIANCE_MULTIPLIER * stddev;
         threshold_angle = (1.0f - adaptive_alpha) * threshold_angle + adaptive_alpha * target_threshold;
     }
 }

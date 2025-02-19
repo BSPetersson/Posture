@@ -1,4 +1,5 @@
 #include "button_controller.h"
+#include "parameters.h"
 
 // ------------------------------
 // Configuration Constants

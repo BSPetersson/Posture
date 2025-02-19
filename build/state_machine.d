@@ -28,8 +28,8 @@ build/state_machine.o: Core/Src/state_machine.c Core/Inc/state_machine.h \
  Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart.h \
  Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart_ex.h \
  Core/Inc/led_controller.h Core/Inc/button_controller.h \
- Core/Inc/accelerometer_controller.h Core/Inc/posture_controller.h \
- Core/Inc/sleep_controller.h
+ Core/Inc/accelerometer_controller.h Core/Inc/parameters.h \
+ Core/Inc/posture_controller.h Core/Inc/sleep_controller.h
 Core/Inc/state_machine.h:
 Core/Inc/haptic_feedback_controller.h:
 Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h:
@@ -64,5 +64,6 @@ Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart_ex.h:
 Core/Inc/led_controller.h:
 Core/Inc/button_controller.h:
 Core/Inc/accelerometer_controller.h:
+Core/Inc/parameters.h:
 Core/Inc/posture_controller.h:
 Core/Inc/sleep_controller.h:

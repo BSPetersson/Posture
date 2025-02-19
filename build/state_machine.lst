@@ -1,4 +1,4 @@
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s 			page 1
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccuagYuw.s 			page 1
 
 
    1              		.cpu cortex-m0
@@ -58,7 +58,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s 			page 1
   50              		.syntax unified
   51              		.code	16
   52              		.thumb_func
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s 			page 2
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccuagYuw.s 			page 2
 
 
   54              	handle_monitoring_state:
@@ -118,7 +118,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s 			page 1
   67 0002 FFF7FEFF 		bl	posture_controller_is_posture_correct
   68              	.LVL0:
   69              		.loc 1 48 8 discriminator 1 view .LVU7
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s 			page 3
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccuagYuw.s 			page 3
 
 
   70 0006 0028     		cmp	r0, #0
@@ -178,7 +178,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s 			page 1
   56:Core/Src/state_machine.c ****     }
   57:Core/Src/state_machine.c **** }
  119              		.loc 1 57 1 view .LVU17
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s 			page 4
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccuagYuw.s 			page 4
 
 
  120              		@ sp needed
@@ -238,7 +238,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s 			page 1
  173              	.LFB45:
   63:Core/Src/state_machine.c **** 
   64:Core/Src/state_machine.c **** void handle_activity_state() {
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s 			page 5
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccuagYuw.s 			page 5
 
 
  174              		.loc 1 64 30 is_stmt 1 view -0
@@ -298,7 +298,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s 			page 1
   71:Core/Src/state_machine.c ****     sleep_controller_activate_sleep_mode();
  224              		.loc 1 71 5 view .LVU31
  225 0002 FFF7FEFF 		bl	sleep_controller_activate_sleep_mode
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s 			page 6
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccuagYuw.s 			page 6
 
 
  226              	.LVL4:
@@ -358,7 +358,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s 			page 1
   16:Core/Src/state_machine.c ****         current_state = DEVICE_STATE_ACTIVITY_STATE;
  272              		.loc 1 16 8 discriminator 1 view .LVU41
  273 000e 0028     		cmp	r0, #0
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s 			page 7
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccuagYuw.s 			page 7
 
 
  274 0010 02D0     		beq	.L24
@@ -418,7 +418,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s 			page 1
  318 003c E5E7     		b	.L23
  319              	.L32:
   27:Core/Src/state_machine.c ****             break;
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s 			page 8
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccuagYuw.s 			page 8
 
 
  320              		.loc 1 27 13 is_stmt 1 view .LVU52
@@ -478,7 +478,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s 			page 1
  364              		.syntax unified
  365              		.code	16
  366              		.thumb_func
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s 			page 9
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccuagYuw.s 			page 9
 
 
  368              	handle_test_state:
@@ -508,37 +508,37 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s 			page 1
  391              		.file 4 "Core/Inc/sleep_controller.h"
  392              		.file 5 "Core/Inc/posture_controller.h"
  393              		.file 6 "Core/Inc/accelerometer_controller.h"
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s 			page 10
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccuagYuw.s 			page 10
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 state_machine.c
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:19     .text.state_machine_initialize:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:25     .text.state_machine_initialize:00000000 state_machine_initialize
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:43     .text.state_machine_initialize:00000008 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:385    .bss.current_state:00000000 current_state
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:48     .text.handle_monitoring_state:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:54     .text.handle_monitoring_state:00000000 handle_monitoring_state
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:84     .text.handle_monitoring_state:00000014 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:89     .text.handle_bad_posture_state:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:95     .text.handle_bad_posture_state:00000000 handle_bad_posture_state
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:125    .text.handle_bad_posture_state:00000014 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:130    .text.handle_calibration_state:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:136    .text.handle_calibration_state:00000000 handle_calibration_state
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:161    .text.handle_calibration_state:00000010 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:166    .text.handle_activity_state:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:172    .text.handle_activity_state:00000000 handle_activity_state
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:202    .text.handle_activity_state:00000014 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:207    .text.handle_sleep_state:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:213    .text.handle_sleep_state:00000000 handle_sleep_state
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:238    .text.handle_sleep_state:00000010 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:243    .text.state_machine_update:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:249    .text.state_machine_update:00000000 state_machine_update
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:304    .rodata.state_machine_update:00000000 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:356    .text.state_machine_update:0000005c $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:362    .text.handle_test_state:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:368    .text.handle_test_state:00000000 handle_test_state
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMELNWz.s:386    .bss.current_state:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccuagYuw.s:19     .text.state_machine_initialize:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccuagYuw.s:25     .text.state_machine_initialize:00000000 state_machine_initialize
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccuagYuw.s:43     .text.state_machine_initialize:00000008 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccuagYuw.s:385    .bss.current_state:00000000 current_state
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccuagYuw.s:48     .text.handle_monitoring_state:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccuagYuw.s:54     .text.handle_monitoring_state:00000000 handle_monitoring_state
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccuagYuw.s:84     .text.handle_monitoring_state:00000014 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccuagYuw.s:89     .text.handle_bad_posture_state:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccuagYuw.s:95     .text.handle_bad_posture_state:00000000 handle_bad_posture_state
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccuagYuw.s:125    .text.handle_bad_posture_state:00000014 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccuagYuw.s:130    .text.handle_calibration_state:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccuagYuw.s:136    .text.handle_calibration_state:00000000 handle_calibration_state
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccuagYuw.s:161    .text.handle_calibration_state:00000010 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccuagYuw.s:166    .text.handle_activity_state:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccuagYuw.s:172    .text.handle_activity_state:00000000 handle_activity_state
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccuagYuw.s:202    .text.handle_activity_state:00000014 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccuagYuw.s:207    .text.handle_sleep_state:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccuagYuw.s:213    .text.handle_sleep_state:00000000 handle_sleep_state
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccuagYuw.s:238    .text.handle_sleep_state:00000010 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccuagYuw.s:243    .text.state_machine_update:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccuagYuw.s:249    .text.state_machine_update:00000000 state_machine_update
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccuagYuw.s:304    .rodata.state_machine_update:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccuagYuw.s:356    .text.state_machine_update:0000005c $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccuagYuw.s:362    .text.handle_test_state:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccuagYuw.s:368    .text.handle_test_state:00000000 handle_test_state
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccuagYuw.s:386    .bss.current_state:00000000 $d
 
 UNDEFINED SYMBOLS
 posture_controller_is_posture_correct
