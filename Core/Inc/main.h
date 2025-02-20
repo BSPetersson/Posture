@@ -31,7 +31,6 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "state_machine.h"
 #include "haptic_feedback_controller.h"
 #include "accelerometer_controller.h"
 #include "led_controller.h"

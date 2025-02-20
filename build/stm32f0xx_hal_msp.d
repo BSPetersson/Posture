@@ -26,10 +26,10 @@ build/stm32f0xx_hal_msp.o: Core/Src/stm32f0xx_hal_msp.c Core/Inc/main.h \
  Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_tim_ex.h \
  Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart.h \
  Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart_ex.h \
- Core/Inc/state_machine.h Core/Inc/haptic_feedback_controller.h \
- Core/Inc/led_controller.h Core/Inc/button_controller.h \
+ Core/Inc/haptic_feedback_controller.h \
  Core/Inc/accelerometer_controller.h Core/Inc/parameters.h \
- Core/Inc/posture_controller.h Core/Inc/sleep_controller.h
+ Core/Inc/led_controller.h Core/Inc/button_controller.h \
+ Core/Inc/sleep_controller.h Core/Inc/posture_controller.h
 Core/Inc/main.h:
 Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h:
 Core/Inc/stm32f0xx_hal_conf.h:
@@ -60,11 +60,10 @@ Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_tim.h:
 Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_tim_ex.h:
 Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart.h:
 Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart_ex.h:
-Core/Inc/state_machine.h:
 Core/Inc/haptic_feedback_controller.h:
-Core/Inc/led_controller.h:
-Core/Inc/button_controller.h:
 Core/Inc/accelerometer_controller.h:
 Core/Inc/parameters.h:
-Core/Inc/posture_controller.h:
+Core/Inc/led_controller.h:
+Core/Inc/button_controller.h:
 Core/Inc/sleep_controller.h:
+Core/Inc/posture_controller.h:

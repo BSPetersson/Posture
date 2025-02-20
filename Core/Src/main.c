@@ -91,8 +91,6 @@ int main(void)
   haptic_feedback_controller_initialize();
   led_controller_initialize();
   button_controller_initialize();
-  posture_controller_initialize();
-  state_machine_initialize();
 
   led_execute_sequence(LED_SEQ_THREE_BLINKS);
   /* USER CODE END 2 */
@@ -126,11 +124,6 @@ int main(void)
     if ((now - last_posture_update) >= POSTURE_UPDATE_THROTTLE_MS) {
         posture_controller_update();
         last_posture_update = now;
-    }
-
-    if ((now - last_state_machine_update) >= STATE_MACHINE_UPDATE_THROTTLE_MS) {
-        state_machine_update();
-        last_state_machine_update = now;
     }
 
     /* USER CODE END WHILE */

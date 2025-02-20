@@ -210,16 +210,4 @@ void accelerometer_handle_int2(void);
 bool accelerometer_controller_is_in_motion(void);
 bool accelerometer_controller_no_motion(void);
 accel_data_t accelerometer_controller_get_latest_data(void);
-
-// -----------------------------
-// Motion Detection Configuration
-// -----------------------------
-// If the net acceleration magnitude deviates from ACCEL_G by more than this value,
-// it is considered a candidate for motion.
-#define ACCEL_DEVIATION_THRESHOLD (0.1f * ACCEL_G) // Adjust as needed
-
-// Time (in milliseconds) that the deviation must persist to confirm each condition.
-#define MOTION_TIME_THRESHOLD_MS    10000  // e.g., 1 second for motion detection
-#define NO_MOTION_TIME_THRESHOLD_MS 300000 // e.g., 5 minutes for no-motion detection
-
 #endif // ACCELEROMETER_CONTROLLER_H
