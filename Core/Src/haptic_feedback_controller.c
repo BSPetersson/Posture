@@ -374,7 +374,12 @@ HAL_StatusTypeDef haptic_feedback_get_calibration_diagnostic_result(uint8_t *dia
  */
 HAL_StatusTypeDef haptic_feedback_play_waveform(uint8_t waveform) {
     uint8_t data[2] = {DRV2605L_REG_WAVESEQ1, waveform};
-    return HAL_I2C_Master_Transmit(&hi2c1, DRV2605L_I2C_ADDR, data, 2, HAL_MAX_DELAY);
+    HAL_StatusTypeDef status = HAL_I2C_Master_Transmit(&hi2c1, DRV2605L_I2C_ADDR, data, 2, HAL_MAX_DELAY);
+    if (status != HAL_OK) {
+        return status;
+    }
+    haptic_feedback_start();
+    return HAL_OK;
 }
 
 /**

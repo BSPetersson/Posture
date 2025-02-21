@@ -1,10 +1,38 @@
 #include "accelerometer_controller.h"
 #include "peripherals.h"
 #include "led_controller.h"
+#include "posture_math.h"
+
+#define LAST_MEASUREMENTS_HISTORY_SIZE 100
+#define SUPER_STILL_ANGLE_THRESHOLD_RADIANS 0.01f
+#define SUPER_STILL_MAGNITUDE_THRESHOLD_G 0.01f
+#define SUPER_STILL_DURATION_MS 300000
+#define ACTIVITY_ANGLE_THRESHOLD_RADIANS 0.1f
+#define ACTIVITY_MAGNITUDE_THRESHOLD_G 0.1f
+#define ACTIVITY_DURATION_MS 10000
+#define ACTIVITY_RESET_DURATION_MS 3000
+#define ACTIVITY_TO_NORMAL_DURATION_MS 10000
 
 volatile bool int1_flag = false;
 volatile bool int2_flag = false;
 volatile accel_data_t latest_accel_data;
+volatile float last_measurements_history[LAST_MEASUREMENTS_HISTORY_SIZE][3];
+volatile int last_measurements_history_index = 0;
+volatile bool last_measurements_history_full = false;
+volatile float last_measurements_history_max_angle_from_mean = 0.0f;
+volatile float last_measurements_history_max_magnitude_from_mean = 0.0f;
+volatile float last_measurements_history_mean_vector[3] = {0.0f, 0.0f, 0.0f};
+volatile accelerometer_mode_t accelerometer_mode = NORMAL;
+
+// Add a static variable to track the start time when conditions are first met
+static uint32_t super_still_start_time = 0;
+
+// Add static variables to track the start time for activity and reset conditions
+static uint32_t activity_start_time = 0;
+static uint32_t activity_reset_start_time = 0;
+
+// Add a static variable to track the time when activity conditions fall below the threshold
+static uint32_t activity_to_normal_start_time = 0;
 
 static HAL_StatusTypeDef accelerometer_write_reg(uint8_t reg, uint8_t value)
 {
@@ -58,17 +86,6 @@ static HAL_StatusTypeDef accel_goto_active(void)
     value |= 0x01;  // Set ACTIVE bit
     return accelerometer_write_reg(MMA8451Q_REG_CTRL_REG1, value);
 }
-
-// -----------------------------
-// Global Variables for Motion State Detection
-// -----------------------------
-// Independent flags for motion and no-motion conditions.
-static volatile bool g_motion_detected = false;
-static volatile bool g_no_motion_detected = false;
-
-// Independent timers (0 means not started).
-static uint32_t motion_timer_start = 0;
-static uint32_t no_motion_timer_start = 0;
 
 // -----------------------------
 // Initialization Function
@@ -144,77 +161,131 @@ HAL_StatusTypeDef accelerometer_controller_initialize(void)
     status = accel_goto_active();
     if (status != HAL_OK) return status;
 
-    // Initialize independent state variables.
-    g_motion_detected = false;
-    g_no_motion_detected = false;
-    motion_timer_start = 0;
-    no_motion_timer_start = 0;
-
     return HAL_OK;
 }
 
 // -----------------------------
 // Update Function
 // -----------------------------
-// This function reads the latest acceleration data and independently updates the
-// "in motion" and "no motion" flags using separate timers.
-// - If the net acceleration deviates from ACCEL_G by more than ACCEL_DEVIATION_THRESHOLD
-//   continuously for MOTION_TIME_THRESHOLD_MS, g_motion_detected is set.
-// - Separately, if the deviation stays below ACCEL_DEVIATION_THRESHOLD continuously for
-//   NO_MOTION_TIME_THRESHOLD_MS, g_no_motion_detected is set.
 void accelerometer_controller_update(void)
 {
-    accel_data_t data;
-    HAL_StatusTypeDef status = accelerometer_read_mps2(&data);
+    uint32_t now = HAL_GetTick();
+    accel_data_t accelerometer_data;
+    HAL_StatusTypeDef status = accelerometer_read_mps2(&accelerometer_data);
     if (status != HAL_OK)
     {
         return;
     }
 
-    latest_accel_data = data;
+    latest_accel_data = accelerometer_data;
 
-    // Calculate net acceleration magnitude.
-    float mag = sqrtf(data.x_mps2 * data.x_mps2 +
-                      data.y_mps2 * data.y_mps2 +
-                      data.z_mps2 * data.z_mps2);
-
-    // Compute absolute deviation from gravitational acceleration.
-    float deviation = fabsf(mag - ACCEL_G);
-    uint32_t now = HAL_GetTick();
-
-    // Check candidate for motion.
-    if (deviation > ACCEL_DEVIATION_THRESHOLD)
-    {
-        // Start (or continue) the motion timer if not already started.
-        if (motion_timer_start == 0)
-        {
-            motion_timer_start = now;
-        }
-        // If the condition persists, mark motion detected.
-        if ((now - motion_timer_start) >= MOTION_TIME_THRESHOLD_MS)
-        {
-            g_motion_detected = true;
-        }
-        // Since there is significant movement, reset no-motion timer and flag.
-        no_motion_timer_start = 0;
-        g_no_motion_detected = false;
+    // Store the current vector in the measurements history
+    last_measurements_history[last_measurements_history_index][0] = accelerometer_data.x_mps2;
+    last_measurements_history[last_measurements_history_index][1] = accelerometer_data.y_mps2;
+    last_measurements_history[last_measurements_history_index][2] = accelerometer_data.z_mps2;
+    last_measurements_history_index = (last_measurements_history_index + 1) % LAST_MEASUREMENTS_HISTORY_SIZE;
+    if (last_measurements_history_index == 0) {
+        last_measurements_history_full = true;
     }
-    else // Candidate for no motion.
-    {
-        // Start (or continue) the no-motion timer if not already started.
-        if (no_motion_timer_start == 0)
-        {
-            no_motion_timer_start = now;
-        }
-        // If the condition persists, mark no motion detected.
-        if ((now - no_motion_timer_start) >= NO_MOTION_TIME_THRESHOLD_MS)
-        {
-            g_no_motion_detected = true;
-        }
-        // Since the acceleration is steady, reset the motion timer and flag.
-        motion_timer_start = 0;
-        g_motion_detected = false;
+
+    // Calculate the mean of the measurements history
+    for (int i = 0; i < LAST_MEASUREMENTS_HISTORY_SIZE; i++) {
+        last_measurements_history_mean_vector[0] += last_measurements_history[i][0];
+        last_measurements_history_mean_vector[1] += last_measurements_history[i][1];
+        last_measurements_history_mean_vector[2] += last_measurements_history[i][2];
     }
+    last_measurements_history_mean_vector[0] /= LAST_MEASUREMENTS_HISTORY_SIZE;
+    last_measurements_history_mean_vector[1] /= LAST_MEASUREMENTS_HISTORY_SIZE;
+    last_measurements_history_mean_vector[2] /= LAST_MEASUREMENTS_HISTORY_SIZE;
+
+    // Calculate the max angle from the mean
+    for (int i = 0; i < LAST_MEASUREMENTS_HISTORY_SIZE; i++) {
+        float angle = get_angle_between_vectors((float *)last_measurements_history[i], (float *)last_measurements_history_mean_vector);
+        if (angle > last_measurements_history_max_angle_from_mean) {
+            last_measurements_history_max_angle_from_mean = angle;
+        }
+    }
+
+    // Calculate the max magnitude from the mean
+    for (int i = 0; i < LAST_MEASUREMENTS_HISTORY_SIZE; i++) {
+        float magnitude = get_magnitude_of_vector((float *)last_measurements_history[i]);
+        if (magnitude > last_measurements_history_max_magnitude_from_mean) {
+            last_measurements_history_max_magnitude_from_mean = magnitude;
+        }
+    }
+
+    // Update the accelerometer mode using a switch statement
+    switch (accelerometer_mode) {
+        case SUPER_STILL:
+            if (int1_flag ||
+                last_measurements_history_max_angle_from_mean >= SUPER_STILL_ANGLE_THRESHOLD_RADIANS ||
+                last_measurements_history_max_magnitude_from_mean >= SUPER_STILL_MAGNITUDE_THRESHOLD_G) {
+                // Transition to NORMAL if int1_flag is true or conditions are no longer met
+                accelerometer_mode = NORMAL;
+            }
+            break;
+
+        case ACTIVITY:
+            if (last_measurements_history_max_angle_from_mean <= ACTIVITY_ANGLE_THRESHOLD_RADIANS &&
+                last_measurements_history_max_magnitude_from_mean <= ACTIVITY_MAGNITUDE_THRESHOLD_G) {
+                if (activity_to_normal_start_time == 0) {
+                    // Start the timer to transition back to NORMAL
+                    activity_to_normal_start_time = now;
+                } else if ((now - activity_to_normal_start_time) >= ACTIVITY_TO_NORMAL_DURATION_MS) { // 10 seconds
+                    // Transition to NORMAL if below threshold for 10 seconds
+                    accelerometer_mode = NORMAL;
+                    activity_to_normal_start_time = 0;
+                }
+            } else {
+                // Reset the timer if conditions are above threshold
+                activity_to_normal_start_time = 0;
+            }
+            break;
+
+        case NORMAL:
+        default:
+            // Existing logic for transitioning to SUPER_STILL or ACTIVITY
+            if (!int1_flag &&
+                last_measurements_history_max_angle_from_mean < SUPER_STILL_ANGLE_THRESHOLD_RADIANS &&
+                last_measurements_history_max_magnitude_from_mean < SUPER_STILL_MAGNITUDE_THRESHOLD_G) {
+                if (super_still_start_time == 0) {
+                    // Start the timer
+                    super_still_start_time = now;
+                } else if ((now - super_still_start_time) >= SUPER_STILL_DURATION_MS) {
+                    // Transition to SUPER_STILL state if the duration is met
+                    accelerometer_mode = SUPER_STILL;
+                }
+            } else {
+                // Reset the timer if conditions are not met or int1_flag is true
+                super_still_start_time = 0;
+            }
+
+            // Check for activity conditions
+            if (last_measurements_history_max_angle_from_mean > ACTIVITY_ANGLE_THRESHOLD_RADIANS ||
+                last_measurements_history_max_magnitude_from_mean > ACTIVITY_MAGNITUDE_THRESHOLD_G) {
+                if (activity_start_time == 0) {
+                    // Start the activity timer
+                    activity_start_time = now;
+                } else if ((now - activity_start_time) >= ACTIVITY_DURATION_MS) {
+                    // Transition to ACTIVITY state if the duration is met
+                    accelerometer_mode = ACTIVITY;
+                }
+                // Reset the reset timer
+                activity_reset_start_time = 0;
+            } else {
+                if (activity_reset_start_time == 0) {
+                    // Start the reset timer
+                    activity_reset_start_time = now;
+                } else if ((now - activity_reset_start_time) >= ACTIVITY_RESET_DURATION_MS) { // 3 seconds
+                    // Reset the activity timer if conditions are below threshold for 3 seconds
+                    activity_start_time = 0;
+                }
+            }
+            break;
+    }
+
+    // Reset int1_flag after use
+    int1_flag = false;
 }
 
 // -----------------------------
@@ -352,17 +423,24 @@ void accelerometer_handle_int2(void)
 // -----------------------------
 // Independent Getter Functions for Motion State
 // -----------------------------
-bool accelerometer_controller_is_in_motion(void)
-{
-    return g_motion_detected;
-}
-
-bool accelerometer_controller_no_motion(void)
-{
-    return g_no_motion_detected;
-}
-
 accel_data_t accelerometer_controller_get_latest_data(void)
 {
     return latest_accel_data;
 }
+
+accelerometer_mode_t accelerometer_controller_get_mode(void)
+{
+    return accelerometer_mode;
+}
+
+bool accelerometer_controller_is_last_measurements_history_full(void)
+{
+    return last_measurements_history_full;
+}
+
+float accelerometer_controller_get_last_measurements_history_max_angle_from_mean(void)
+{
+    return last_measurements_history_max_angle_from_mean;
+}
+
+

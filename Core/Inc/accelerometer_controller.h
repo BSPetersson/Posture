@@ -189,6 +189,13 @@ typedef struct {
     float z_mps2;
 } accel_data_t;
 
+// enum for three modes, super still, normal, activity
+typedef enum {
+    SUPER_STILL,
+    NORMAL,
+    ACTIVITY
+} accelerometer_mode_t;
+
 // -----------------------------
 // Function Prototypes
 // -----------------------------
@@ -206,8 +213,10 @@ uint8_t get_transient_src(void);
 void accelerometer_handle_int1(void);
 void accelerometer_handle_int2(void);
 
-// New independent functions for motion detection
-bool accelerometer_controller_is_in_motion(void);
-bool accelerometer_controller_no_motion(void);
 accel_data_t accelerometer_controller_get_latest_data(void);
+
+bool accelerometer_controller_is_last_measurements_history_full(void);
+float accelerometer_controller_get_last_measurements_history_max_angle_from_mean(void);
+
+accelerometer_mode_t accelerometer_controller_get_mode(void);
 #endif // ACCELEROMETER_CONTROLLER_H

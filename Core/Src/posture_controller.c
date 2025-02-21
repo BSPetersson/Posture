@@ -50,10 +50,12 @@ Then we could find a variance from the and use that to scale the threshold in a 
 We might even wight the newer samples more when computing the variance
 */
 #include "posture_controller.h"
+#include "posture_math.h"
+#include "accelerometer_controller.h"
 
 // Private function prototypes
-static float dot_product(const float a[3], const float b[3]);
-static void normalize_vector(float v[3]);
+// static float dot_product(const float a[3], const float b[3]);
+// static void normalize_vector(float v[3]);
 
 // Public function declarations (these match the header file)
 float get_angle_between_vectors(float vector1[3], float vector2[3]);
@@ -67,15 +69,14 @@ void start_calibration_procedure(void);
 #define BAD_POSTURE_TRANSITION_TIME_MS 3000
 #define GOOD_POSTURE_TRANSITION_TIME_MS 3000
 #define BAD_POSTURE_HAPTIC_FEEDBACK_INTERVAL_MS 5000
-#define UNREALISTIC_POSTURE_THRESHOLD_DEGREES 70.0f
+#define UNREALISTIC_POSTURE_THRESHOLD_RADIANS 1.22173f
 #define GOOD_POSTURE_VECTOR_RECALIBRATION_TIME_MS 10000
 #define GOOD_POSTURE_HISTORY_SIZE 10
-#define LAST_MEASUREMENTS_HISTORY_SIZE 100
-#define GOOD_POSTURE_VECTOR_RECALIBRATION_THRESHOLD_DEGREES 5.0f
+#define GOOD_POSTURE_VECTOR_RECALIBRATION_THRESHOLD_RADIANS 0.06
 
 float current_accelerometer_vector[3];
 float good_posture_vector[3];
-float threshold_angle;
+float threshold_angle = 0.174533f; // angle in radians
 bool is_posture_correct = true;
 uint32_t last_bad_posture_time = 0;
 uint32_t last_good_posture_time = 0;
@@ -83,15 +84,24 @@ uint32_t last_haptic_feedback_time = 0;
 bool did_calibrate = false;
 float update_alpha = 0.2f;
 float good_posture_history[GOOD_POSTURE_HISTORY_SIZE][3];
-float last_measurements_history[LAST_MEASUREMENTS_HISTORY_SIZE][3];
-int last_measurements_history_index = 0;
-bool last_measurements_history_full = false;
 int good_posture_history_index = 0;
 bool good_posture_history_full = false;
 
 void posture_controller_update(void)
 {
     uint32_t now = HAL_GetTick();
+
+    accelerometer_mode_t accelerometer_mode = accelerometer_controller_get_mode();
+
+    if (accelerometer_mode == SUPER_STILL) {
+        
+    }
+
+    // Get the latest accelerometer vector
+    accel_data_t accelerometer_vector = accelerometer_controller_get_latest_data();
+    current_accelerometer_vector[0] = accelerometer_vector.x_mps2;
+    current_accelerometer_vector[1] = accelerometer_vector.y_mps2;
+    current_accelerometer_vector[2] = accelerometer_vector.z_mps2;
     
     // Check for button long press
     button_event_t button_event = button_controller_get_event();
@@ -101,28 +111,12 @@ void posture_controller_update(void)
         did_calibrate = true;
         return;
     }
-    
-    // Get the latest accelerometer vector
-    accel_data_t accelerometer_vector = accelerometer_controller_get_latest_data();
-    current_accelerometer_vector[0] = accelerometer_vector.x_mps2;
-    current_accelerometer_vector[1] = accelerometer_vector.y_mps2;
-    current_accelerometer_vector[2] = accelerometer_vector.z_mps2;
-    normalize_vector(current_accelerometer_vector);
-
-    // Store the current vector in the measurements history
-    for (int i = 0; i < 3; i++) {
-        last_measurements_history[last_measurements_history_index][i] = current_accelerometer_vector[i];
-    }
-    last_measurements_history_index = (last_measurements_history_index + 1) % LAST_MEASUREMENTS_HISTORY_SIZE;
-    if (last_measurements_history_index == 0) {
-        last_measurements_history_full = true;
-    }
 
     // Get the angle between the current accelerometer vector and the good posture vector
     float error_angle = get_angle_between_vectors(current_accelerometer_vector, good_posture_vector);
 
     // If the angle is greater than the unrealistic posture threshold, do nothing
-    if (error_angle > UNREALISTIC_POSTURE_THRESHOLD_DEGREES)
+    if (error_angle > UNREALISTIC_POSTURE_THRESHOLD_RADIANS)
     {
         return;
     }
@@ -163,7 +157,6 @@ void posture_controller_update(void)
     // If the posture is correct and the last good posture time is greater than the good posture vector recalibration time,
     // and the device have not calibrated yet, then start the calibration procedure.
     if (is_posture_correct &&
-        (now - last_good_posture_time) > GOOD_POSTURE_VECTOR_RECALIBRATION_TIME_MS &&
         !did_calibrate)
     {
         start_calibration_procedure();
@@ -181,7 +174,7 @@ void handle_bad_posture(void)
     if (now - last_haptic_feedback_time > BAD_POSTURE_HAPTIC_FEEDBACK_INTERVAL_MS)
     {
         last_haptic_feedback_time = now;
-        led_on(100); // Remove this
+        led_execute_sequence(LED_SEQ_FADE_IN_OUT);
         haptic_feedback_play_waveform(1); // Tune this
     }
 }
@@ -195,43 +188,25 @@ void notify_posture_correct(void)
 
 void start_calibration_procedure(void)
 {
-    if (!last_measurements_history_full)
+    uint32_t now = HAL_GetTick();
+    if ((now - last_bad_posture_time) < GOOD_POSTURE_VECTOR_RECALIBRATION_TIME_MS)
     {
         return;
     }
 
-    // Calculate average vector
-    float avg_vector[3] = {0, 0, 0};
-    int array_size = LAST_MEASUREMENTS_HISTORY_SIZE;
-    
-    for (int i = 0; i < array_size; i++) {
-        avg_vector[0] += last_measurements_history[i][0];
-        avg_vector[1] += last_measurements_history[i][1];
-        avg_vector[2] += last_measurements_history[i][2];
-    }
-    
-    avg_vector[0] /= array_size;
-    avg_vector[1] /= array_size;
-    avg_vector[2] /= array_size;
-    normalize_vector(avg_vector);
-
-    // Find maximum deviation from average
-    float max_deviation = 0.0f;
-    for (int i = 0; i < array_size; i++) {
-        float angle = get_angle_between_vectors(last_measurements_history[i], avg_vector);
-        if (angle > max_deviation) {
-            max_deviation = angle;
-        }
-    }
-
-    if (max_deviation > GOOD_POSTURE_VECTOR_RECALIBRATION_THRESHOLD_DEGREES)
+    if (!accelerometer_controller_is_last_measurements_history_full())
     {
         return;
     }
 
-    update_good_posture_history(avg_vector);
+    if (accelerometer_controller_get_last_measurements_history_max_angle_from_mean() > GOOD_POSTURE_VECTOR_RECALIBRATION_THRESHOLD_RADIANS)
+    {
+        return;
+    }
+
+    update_good_posture_history(current_accelerometer_vector);
     
-    update_good_posture_vector(avg_vector);
+    update_good_posture_vector(current_accelerometer_vector);
 
     did_calibrate = true;
 }
@@ -241,42 +216,12 @@ void reset_good_posture_vector(void)
     good_posture_vector[0] = current_accelerometer_vector[0];
     good_posture_vector[1] = current_accelerometer_vector[1];
     good_posture_vector[2] = current_accelerometer_vector[2];
-    normalize_vector(good_posture_vector);
-}
-
-bool posture_controller_is_posture_correct(void)
-{
-    return is_posture_correct;
 }
 
 void update_good_posture_vector(float vector[3])
 {
     for (int i = 0; i < 3; i++) {
         good_posture_vector[i] = (1.0f - update_alpha) * good_posture_vector[i] + update_alpha * vector[i];
-    }
-    normalize_vector(good_posture_vector);
-}
-
-float get_angle_between_vectors(float vector1[3], float vector2[3])
-{
-    float dot = dot_product(vector1, vector2);
-    if (dot > 1.0f)
-        dot = 1.0f;
-    if (dot < -1.0f)
-        dot = -1.0f;
-    return acosf(dot);
-}
-
-float dot_product(const float a[3], const float b[3]) {
-    return a[0]*b[0] + a[1]*b[1] + a[2]*b[2];
-}
-
-void normalize_vector(float v[3]) {
-    float mag = sqrtf(v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
-    if (mag > 0.0f) {
-        v[0] /= mag;
-        v[1] /= mag;
-        v[2] /= mag;
     }
 }
 

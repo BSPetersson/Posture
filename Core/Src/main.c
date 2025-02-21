@@ -104,7 +104,6 @@ int main(void)
     static uint32_t last_led_update = 0;
     static uint32_t last_button_update = 0;
     static uint32_t last_posture_update = 0;
-    static uint32_t last_state_machine_update = 0;
 
     if ((now - last_acc_update) >= ACCELEROMETER_UPDATE_THROTTLE_MS) {
         accelerometer_controller_update();

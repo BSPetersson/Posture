@@ -39,9 +39,9 @@ Archive member included to satisfy reference by file (symbol)
 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc_nano.a(libc_a-freer.o)
                               /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc_nano.a(libc_a-fflush.o) (_free_r)
 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-wf_acos.o)
-                              build/posture_controller.o (acosf)
+                              build/posture_math.o (acosf)
 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-wf_sqrt.o)
-                              build/posture_controller.o (sqrtf)
+                              build/posture_math.o (sqrtf)
 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-sf_fabs.o)
                               /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-wf_acos.o) (fabsf)
 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-sf_nan.o)
@@ -56,14 +56,16 @@ Archive member included to satisfy reference by file (symbol)
                               build/posture_controller.o (__aeabi_idivmod)
 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_dvmd_tls.o)
                               /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_udivsi3.o) (__aeabi_idiv0)
+/Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_arm_cmpdf2.o)
+                              build/posture_controller.o (__aeabi_dcmpgt)
 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_arm_cmpsf2.o)
-                              build/posture_controller.o (__aeabi_fcmplt)
+                              build/posture_math.o (__aeabi_fcmplt)
 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_fixunsdfsi.o)
                               build/haptic_feedback_controller.o (__aeabi_d2uiz)
 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(addsf3.o)
                               build/posture_controller.o (__aeabi_fadd)
 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(divsf3.o)
-                              build/posture_controller.o (__aeabi_fdiv)
+                              build/posture_math.o (__aeabi_fdiv)
 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(eqsf2.o)
                               /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_arm_cmpsf2.o) (__eqsf2)
 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(gesf2.o)
@@ -80,6 +82,12 @@ Archive member included to satisfy reference by file (symbol)
                               build/accelerometer_controller.o (__aeabi_i2f)
 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(divdf3.o)
                               build/haptic_feedback_controller.o (__aeabi_ddiv)
+/Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(eqdf2.o)
+                              /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_arm_cmpdf2.o) (__eqdf2)
+/Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(gedf2.o)
+                              /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_arm_cmpdf2.o) (__gedf2)
+/Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(ledf2.o)
+                              /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_arm_cmpdf2.o) (__ledf2)
 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(muldf3.o)
                               build/haptic_feedback_controller.o (__aeabi_dmul)
 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(subdf3.o)
@@ -88,16 +96,10 @@ Archive member included to satisfy reference by file (symbol)
                               /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_fixunsdfsi.o) (__aeabi_d2iz)
 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(floatsidf.o)
                               build/haptic_feedback_controller.o (__aeabi_i2d)
-/Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_arm_cmpdf2.o)
-                              /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_fixunsdfsi.o) (__aeabi_dcmpge)
+/Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(extendsfdf2.o)
+                              build/posture_controller.o (__aeabi_f2d)
 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_clzsi2.o)
                               /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(addsf3.o) (__clzsi2)
-/Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(eqdf2.o)
-                              /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_arm_cmpdf2.o) (__eqdf2)
-/Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(gedf2.o)
-                              /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_arm_cmpdf2.o) (__gedf2)
-/Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(ledf2.o)
-                              /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_arm_cmpdf2.o) (__ledf2)
 
 Discarded input sections
 
@@ -126,17 +128,14 @@ Discarded input sections
  .text          0x00000000        0x0 build/posture_controller.o
  .data          0x00000000        0x0 build/posture_controller.o
  .bss           0x00000000        0x0 build/posture_controller.o
- .text.posture_controller_is_posture_correct
-                0x00000000        0xc build/posture_controller.o
+ .text          0x00000000        0x0 build/posture_math.o
+ .data          0x00000000        0x0 build/posture_math.o
+ .bss           0x00000000        0x0 build/posture_math.o
  .text          0x00000000        0x0 build/accelerometer_controller.o
  .data          0x00000000        0x0 build/accelerometer_controller.o
  .bss           0x00000000        0x0 build/accelerometer_controller.o
  .text.clear_accelerometer_interrupts
                 0x00000000       0x80 build/accelerometer_controller.o
- .text.accelerometer_controller_is_in_motion
-                0x00000000        0xc build/accelerometer_controller.o
- .text.accelerometer_controller_no_motion
-                0x00000000        0xc build/accelerometer_controller.o
  .text          0x00000000        0x0 build/button_controller.o
  .data          0x00000000        0x0 build/button_controller.o
  .bss           0x00000000        0x0 build/button_controller.o
@@ -171,8 +170,6 @@ Discarded input sections
                 0x00000000       0x44 build/haptic_feedback_controller.o
  .text.haptic_feedback_set_library
                 0x00000000       0x24 build/haptic_feedback_controller.o
- .text.haptic_feedback_start
-                0x00000000       0x24 build/haptic_feedback_controller.o
  .text.haptic_feedback_run_auto_calibration_procedure
                 0x00000000       0x8c build/haptic_feedback_controller.o
  .text.haptic_feedback_stop
@@ -188,6 +185,7 @@ Discarded input sections
  .text          0x00000000        0x0 build/led_controller.o
  .data          0x00000000        0x0 build/led_controller.o
  .bss           0x00000000        0x0 build/led_controller.o
+ .text.led_on   0x00000000        0x8 build/led_controller.o
  .text          0x00000000        0x0 build/sleep_controller.o
  .data          0x00000000        0x0 build/sleep_controller.o
  .bss           0x00000000        0x0 build/sleep_controller.o
@@ -1423,6 +1421,8 @@ Discarded input sections
  .bss           0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_divsi3.o)
  .data          0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_dvmd_tls.o)
  .bss           0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_dvmd_tls.o)
+ .data          0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_arm_cmpdf2.o)
+ .bss           0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_arm_cmpdf2.o)
  .data          0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_arm_cmpsf2.o)
  .bss           0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_arm_cmpsf2.o)
  .text          0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_fixunsdfsi.o)
@@ -1458,6 +1458,15 @@ Discarded input sections
  .text          0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(divdf3.o)
  .data          0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(divdf3.o)
  .bss           0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(divdf3.o)
+ .text          0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(eqdf2.o)
+ .data          0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(eqdf2.o)
+ .bss           0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(eqdf2.o)
+ .text          0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(gedf2.o)
+ .data          0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(gedf2.o)
+ .bss           0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(gedf2.o)
+ .text          0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(ledf2.o)
+ .data          0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(ledf2.o)
+ .bss           0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(ledf2.o)
  .text          0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(muldf3.o)
  .data          0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(muldf3.o)
  .bss           0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(muldf3.o)
@@ -1470,19 +1479,11 @@ Discarded input sections
  .text          0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(floatsidf.o)
  .data          0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(floatsidf.o)
  .bss           0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(floatsidf.o)
- .data          0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_arm_cmpdf2.o)
- .bss           0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_arm_cmpdf2.o)
+ .text          0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(extendsfdf2.o)
+ .data          0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(extendsfdf2.o)
+ .bss           0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(extendsfdf2.o)
  .data          0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_clzsi2.o)
  .bss           0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_clzsi2.o)
- .text          0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(eqdf2.o)
- .data          0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(eqdf2.o)
- .bss           0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(eqdf2.o)
- .text          0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(gedf2.o)
- .data          0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(gedf2.o)
- .bss           0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(gedf2.o)
- .text          0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(ledf2.o)
- .data          0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(ledf2.o)
- .bss           0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(ledf2.o)
  .text          0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/crtend.o
  .data          0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/crtend.o
  .bss           0x00000000        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/crtend.o
@@ -1507,6 +1508,7 @@ LOAD /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-no
 LOAD /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/crt0.o
 LOAD build/main.o
 LOAD build/posture_controller.o
+LOAD build/posture_math.o
 LOAD build/accelerometer_controller.o
 LOAD build/button_controller.o
 LOAD build/haptic_feedback_controller.o
@@ -1559,7 +1561,7 @@ LOAD /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-no
                 0x08000000                g_pfnVectors
                 0x080000c0                        . = ALIGN (0x4)
 
-.text           0x080000c0     0x6370
+.text           0x080000c0     0x6568
                 0x080000c0                        . = ALIGN (0x4)
  *(.text)
  .text          0x080000c0      0x114 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_udivsi3.o)
@@ -1573,24 +1575,24 @@ LOAD /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-no
  .text          0x080003a8        0x4 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_dvmd_tls.o)
                 0x080003a8                __aeabi_ldiv0
                 0x080003a8                __aeabi_idiv0
- .text          0x080003ac       0x74 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_arm_cmpsf2.o)
-                0x080003ac                __aeabi_cfrcmple
-                0x080003b4                __aeabi_cfcmple
-                0x080003b4                __aeabi_cfcmpeq
-                0x080003c4                __aeabi_fcmpeq
-                0x080003d0                __aeabi_fcmplt
-                0x080003e4                __aeabi_fcmple
-                0x080003f8                __aeabi_fcmpgt
-                0x0800040c                __aeabi_fcmpge
- .text          0x08000420       0x7c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_arm_cmpdf2.o)
-                0x08000420                __aeabi_cdrcmple
-                0x08000430                __aeabi_cdcmple
-                0x08000430                __aeabi_cdcmpeq
-                0x08000440                __aeabi_dcmpeq
-                0x0800044c                __aeabi_dcmplt
-                0x08000460                __aeabi_dcmple
-                0x08000474                __aeabi_dcmpgt
-                0x08000488                __aeabi_dcmpge
+ .text          0x080003ac       0x7c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_arm_cmpdf2.o)
+                0x080003ac                __aeabi_cdrcmple
+                0x080003bc                __aeabi_cdcmple
+                0x080003bc                __aeabi_cdcmpeq
+                0x080003cc                __aeabi_dcmpeq
+                0x080003d8                __aeabi_dcmplt
+                0x080003ec                __aeabi_dcmple
+                0x08000400                __aeabi_dcmpgt
+                0x08000414                __aeabi_dcmpge
+ .text          0x08000428       0x74 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_arm_cmpsf2.o)
+                0x08000428                __aeabi_cfrcmple
+                0x08000430                __aeabi_cfcmple
+                0x08000430                __aeabi_cfcmpeq
+                0x08000440                __aeabi_fcmpeq
+                0x0800044c                __aeabi_fcmplt
+                0x08000460                __aeabi_fcmple
+                0x08000474                __aeabi_fcmpgt
+                0x08000488                __aeabi_fcmpge
  .text          0x0800049c       0x3c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_clzsi2.o)
                 0x0800049c                __clzsi2
  *(.text*)
@@ -1622,502 +1624,521 @@ LOAD /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-no
  *fill*         0x080007fe        0x2 
  .text.main     0x08000800       0xa0 build/main.o
                 0x08000800                main
- .text.dot_product
-                0x080008a0       0x34 build/posture_controller.o
- .text.normalize_vector
-                0x080008d4       0x70 build/posture_controller.o
  .text.handle_bad_posture
-                0x08000944       0x30 build/posture_controller.o
-                0x08000944                handle_bad_posture
+                0x080008a0       0x30 build/posture_controller.o
+                0x080008a0                handle_bad_posture
  .text.notify_posture_correct
-                0x08000974       0x14 build/posture_controller.o
-                0x08000974                notify_posture_correct
+                0x080008d0       0x14 build/posture_controller.o
+                0x080008d0                notify_posture_correct
  .text.reset_good_posture_vector
-                0x08000988       0x20 build/posture_controller.o
-                0x08000988                reset_good_posture_vector
+                0x080008e4       0x1c build/posture_controller.o
+                0x080008e4                reset_good_posture_vector
  .text.update_good_posture_vector
-                0x080009a8       0x58 build/posture_controller.o
-                0x080009a8                update_good_posture_vector
- .text.get_angle_between_vectors
-                0x08000a00       0x34 build/posture_controller.o
-                0x08000a00                get_angle_between_vectors
+                0x08000900       0x54 build/posture_controller.o
+                0x08000900                update_good_posture_vector
  .text.update_good_posture_history
-                0x08000a34       0x48 build/posture_controller.o
-                0x08000a34                update_good_posture_history
+                0x08000954       0x48 build/posture_controller.o
+                0x08000954                update_good_posture_history
  .text.start_calibration_procedure
-                0x08000a7c       0xd8 build/posture_controller.o
-                0x08000a7c                start_calibration_procedure
+                0x0800099c       0x60 build/posture_controller.o
+                0x0800099c                start_calibration_procedure
  .text.posture_controller_update
-                0x08000b54      0x154 build/posture_controller.o
-                0x08000b54                posture_controller_update
+                0x080009fc      0x104 build/posture_controller.o
+                0x080009fc                posture_controller_update
+ .text.dot_product
+                0x08000b00       0x34 build/posture_math.o
+                0x08000b00                dot_product
+ .text.normalize_vector
+                0x08000b34       0x70 build/posture_math.o
+                0x08000b34                normalize_vector
+ .text.get_angle_between_vectors
+                0x08000ba4       0x48 build/posture_math.o
+                0x08000ba4                get_angle_between_vectors
+ .text.get_magnitude_of_vector
+                0x08000bec       0x36 build/posture_math.o
+                0x08000bec                get_magnitude_of_vector
+ *fill*         0x08000c22        0x2 
  .text.accelerometer_read_reg
-                0x08000ca8       0x24 build/accelerometer_controller.o
+                0x08000c24       0x24 build/accelerometer_controller.o
  .text.accelerometer_read_regs
-                0x08000ccc       0x24 build/accelerometer_controller.o
+                0x08000c48       0x24 build/accelerometer_controller.o
  .text.accelerometer_write_reg
-                0x08000cf0       0x2c build/accelerometer_controller.o
+                0x08000c6c       0x2c build/accelerometer_controller.o
  .text.accel_goto_standby
-                0x08000d1c       0x28 build/accelerometer_controller.o
+                0x08000c98       0x28 build/accelerometer_controller.o
  .text.accel_goto_active
-                0x08000d44       0x2a build/accelerometer_controller.o
- *fill*         0x08000d6e        0x2 
+                0x08000cc0       0x2a build/accelerometer_controller.o
  .text.accelerometer_controller_initialize
-                0x08000d70       0xf4 build/accelerometer_controller.o
-                0x08000d70                accelerometer_controller_initialize
+                0x08000cea       0xcc build/accelerometer_controller.o
+                0x08000cea                accelerometer_controller_initialize
+ *fill*         0x08000db6        0x2 
  .text.accelerometer_read_mps2
-                0x08000e64      0x120 build/accelerometer_controller.o
-                0x08000e64                accelerometer_read_mps2
+                0x08000db8      0x120 build/accelerometer_controller.o
+                0x08000db8                accelerometer_read_mps2
  .text.accelerometer_controller_update
-                0x08000f84       0xe0 build/accelerometer_controller.o
-                0x08000f84                accelerometer_controller_update
+                0x08000ed8      0x2a8 build/accelerometer_controller.o
+                0x08000ed8                accelerometer_controller_update
  .text.accelerometer_handle_int1
-                0x08001064        0xc build/accelerometer_controller.o
-                0x08001064                accelerometer_handle_int1
+                0x08001180        0xc build/accelerometer_controller.o
+                0x08001180                accelerometer_handle_int1
  .text.accelerometer_handle_int2
-                0x08001070        0xc build/accelerometer_controller.o
-                0x08001070                accelerometer_handle_int2
+                0x0800118c        0xc build/accelerometer_controller.o
+                0x0800118c                accelerometer_handle_int2
  .text.accelerometer_controller_get_latest_data
-                0x0800107c       0x10 build/accelerometer_controller.o
-                0x0800107c                accelerometer_controller_get_latest_data
+                0x08001198       0x10 build/accelerometer_controller.o
+                0x08001198                accelerometer_controller_get_latest_data
+ .text.accelerometer_controller_get_mode
+                0x080011a8        0xc build/accelerometer_controller.o
+                0x080011a8                accelerometer_controller_get_mode
+ .text.accelerometer_controller_is_last_measurements_history_full
+                0x080011b4        0xc build/accelerometer_controller.o
+                0x080011b4                accelerometer_controller_is_last_measurements_history_full
+ .text.accelerometer_controller_get_last_measurements_history_max_angle_from_mean
+                0x080011c0        0xc build/accelerometer_controller.o
+                0x080011c0                accelerometer_controller_get_last_measurements_history_max_angle_from_mean
  .text.read_raw_button_state
-                0x0800108c       0x18 build/button_controller.o
+                0x080011cc       0x18 build/button_controller.o
  .text.button_controller_initialize
-                0x080010a4       0x3c build/button_controller.o
-                0x080010a4                button_controller_initialize
+                0x080011e4       0x3c build/button_controller.o
+                0x080011e4                button_controller_initialize
  .text.button_controller_update
-                0x080010e0       0xfc build/button_controller.o
-                0x080010e0                button_controller_update
+                0x08001220       0xfc build/button_controller.o
+                0x08001220                button_controller_update
  .text.button_controller_get_event
-                0x080011dc       0x10 build/button_controller.o
-                0x080011dc                button_controller_get_event
+                0x0800131c       0x10 build/button_controller.o
+                0x0800131c                button_controller_get_event
  .text.haptic_feedback_modify_register
-                0x080011ec       0x74 build/haptic_feedback_controller.o
+                0x0800132c       0x74 build/haptic_feedback_controller.o
  .text.haptic_feedback_set_actuator_type
-                0x08001260       0x16 build/haptic_feedback_controller.o
-                0x08001260                haptic_feedback_set_actuator_type
- *fill*         0x08001276        0x2 
+                0x080013a0       0x16 build/haptic_feedback_controller.o
+                0x080013a0                haptic_feedback_set_actuator_type
+ *fill*         0x080013b6        0x2 
  .text.haptic_feedback_set_od_clamp
-                0x08001278       0x24 build/haptic_feedback_controller.o
-                0x08001278                haptic_feedback_set_od_clamp
+                0x080013b8       0x24 build/haptic_feedback_controller.o
+                0x080013b8                haptic_feedback_set_od_clamp
  .text.haptic_feedback_set_open_loop
-                0x0800129c        0xe build/haptic_feedback_controller.o
-                0x0800129c                haptic_feedback_set_open_loop
- *fill*         0x080012aa        0x2 
+                0x080013dc        0xe build/haptic_feedback_controller.o
+                0x080013dc                haptic_feedback_set_open_loop
+ *fill*         0x080013ea        0x2 
  .text.haptic_feedback_set_ol_lra_period
-                0x080012ac       0x38 build/haptic_feedback_controller.o
-                0x080012ac                haptic_feedback_set_ol_lra_period
- .text.haptic_feedback_play_waveform
-                0x080012e4       0x24 build/haptic_feedback_controller.o
-                0x080012e4                haptic_feedback_play_waveform
+                0x080013ec       0x38 build/haptic_feedback_controller.o
+                0x080013ec                haptic_feedback_set_ol_lra_period
  .text.haptic_feedback_set_mode
-                0x08001308       0x24 build/haptic_feedback_controller.o
-                0x08001308                haptic_feedback_set_mode
+                0x08001424       0x24 build/haptic_feedback_controller.o
+                0x08001424                haptic_feedback_set_mode
  .text.haptic_feedback_init_for_wideband_LRA
-                0x0800132c       0x44 build/haptic_feedback_controller.o
-                0x0800132c                haptic_feedback_init_for_wideband_LRA
+                0x08001448       0x44 build/haptic_feedback_controller.o
+                0x08001448                haptic_feedback_init_for_wideband_LRA
  .text.haptic_feedback_controller_initialize
-                0x08001370       0x1e build/haptic_feedback_controller.o
-                0x08001370                haptic_feedback_controller_initialize
- *fill*         0x0800138e        0x2 
+                0x0800148c       0x1e build/haptic_feedback_controller.o
+                0x0800148c                haptic_feedback_controller_initialize
+ *fill*         0x080014aa        0x2 
+ .text.haptic_feedback_start
+                0x080014ac       0x24 build/haptic_feedback_controller.o
+                0x080014ac                haptic_feedback_start
+ .text.haptic_feedback_play_waveform
+                0x080014d0       0x30 build/haptic_feedback_controller.o
+                0x080014d0                haptic_feedback_play_waveform
  .text.update_pwm
-                0x08001390       0x24 build/led_controller.o
+                0x08001500       0x24 build/led_controller.o
  .text.led_controller_initialize
-                0x080013b4       0x28 build/led_controller.o
-                0x080013b4                led_controller_initialize
- .text.led_on   0x080013dc        0x8 build/led_controller.o
-                0x080013dc                led_on
- .text.led_off  0x080013e4        0xa build/led_controller.o
-                0x080013e4                led_off
- *fill*         0x080013ee        0x2 
+                0x08001524       0x28 build/led_controller.o
+                0x08001524                led_controller_initialize
+ .text.led_off  0x0800154c        0xa build/led_controller.o
+                0x0800154c                led_off
+ *fill*         0x08001556        0x2 
  .text.led_execute_sequence
-                0x080013f0       0x2c build/led_controller.o
-                0x080013f0                led_execute_sequence
+                0x08001558       0x2c build/led_controller.o
+                0x08001558                led_execute_sequence
  .text.led_controller_update
-                0x0800141c      0x114 build/led_controller.o
-                0x0800141c                led_controller_update
+                0x08001584      0x114 build/led_controller.o
+                0x08001584                led_controller_update
  .text.NMI_Handler
-                0x08001530        0x2 build/stm32f0xx_it.o
-                0x08001530                NMI_Handler
+                0x08001698        0x2 build/stm32f0xx_it.o
+                0x08001698                NMI_Handler
  .text.HardFault_Handler
-                0x08001532        0x2 build/stm32f0xx_it.o
-                0x08001532                HardFault_Handler
+                0x0800169a        0x2 build/stm32f0xx_it.o
+                0x0800169a                HardFault_Handler
  .text.SVC_Handler
-                0x08001534        0x2 build/stm32f0xx_it.o
-                0x08001534                SVC_Handler
+                0x0800169c        0x2 build/stm32f0xx_it.o
+                0x0800169c                SVC_Handler
  .text.PendSV_Handler
-                0x08001536        0x2 build/stm32f0xx_it.o
-                0x08001536                PendSV_Handler
+                0x0800169e        0x2 build/stm32f0xx_it.o
+                0x0800169e                PendSV_Handler
  .text.SysTick_Handler
-                0x08001538        0x8 build/stm32f0xx_it.o
-                0x08001538                SysTick_Handler
+                0x080016a0        0x8 build/stm32f0xx_it.o
+                0x080016a0                SysTick_Handler
  .text.EXTI0_1_IRQHandler
-                0x08001540       0x10 build/stm32f0xx_it.o
-                0x08001540                EXTI0_1_IRQHandler
+                0x080016a8       0x10 build/stm32f0xx_it.o
+                0x080016a8                EXTI0_1_IRQHandler
  .text.EXTI4_15_IRQHandler
-                0x08001550        0xa build/stm32f0xx_it.o
-                0x08001550                EXTI4_15_IRQHandler
- *fill*         0x0800155a        0x2 
+                0x080016b8        0xa build/stm32f0xx_it.o
+                0x080016b8                EXTI4_15_IRQHandler
+ *fill*         0x080016c2        0x2 
  .text.HAL_MspInit
-                0x0800155c       0x30 build/stm32f0xx_hal_msp.o
-                0x0800155c                HAL_MspInit
+                0x080016c4       0x30 build/stm32f0xx_hal_msp.o
+                0x080016c4                HAL_MspInit
  .text.HAL_I2C_MspInit
-                0x0800158c       0x68 build/stm32f0xx_hal_msp.o
-                0x0800158c                HAL_I2C_MspInit
+                0x080016f4       0x68 build/stm32f0xx_hal_msp.o
+                0x080016f4                HAL_I2C_MspInit
  .text.HAL_TIM_Base_MspInit
-                0x080015f4       0x2c build/stm32f0xx_hal_msp.o
-                0x080015f4                HAL_TIM_Base_MspInit
+                0x0800175c       0x2c build/stm32f0xx_hal_msp.o
+                0x0800175c                HAL_TIM_Base_MspInit
  .text.HAL_TIM_MspPostInit
-                0x08001620       0x54 build/stm32f0xx_hal_msp.o
-                0x08001620                HAL_TIM_MspPostInit
+                0x08001788       0x54 build/stm32f0xx_hal_msp.o
+                0x08001788                HAL_TIM_MspPostInit
  .text.HAL_UART_MspInit
-                0x08001674       0x68 build/stm32f0xx_hal_msp.o
-                0x08001674                HAL_UART_MspInit
+                0x080017dc       0x68 build/stm32f0xx_hal_msp.o
+                0x080017dc                HAL_UART_MspInit
  .text.HAL_RCC_OscConfig
-                0x080016dc      0x49c build/stm32f0xx_hal_rcc.o
-                0x080016dc                HAL_RCC_OscConfig
+                0x08001844      0x49c build/stm32f0xx_hal_rcc.o
+                0x08001844                HAL_RCC_OscConfig
  .text.HAL_RCC_GetSysClockFreq
-                0x08001b78       0x60 build/stm32f0xx_hal_rcc.o
-                0x08001b78                HAL_RCC_GetSysClockFreq
+                0x08001ce0       0x60 build/stm32f0xx_hal_rcc.o
+                0x08001ce0                HAL_RCC_GetSysClockFreq
  .text.HAL_RCC_ClockConfig
-                0x08001bd8      0x134 build/stm32f0xx_hal_rcc.o
-                0x08001bd8                HAL_RCC_ClockConfig
+                0x08001d40      0x134 build/stm32f0xx_hal_rcc.o
+                0x08001d40                HAL_RCC_ClockConfig
  .text.HAL_RCC_GetHCLKFreq
-                0x08001d0c        0xc build/stm32f0xx_hal_rcc.o
-                0x08001d0c                HAL_RCC_GetHCLKFreq
+                0x08001e74        0xc build/stm32f0xx_hal_rcc.o
+                0x08001e74                HAL_RCC_GetHCLKFreq
  .text.HAL_RCC_GetPCLK1Freq
-                0x08001d18       0x20 build/stm32f0xx_hal_rcc.o
-                0x08001d18                HAL_RCC_GetPCLK1Freq
+                0x08001e80       0x20 build/stm32f0xx_hal_rcc.o
+                0x08001e80                HAL_RCC_GetPCLK1Freq
  .text.HAL_RCCEx_PeriphCLKConfig
-                0x08001d38      0x120 build/stm32f0xx_hal_rcc_ex.o
-                0x08001d38                HAL_RCCEx_PeriphCLKConfig
+                0x08001ea0      0x120 build/stm32f0xx_hal_rcc_ex.o
+                0x08001ea0                HAL_RCCEx_PeriphCLKConfig
  .text.HAL_InitTick
-                0x08001e58       0x50 build/stm32f0xx_hal.o
-                0x08001e58                HAL_InitTick
+                0x08001fc0       0x50 build/stm32f0xx_hal.o
+                0x08001fc0                HAL_InitTick
  .text.HAL_Init
-                0x08001ea8       0x20 build/stm32f0xx_hal.o
-                0x08001ea8                HAL_Init
+                0x08002010       0x20 build/stm32f0xx_hal.o
+                0x08002010                HAL_Init
  .text.HAL_IncTick
-                0x08001ec8       0x18 build/stm32f0xx_hal.o
-                0x08001ec8                HAL_IncTick
+                0x08002030       0x18 build/stm32f0xx_hal.o
+                0x08002030                HAL_IncTick
  .text.HAL_GetTick
-                0x08001ee0        0xc build/stm32f0xx_hal.o
-                0x08001ee0                HAL_GetTick
+                0x08002048        0xc build/stm32f0xx_hal.o
+                0x08002048                HAL_GetTick
  .text.HAL_Delay
-                0x08001eec       0x24 build/stm32f0xx_hal.o
-                0x08001eec                HAL_Delay
+                0x08002054       0x24 build/stm32f0xx_hal.o
+                0x08002054                HAL_Delay
  .text.I2C_Flush_TXDR
-                0x08001f10       0x1e build/stm32f0xx_hal_i2c.o
- *fill*         0x08001f2e        0x2 
+                0x08002078       0x1e build/stm32f0xx_hal_i2c.o
+ *fill*         0x08002096        0x2 
  .text.I2C_TransferConfig
-                0x08001f30       0x34 build/stm32f0xx_hal_i2c.o
+                0x08002098       0x34 build/stm32f0xx_hal_i2c.o
  .text.I2C_IsErrorOccurred
-                0x08001f64      0x118 build/stm32f0xx_hal_i2c.o
+                0x080020cc      0x118 build/stm32f0xx_hal_i2c.o
  .text.I2C_WaitOnTXISFlagUntilTimeout
-                0x0800207c       0x5a build/stm32f0xx_hal_i2c.o
+                0x080021e4       0x5a build/stm32f0xx_hal_i2c.o
  .text.I2C_WaitOnFlagUntilTimeout
-                0x080020d6       0x8a build/stm32f0xx_hal_i2c.o
+                0x0800223e       0x8a build/stm32f0xx_hal_i2c.o
  .text.I2C_RequestMemoryWrite
-                0x08002160       0x78 build/stm32f0xx_hal_i2c.o
+                0x080022c8       0x78 build/stm32f0xx_hal_i2c.o
  .text.I2C_RequestMemoryRead
-                0x080021d8       0x74 build/stm32f0xx_hal_i2c.o
+                0x08002340       0x74 build/stm32f0xx_hal_i2c.o
  .text.I2C_WaitOnSTOPFlagUntilTimeout
-                0x0800224c       0x5a build/stm32f0xx_hal_i2c.o
- *fill*         0x080022a6        0x2 
+                0x080023b4       0x5a build/stm32f0xx_hal_i2c.o
+ *fill*         0x0800240e        0x2 
  .text.I2C_WaitOnRXNEFlagUntilTimeout
-                0x080022a8       0xa0 build/stm32f0xx_hal_i2c.o
+                0x08002410       0xa0 build/stm32f0xx_hal_i2c.o
  .text.HAL_I2C_Init
-                0x08002348       0xdc build/stm32f0xx_hal_i2c.o
-                0x08002348                HAL_I2C_Init
+                0x080024b0       0xdc build/stm32f0xx_hal_i2c.o
+                0x080024b0                HAL_I2C_Init
  .text.HAL_I2C_Master_Transmit
-                0x08002424      0x190 build/stm32f0xx_hal_i2c.o
-                0x08002424                HAL_I2C_Master_Transmit
+                0x0800258c      0x190 build/stm32f0xx_hal_i2c.o
+                0x0800258c                HAL_I2C_Master_Transmit
  .text.HAL_I2C_Master_Receive
-                0x080025b4      0x16c build/stm32f0xx_hal_i2c.o
-                0x080025b4                HAL_I2C_Master_Receive
+                0x0800271c      0x16c build/stm32f0xx_hal_i2c.o
+                0x0800271c                HAL_I2C_Master_Receive
  .text.HAL_I2C_Mem_Write
-                0x08002720      0x198 build/stm32f0xx_hal_i2c.o
-                0x08002720                HAL_I2C_Mem_Write
+                0x08002888      0x198 build/stm32f0xx_hal_i2c.o
+                0x08002888                HAL_I2C_Mem_Write
  .text.HAL_I2C_Mem_Read
-                0x080028b8      0x1a0 build/stm32f0xx_hal_i2c.o
-                0x080028b8                HAL_I2C_Mem_Read
+                0x08002a20      0x1a0 build/stm32f0xx_hal_i2c.o
+                0x08002a20                HAL_I2C_Mem_Read
  .text.HAL_I2CEx_ConfigAnalogFilter
-                0x08002a58       0x58 build/stm32f0xx_hal_i2c_ex.o
-                0x08002a58                HAL_I2CEx_ConfigAnalogFilter
+                0x08002bc0       0x58 build/stm32f0xx_hal_i2c_ex.o
+                0x08002bc0                HAL_I2CEx_ConfigAnalogFilter
  .text.HAL_I2CEx_ConfigDigitalFilter
-                0x08002ab0       0x54 build/stm32f0xx_hal_i2c_ex.o
-                0x08002ab0                HAL_I2CEx_ConfigDigitalFilter
+                0x08002c18       0x54 build/stm32f0xx_hal_i2c_ex.o
+                0x08002c18                HAL_I2CEx_ConfigDigitalFilter
  .text.HAL_GPIO_Init
-                0x08002b04      0x188 build/stm32f0xx_hal_gpio.o
-                0x08002b04                HAL_GPIO_Init
+                0x08002c6c      0x188 build/stm32f0xx_hal_gpio.o
+                0x08002c6c                HAL_GPIO_Init
  .text.HAL_GPIO_ReadPin
-                0x08002c8c        0xe build/stm32f0xx_hal_gpio.o
-                0x08002c8c                HAL_GPIO_ReadPin
+                0x08002df4        0xe build/stm32f0xx_hal_gpio.o
+                0x08002df4                HAL_GPIO_ReadPin
  .text.HAL_GPIO_WritePin
-                0x08002c9a        0xc build/stm32f0xx_hal_gpio.o
-                0x08002c9a                HAL_GPIO_WritePin
- *fill*         0x08002ca6        0x2 
+                0x08002e02        0xc build/stm32f0xx_hal_gpio.o
+                0x08002e02                HAL_GPIO_WritePin
+ *fill*         0x08002e0e        0x2 
  .text.HAL_GPIO_EXTI_IRQHandler
-                0x08002ca8       0x1c build/stm32f0xx_hal_gpio.o
-                0x08002ca8                HAL_GPIO_EXTI_IRQHandler
+                0x08002e10       0x1c build/stm32f0xx_hal_gpio.o
+                0x08002e10                HAL_GPIO_EXTI_IRQHandler
  .text.__NVIC_SetPriority
-                0x08002cc4       0x60 build/stm32f0xx_hal_cortex.o
+                0x08002e2c       0x60 build/stm32f0xx_hal_cortex.o
  .text.SysTick_Config
-                0x08002d24       0x38 build/stm32f0xx_hal_cortex.o
+                0x08002e8c       0x38 build/stm32f0xx_hal_cortex.o
  .text.HAL_NVIC_SetPriority
-                0x08002d5c        0x8 build/stm32f0xx_hal_cortex.o
-                0x08002d5c                HAL_NVIC_SetPriority
+                0x08002ec4        0x8 build/stm32f0xx_hal_cortex.o
+                0x08002ec4                HAL_NVIC_SetPriority
  .text.HAL_NVIC_EnableIRQ
-                0x08002d64       0x18 build/stm32f0xx_hal_cortex.o
-                0x08002d64                HAL_NVIC_EnableIRQ
+                0x08002ecc       0x18 build/stm32f0xx_hal_cortex.o
+                0x08002ecc                HAL_NVIC_EnableIRQ
  .text.HAL_SYSTICK_Config
-                0x08002d7c        0x8 build/stm32f0xx_hal_cortex.o
-                0x08002d7c                HAL_SYSTICK_Config
+                0x08002ee4        0x8 build/stm32f0xx_hal_cortex.o
+                0x08002ee4                HAL_SYSTICK_Config
  .text.SystemInit
-                0x08002d84        0x2 build/system_stm32f0xx.o
-                0x08002d84                SystemInit
- *fill*         0x08002d86        0x2 
+                0x08002eec        0x2 build/system_stm32f0xx.o
+                0x08002eec                SystemInit
+ *fill*         0x08002eee        0x2 
  .text.TIM_OC1_SetConfig
-                0x08002d88       0x8c build/stm32f0xx_hal_tim.o
+                0x08002ef0       0x8c build/stm32f0xx_hal_tim.o
  .text.TIM_OC3_SetConfig
-                0x08002e14       0x8c build/stm32f0xx_hal_tim.o
+                0x08002f7c       0x8c build/stm32f0xx_hal_tim.o
  .text.TIM_OC4_SetConfig
-                0x08002ea0       0x74 build/stm32f0xx_hal_tim.o
+                0x08003008       0x74 build/stm32f0xx_hal_tim.o
  .text.HAL_TIM_PWM_MspInit
-                0x08002f14        0x2 build/stm32f0xx_hal_tim.o
-                0x08002f14                HAL_TIM_PWM_MspInit
- *fill*         0x08002f16        0x2 
+                0x0800307c        0x2 build/stm32f0xx_hal_tim.o
+                0x0800307c                HAL_TIM_PWM_MspInit
+ *fill*         0x0800307e        0x2 
  .text.TIM_Base_SetConfig
-                0x08002f18       0xa0 build/stm32f0xx_hal_tim.o
-                0x08002f18                TIM_Base_SetConfig
+                0x08003080       0xa0 build/stm32f0xx_hal_tim.o
+                0x08003080                TIM_Base_SetConfig
  .text.HAL_TIM_Base_Init
-                0x08002fb8       0x58 build/stm32f0xx_hal_tim.o
-                0x08002fb8                HAL_TIM_Base_Init
+                0x08003120       0x58 build/stm32f0xx_hal_tim.o
+                0x08003120                HAL_TIM_Base_Init
  .text.HAL_TIM_PWM_Init
-                0x08003010       0x58 build/stm32f0xx_hal_tim.o
-                0x08003010                HAL_TIM_PWM_Init
+                0x08003178       0x58 build/stm32f0xx_hal_tim.o
+                0x08003178                HAL_TIM_PWM_Init
  .text.TIM_OC2_SetConfig
-                0x08003068       0x84 build/stm32f0xx_hal_tim.o
-                0x08003068                TIM_OC2_SetConfig
+                0x080031d0       0x84 build/stm32f0xx_hal_tim.o
+                0x080031d0                TIM_OC2_SetConfig
  .text.HAL_TIM_PWM_ConfigChannel
-                0x080030ec       0xf0 build/stm32f0xx_hal_tim.o
-                0x080030ec                HAL_TIM_PWM_ConfigChannel
+                0x08003254       0xf0 build/stm32f0xx_hal_tim.o
+                0x08003254                HAL_TIM_PWM_ConfigChannel
  .text.TIM_CCxChannelCmd
-                0x080031dc       0x1a build/stm32f0xx_hal_tim.o
-                0x080031dc                TIM_CCxChannelCmd
- *fill*         0x080031f6        0x2 
+                0x08003344       0x1a build/stm32f0xx_hal_tim.o
+                0x08003344                TIM_CCxChannelCmd
+ *fill*         0x0800335e        0x2 
  .text.HAL_TIM_PWM_Start
-                0x080031f8       0xf4 build/stm32f0xx_hal_tim.o
-                0x080031f8                HAL_TIM_PWM_Start
+                0x08003360       0xf4 build/stm32f0xx_hal_tim.o
+                0x08003360                HAL_TIM_PWM_Start
  .text.HAL_TIMEx_ConfigBreakDeadTime
-                0x080032ec       0x6c build/stm32f0xx_hal_tim_ex.o
-                0x080032ec                HAL_TIMEx_ConfigBreakDeadTime
+                0x08003454       0x6c build/stm32f0xx_hal_tim_ex.o
+                0x08003454                HAL_TIMEx_ConfigBreakDeadTime
  .text.UART_EndRxTransfer
-                0x08003358       0x60 build/stm32f0xx_hal_uart.o
+                0x080034c0       0x60 build/stm32f0xx_hal_uart.o
  .text.UART_SetConfig
-                0x080033b8      0x170 build/stm32f0xx_hal_uart.o
-                0x080033b8                UART_SetConfig
+                0x08003520      0x170 build/stm32f0xx_hal_uart.o
+                0x08003520                UART_SetConfig
  .text.UART_AdvFeatureConfig
-                0x08003528       0xe0 build/stm32f0xx_hal_uart.o
-                0x08003528                UART_AdvFeatureConfig
+                0x08003690       0xe0 build/stm32f0xx_hal_uart.o
+                0x08003690                UART_AdvFeatureConfig
  .text.UART_WaitOnFlagUntilTimeout
-                0x08003608       0x9e build/stm32f0xx_hal_uart.o
-                0x08003608                UART_WaitOnFlagUntilTimeout
- *fill*         0x080036a6        0x2 
+                0x08003770       0x9e build/stm32f0xx_hal_uart.o
+                0x08003770                UART_WaitOnFlagUntilTimeout
+ *fill*         0x0800380e        0x2 
  .text.UART_CheckIdleState
-                0x080036a8       0xd0 build/stm32f0xx_hal_uart.o
-                0x080036a8                UART_CheckIdleState
+                0x08003810       0xd0 build/stm32f0xx_hal_uart.o
+                0x08003810                UART_CheckIdleState
  .text.HAL_UART_Init
-                0x08003778       0x6c build/stm32f0xx_hal_uart.o
-                0x08003778                HAL_UART_Init
+                0x080038e0       0x6c build/stm32f0xx_hal_uart.o
+                0x080038e0                HAL_UART_Init
  .text.Reset_Handler
-                0x080037e4       0x50 build/startup_stm32f030x8.o
-                0x080037e4                Reset_Handler
+                0x0800394c       0x50 build/startup_stm32f030x8.o
+                0x0800394c                Reset_Handler
  .text.Default_Handler
-                0x08003834        0x2 build/startup_stm32f030x8.o
-                0x08003834                TIM1_BRK_UP_TRG_COM_IRQHandler
-                0x08003834                TIM6_IRQHandler
-                0x08003834                I2C1_IRQHandler
-                0x08003834                SPI1_IRQHandler
-                0x08003834                EXTI2_3_IRQHandler
-                0x08003834                ADC1_IRQHandler
-                0x08003834                I2C2_IRQHandler
-                0x08003834                TIM17_IRQHandler
-                0x08003834                RTC_IRQHandler
-                0x08003834                TIM16_IRQHandler
-                0x08003834                TIM3_IRQHandler
-                0x08003834                RCC_IRQHandler
-                0x08003834                DMA1_Channel1_IRQHandler
-                0x08003834                Default_Handler
-                0x08003834                TIM14_IRQHandler
-                0x08003834                DMA1_Channel4_5_IRQHandler
-                0x08003834                TIM15_IRQHandler
-                0x08003834                SPI2_IRQHandler
-                0x08003834                WWDG_IRQHandler
-                0x08003834                DMA1_Channel2_3_IRQHandler
-                0x08003834                USART2_IRQHandler
-                0x08003834                FLASH_IRQHandler
-                0x08003834                USART1_IRQHandler
-                0x08003834                TIM1_CC_IRQHandler
- .text.memset   0x08003836       0x10 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc_nano.a(libc_a-memset.o)
-                0x08003836                memset
- *fill*         0x08003846        0x2 
- .text.__errno  0x08003848        0xc /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc_nano.a(libc_a-errno.o)
-                0x08003848                __errno
+                0x0800399c        0x2 build/startup_stm32f030x8.o
+                0x0800399c                TIM1_BRK_UP_TRG_COM_IRQHandler
+                0x0800399c                TIM6_IRQHandler
+                0x0800399c                I2C1_IRQHandler
+                0x0800399c                SPI1_IRQHandler
+                0x0800399c                EXTI2_3_IRQHandler
+                0x0800399c                ADC1_IRQHandler
+                0x0800399c                I2C2_IRQHandler
+                0x0800399c                TIM17_IRQHandler
+                0x0800399c                RTC_IRQHandler
+                0x0800399c                TIM16_IRQHandler
+                0x0800399c                TIM3_IRQHandler
+                0x0800399c                RCC_IRQHandler
+                0x0800399c                DMA1_Channel1_IRQHandler
+                0x0800399c                Default_Handler
+                0x0800399c                TIM14_IRQHandler
+                0x0800399c                DMA1_Channel4_5_IRQHandler
+                0x0800399c                TIM15_IRQHandler
+                0x0800399c                SPI2_IRQHandler
+                0x0800399c                WWDG_IRQHandler
+                0x0800399c                DMA1_Channel2_3_IRQHandler
+                0x0800399c                USART2_IRQHandler
+                0x0800399c                FLASH_IRQHandler
+                0x0800399c                USART1_IRQHandler
+                0x0800399c                TIM1_CC_IRQHandler
+ .text.memset   0x0800399e       0x10 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc_nano.a(libc_a-memset.o)
+                0x0800399e                memset
+ *fill*         0x080039ae        0x2 
+ .text.__errno  0x080039b0        0xc /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc_nano.a(libc_a-errno.o)
+                0x080039b0                __errno
  .text.__libc_init_array
-                0x08003854       0x48 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc_nano.a(libc_a-init.o)
-                0x08003854                __libc_init_array
- .text.acosf    0x0800389c       0x40 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-wf_acos.o)
-                0x0800389c                acosf
- .text.sqrtf    0x080038dc       0x3c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-wf_sqrt.o)
-                0x080038dc                sqrtf
- .text.fabsf    0x08003918        0x8 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-sf_fabs.o)
-                0x08003918                fabsf
- .text.nanf     0x08003920        0x8 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-sf_nan.o)
-                0x08003920                nanf
+                0x080039bc       0x48 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc_nano.a(libc_a-init.o)
+                0x080039bc                __libc_init_array
+ .text.acosf    0x08003a04       0x40 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-wf_acos.o)
+                0x08003a04                acosf
+ .text.sqrtf    0x08003a44       0x3c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-wf_sqrt.o)
+                0x08003a44                sqrtf
+ .text.fabsf    0x08003a80        0x8 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-sf_fabs.o)
+                0x08003a80                fabsf
+ .text.nanf     0x08003a88        0x8 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-sf_nan.o)
+                0x08003a88                nanf
  .text.__ieee754_acosf
-                0x08003928      0x2c4 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-ef_acos.o)
-                0x08003928                __ieee754_acosf
+                0x08003a90      0x2c4 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-ef_acos.o)
+                0x08003a90                __ieee754_acosf
  .text.__ieee754_sqrtf
-                0x08003bec       0xec /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-ef_sqrt.o)
-                0x08003bec                __ieee754_sqrtf
+                0x08003d54       0xec /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-ef_sqrt.o)
+                0x08003d54                __ieee754_sqrtf
  .text.__fixunsdfsi
-                0x08003cd8       0x3c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_fixunsdfsi.o)
-                0x08003cd8                __fixunsdfsi
-                0x08003cd8                __aeabi_d2uiz
+                0x08003e40       0x3c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_fixunsdfsi.o)
+                0x08003e40                __fixunsdfsi
+                0x08003e40                __aeabi_d2uiz
  .text.__aeabi_fadd
-                0x08003d14      0x41c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(addsf3.o)
-                0x08003d14                __aeabi_fadd
+                0x08003e7c      0x41c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(addsf3.o)
+                0x08003e7c                __aeabi_fadd
  .text.__aeabi_fdiv
-                0x08004130      0x22c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(divsf3.o)
-                0x08004130                __aeabi_fdiv
- .text.__eqsf2  0x0800435c       0x50 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(eqsf2.o)
-                0x0800435c                __nesf2
-                0x0800435c                __eqsf2
- .text.__gesf2  0x080043ac       0x90 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(gesf2.o)
-                0x080043ac                __gtsf2
-                0x080043ac                __gesf2
- .text.__lesf2  0x0800443c       0x90 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(lesf2.o)
-                0x0800443c                __lesf2
-                0x0800443c                __ltsf2
+                0x08004298      0x22c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(divsf3.o)
+                0x08004298                __aeabi_fdiv
+ .text.__eqsf2  0x080044c4       0x50 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(eqsf2.o)
+                0x080044c4                __nesf2
+                0x080044c4                __eqsf2
+ .text.__gesf2  0x08004514       0x90 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(gesf2.o)
+                0x08004514                __gtsf2
+                0x08004514                __gesf2
+ .text.__lesf2  0x080045a4       0x90 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(lesf2.o)
+                0x080045a4                __lesf2
+                0x080045a4                __ltsf2
  .text.__aeabi_fmul
-                0x080044cc      0x2a4 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(mulsf3.o)
-                0x080044cc                __aeabi_fmul
+                0x08004634      0x2a4 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(mulsf3.o)
+                0x08004634                __aeabi_fmul
  .text.__aeabi_fsub
-                0x08004770      0x484 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(subsf3.o)
-                0x08004770                __aeabi_fsub
+                0x080048d8      0x484 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(subsf3.o)
+                0x080048d8                __aeabi_fsub
  .text.__aeabi_fcmpun
-                0x08004bf4       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(unordsf2.o)
-                0x08004bf4                __aeabi_fcmpun
+                0x08004d5c       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(unordsf2.o)
+                0x08004d5c                __aeabi_fcmpun
  .text.__aeabi_i2f
-                0x08004c20       0xa0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(floatsisf.o)
-                0x08004c20                __aeabi_i2f
+                0x08004d88       0xa0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(floatsisf.o)
+                0x08004d88                __aeabi_i2f
  .text.__aeabi_ddiv
-                0x08004cc0      0x63c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(divdf3.o)
-                0x08004cc0                __aeabi_ddiv
+                0x08004e28      0x63c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(divdf3.o)
+                0x08004e28                __aeabi_ddiv
+ .text.__eqdf2  0x08005464       0x8c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(eqdf2.o)
+                0x08005464                __eqdf2
+                0x08005464                __nedf2
+ .text.__gedf2  0x080054f0       0xe0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(gedf2.o)
+                0x080054f0                __gtdf2
+                0x080054f0                __gedf2
+ .text.__ledf2  0x080055d0       0xdc /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(ledf2.o)
+                0x080055d0                __ltdf2
+                0x080055d0                __ledf2
  .text.__aeabi_dmul
-                0x080052fc      0x590 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(muldf3.o)
-                0x080052fc                __aeabi_dmul
+                0x080056ac      0x590 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(muldf3.o)
+                0x080056ac                __aeabi_dmul
  .text.__aeabi_dsub
-                0x0800588c      0x870 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(subdf3.o)
-                0x0800588c                __aeabi_dsub
+                0x08005c3c      0x870 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(subdf3.o)
+                0x08005c3c                __aeabi_dsub
  .text.__aeabi_d2iz
-                0x080060fc       0x78 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(fixdfsi.o)
-                0x080060fc                __aeabi_d2iz
+                0x080064ac       0x78 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(fixdfsi.o)
+                0x080064ac                __aeabi_d2iz
  .text.__aeabi_i2d
-                0x08006174       0x5c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(floatsidf.o)
-                0x08006174                __aeabi_i2d
- .text.__eqdf2  0x080061d0       0x8c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(eqdf2.o)
-                0x080061d0                __eqdf2
-                0x080061d0                __nedf2
- .text.__gedf2  0x0800625c       0xe0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(gedf2.o)
-                0x0800625c                __gtdf2
-                0x0800625c                __gedf2
- .text.__ledf2  0x0800633c       0xdc /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(ledf2.o)
-                0x0800633c                __ltdf2
-                0x0800633c                __ledf2
+                0x08006524       0x5c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(floatsidf.o)
+                0x08006524                __aeabi_i2d
+ .text.__aeabi_f2d
+                0x08006580       0x90 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(extendsfdf2.o)
+                0x08006580                __aeabi_f2d
  *(.glue_7)
- .glue_7        0x08006418        0x0 linker stubs
+ .glue_7        0x08006610        0x0 linker stubs
  *(.glue_7t)
- .glue_7t       0x08006418        0x0 linker stubs
+ .glue_7t       0x08006610        0x0 linker stubs
  *(.eh_frame)
- .eh_frame      0x08006418        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/crtbegin.o
+ .eh_frame      0x08006610        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/crtbegin.o
  *(.init)
- .init          0x08006418        0x4 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/crti.o
-                0x08006418                _init
- .init          0x0800641c        0x8 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/crtn.o
+ .init          0x08006610        0x4 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/crti.o
+                0x08006610                _init
+ .init          0x08006614        0x8 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/crtn.o
  *(.fini)
- .fini          0x08006424        0x4 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/crti.o
-                0x08006424                _fini
- .fini          0x08006428        0x8 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/crtn.o
-                0x08006430                        . = ALIGN (0x4)
-                0x08006430                        _etext = .
+ .fini          0x0800661c        0x4 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/crti.o
+                0x0800661c                _fini
+ .fini          0x08006620        0x8 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/crtn.o
+                0x08006628                        . = ALIGN (0x4)
+                0x08006628                        _etext = .
 
-.vfp11_veneer   0x08006430        0x0
- .vfp11_veneer  0x08006430        0x0 linker stubs
+.vfp11_veneer   0x08006628        0x0
+ .vfp11_veneer  0x08006628        0x0 linker stubs
 
-.v4_bx          0x08006430        0x0
- .v4_bx         0x08006430        0x0 linker stubs
+.v4_bx          0x08006628        0x0
+ .v4_bx         0x08006628        0x0 linker stubs
 
-.iplt           0x08006430        0x0
- .iplt          0x08006430        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/crtbegin.o
+.iplt           0x08006628        0x0
+ .iplt          0x08006628        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/crtbegin.o
 
-.rodata         0x08006430      0x100
-                0x08006430                        . = ALIGN (0x4)
+.rodata         0x08006628      0x100
+                0x08006628                        . = ALIGN (0x4)
  *(.rodata)
  *(.rodata*)
  .rodata.aPredivFactorTable.0
-                0x08006430       0x10 build/stm32f0xx_hal_rcc.o
+                0x08006628       0x10 build/stm32f0xx_hal_rcc.o
  .rodata.aPLLMULFactorTable.1
-                0x08006440       0x10 build/stm32f0xx_hal_rcc.o
+                0x08006638       0x10 build/stm32f0xx_hal_rcc.o
  .rodata.APBPrescTable
-                0x08006450        0x8 build/system_stm32f0xx.o
-                0x08006450                APBPrescTable
+                0x08006648        0x8 build/system_stm32f0xx.o
+                0x08006648                APBPrescTable
  .rodata.AHBPrescTable
-                0x08006458       0x10 build/system_stm32f0xx.o
-                0x08006458                AHBPrescTable
+                0x08006650       0x10 build/system_stm32f0xx.o
+                0x08006650                AHBPrescTable
  .rodata.acosf.str1.4
-                0x08006468        0x1 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-wf_acos.o)
- *fill*         0x08006469        0x3 
- .rodata.tiny   0x0800646c        0x4 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-ef_sqrt.o)
- .rodata.one    0x08006470        0x4 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-ef_sqrt.o)
+                0x08006660        0x1 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-wf_acos.o)
+ *fill*         0x08006661        0x3 
+ .rodata.tiny   0x08006664        0x4 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-ef_sqrt.o)
+ .rodata.one    0x08006668        0x4 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-ef_sqrt.o)
  .rodata.__aeabi_fdiv
-                0x08006474       0x7c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(divsf3.o)
+                0x0800666c       0x7c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(divsf3.o)
  .rodata.__aeabi_ddiv
-                0x080064f0       0x40 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(divdf3.o)
-                0x08006530                        . = ALIGN (0x4)
+                0x080066e8       0x40 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(divdf3.o)
+                0x08006728                        . = ALIGN (0x4)
 
-.rel.dyn        0x08006530        0x0
- .rel.iplt      0x08006530        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/crtbegin.o
+.rel.dyn        0x08006728        0x0
+ .rel.iplt      0x08006728        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/crtbegin.o
 
 .ARM.extab
  *(.ARM.extab* .gnu.linkonce.armextab.*)
 
-.ARM            0x08006530        0x0
-                0x08006530                        __exidx_start = .
+.ARM            0x08006728        0x0
+                0x08006728                        __exidx_start = .
  *(.ARM.exidx*)
-                0x08006530                        __exidx_end = .
+                0x08006728                        __exidx_end = .
 
-.preinit_array  0x08006530        0x0
-                0x08006530                        PROVIDE (__preinit_array_start = .)
+.preinit_array  0x08006728        0x0
+                0x08006728                        PROVIDE (__preinit_array_start = .)
  *(.preinit_array*)
-                0x08006530                        PROVIDE (__preinit_array_end = .)
+                0x08006728                        PROVIDE (__preinit_array_end = .)
 
-.init_array     0x08006530        0x4
-                0x08006530                        PROVIDE (__init_array_start = .)
+.init_array     0x08006728        0x4
+                0x08006728                        PROVIDE (__init_array_start = .)
  *(SORT_BY_NAME(.init_array.*))
  *(.init_array*)
- .init_array    0x08006530        0x4 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/crtbegin.o
-                0x08006534                        PROVIDE (__init_array_end = .)
+ .init_array    0x08006728        0x4 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/crtbegin.o
+                0x0800672c                        PROVIDE (__init_array_end = .)
 
-.fini_array     0x08006534        0x4
+.fini_array     0x0800672c        0x4
                 [!provide]                        PROVIDE (__fini_array_start = .)
  *(SORT_BY_NAME(.fini_array.*))
  *(.fini_array*)
- .fini_array    0x08006534        0x4 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/crtbegin.o
+ .fini_array    0x0800672c        0x4 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/crtbegin.o
                 [!provide]                        PROVIDE (__fini_array_end = .)
-                0x08006538                        _sidata = LOADADDR (.data)
+                0x08006730                        _sidata = LOADADDR (.data)
 
-.data           0x20000000       0x60 load address 0x08006538
+.data           0x20000000       0x68 load address 0x08006730
                 0x20000000                        . = ALIGN (0x4)
                 0x20000000                        _sdata = .
  *(.data)
@@ -2128,154 +2149,167 @@ LOAD /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-no
  .data.is_posture_correct
                 0x20000004        0x1 build/posture_controller.o
                 0x20000004                is_posture_correct
+ *fill*         0x20000005        0x3 
+ .data.threshold_angle
+                0x20000008        0x4 build/posture_controller.o
+                0x20000008                threshold_angle
+ .data.accelerometer_mode
+                0x2000000c        0x1 build/accelerometer_controller.o
+                0x2000000c                accelerometer_mode
  .data.uwTickFreq
-                0x20000005        0x1 build/stm32f0xx_hal.o
-                0x20000005                uwTickFreq
- *fill*         0x20000006        0x2 
+                0x2000000d        0x1 build/stm32f0xx_hal.o
+                0x2000000d                uwTickFreq
+ *fill*         0x2000000e        0x2 
  .data.uwTickPrio
-                0x20000008        0x4 build/stm32f0xx_hal.o
-                0x20000008                uwTickPrio
+                0x20000010        0x4 build/stm32f0xx_hal.o
+                0x20000010                uwTickPrio
  .data.SystemCoreClock
-                0x2000000c        0x4 build/system_stm32f0xx.o
-                0x2000000c                SystemCoreClock
+                0x20000014        0x4 build/system_stm32f0xx.o
+                0x20000014                SystemCoreClock
  .data._impure_ptr
-                0x20000010        0x4 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc_nano.a(libc_a-impure.o)
-                0x20000010                _impure_ptr
+                0x20000018        0x4 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc_nano.a(libc_a-impure.o)
+                0x20000018                _impure_ptr
  .data._impure_data
-                0x20000014       0x4c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc_nano.a(libc_a-impure.o)
-                0x20000014                _impure_data
-                0x20000060                        . = ALIGN (0x4)
-                0x20000060                        _edata = .
+                0x2000001c       0x4c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc_nano.a(libc_a-impure.o)
+                0x2000001c                _impure_data
+                0x20000068                        . = ALIGN (0x4)
+                0x20000068                        _edata = .
 
 .tm_clone_table
-                0x20000060        0x0 load address 0x08006598
+                0x20000068        0x0 load address 0x08006798
  .tm_clone_table
-                0x20000060        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/crtbegin.o
+                0x20000068        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/crtbegin.o
  .tm_clone_table
-                0x20000060        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/crtend.o
+                0x20000068        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/crtend.o
 
-.igot.plt       0x20000060        0x0 load address 0x08006598
- .igot.plt      0x20000060        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/crtbegin.o
-                0x20000060                        . = ALIGN (0x4)
+.igot.plt       0x20000068        0x0 load address 0x08006798
+ .igot.plt      0x20000068        0x0 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/crtbegin.o
+                0x20000068                        . = ALIGN (0x4)
 
-.bss            0x20000060      0x828 load address 0x08006598
-                0x20000060                        _sbss = .
-                0x20000060                        __bss_start__ = _sbss
+.bss            0x20000068      0x83c load address 0x08006798
+                0x20000068                        _sbss = .
+                0x20000068                        __bss_start__ = _sbss
  *(.bss)
  *(.bss*)
  .bss.completed.1
-                0x20000060        0x1 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/crtbegin.o
- *fill*         0x20000061        0x3 
- .bss.object.0  0x20000064       0x18 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/crtbegin.o
+                0x20000068        0x1 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/crtbegin.o
+ *fill*         0x20000069        0x3 
+ .bss.object.0  0x2000006c       0x18 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/crtbegin.o
  .bss.last_posture_update.0
-                0x2000007c        0x4 build/main.o
- .bss.last_button_update.1
-                0x20000080        0x4 build/main.o
- .bss.last_led_update.2
                 0x20000084        0x4 build/main.o
- .bss.last_acc_update.3
+ .bss.last_button_update.1
                 0x20000088        0x4 build/main.o
- .bss.huart1    0x2000008c       0x88 build/main.o
-                0x2000008c                huart1
- .bss.htim16    0x20000114       0x48 build/main.o
-                0x20000114                htim16
- .bss.hi2c1     0x2000015c       0x54 build/main.o
-                0x2000015c                hi2c1
+ .bss.last_led_update.2
+                0x2000008c        0x4 build/main.o
+ .bss.last_acc_update.3
+                0x20000090        0x4 build/main.o
+ .bss.huart1    0x20000094       0x88 build/main.o
+                0x20000094                huart1
+ .bss.htim16    0x2000011c       0x48 build/main.o
+                0x2000011c                htim16
+ .bss.hi2c1     0x20000164       0x54 build/main.o
+                0x20000164                hi2c1
  .bss.good_posture_history_full
-                0x200001b0        0x1 build/posture_controller.o
-                0x200001b0                good_posture_history_full
- *fill*         0x200001b1        0x3 
- .bss.good_posture_history_index
-                0x200001b4        0x4 build/posture_controller.o
-                0x200001b4                good_posture_history_index
- .bss.last_measurements_history_full
                 0x200001b8        0x1 build/posture_controller.o
-                0x200001b8                last_measurements_history_full
+                0x200001b8                good_posture_history_full
  *fill*         0x200001b9        0x3 
- .bss.last_measurements_history_index
+ .bss.good_posture_history_index
                 0x200001bc        0x4 build/posture_controller.o
-                0x200001bc                last_measurements_history_index
- .bss.last_measurements_history
-                0x200001c0      0x4b0 build/posture_controller.o
-                0x200001c0                last_measurements_history
+                0x200001bc                good_posture_history_index
  .bss.good_posture_history
-                0x20000670       0x78 build/posture_controller.o
-                0x20000670                good_posture_history
+                0x200001c0       0x78 build/posture_controller.o
+                0x200001c0                good_posture_history
  .bss.did_calibrate
-                0x200006e8        0x1 build/posture_controller.o
-                0x200006e8                did_calibrate
- *fill*         0x200006e9        0x3 
+                0x20000238        0x1 build/posture_controller.o
+                0x20000238                did_calibrate
+ *fill*         0x20000239        0x3 
  .bss.last_haptic_feedback_time
-                0x200006ec        0x4 build/posture_controller.o
-                0x200006ec                last_haptic_feedback_time
+                0x2000023c        0x4 build/posture_controller.o
+                0x2000023c                last_haptic_feedback_time
  .bss.last_good_posture_time
-                0x200006f0        0x4 build/posture_controller.o
-                0x200006f0                last_good_posture_time
+                0x20000240        0x4 build/posture_controller.o
+                0x20000240                last_good_posture_time
  .bss.last_bad_posture_time
-                0x200006f4        0x4 build/posture_controller.o
-                0x200006f4                last_bad_posture_time
- .bss.threshold_angle
-                0x200006f8        0x4 build/posture_controller.o
-                0x200006f8                threshold_angle
+                0x20000244        0x4 build/posture_controller.o
+                0x20000244                last_bad_posture_time
  .bss.good_posture_vector
-                0x200006fc        0xc build/posture_controller.o
-                0x200006fc                good_posture_vector
+                0x20000248        0xc build/posture_controller.o
+                0x20000248                good_posture_vector
  .bss.current_accelerometer_vector
-                0x20000708        0xc build/posture_controller.o
-                0x20000708                current_accelerometer_vector
- .bss.no_motion_timer_start
-                0x20000714        0x4 build/accelerometer_controller.o
- .bss.motion_timer_start
-                0x20000718        0x4 build/accelerometer_controller.o
- .bss.g_no_motion_detected
-                0x2000071c        0x1 build/accelerometer_controller.o
- .bss.g_motion_detected
-                0x2000071d        0x1 build/accelerometer_controller.o
- *fill*         0x2000071e        0x2 
+                0x20000254        0xc build/posture_controller.o
+                0x20000254                current_accelerometer_vector
+ .bss.activity_to_normal_start_time
+                0x20000260        0x4 build/accelerometer_controller.o
+ .bss.activity_reset_start_time
+                0x20000264        0x4 build/accelerometer_controller.o
+ .bss.activity_start_time
+                0x20000268        0x4 build/accelerometer_controller.o
+ .bss.super_still_start_time
+                0x2000026c        0x4 build/accelerometer_controller.o
+ .bss.last_measurements_history_mean_vector
+                0x20000270        0xc build/accelerometer_controller.o
+                0x20000270                last_measurements_history_mean_vector
+ .bss.last_measurements_history_max_magnitude_from_mean
+                0x2000027c        0x4 build/accelerometer_controller.o
+                0x2000027c                last_measurements_history_max_magnitude_from_mean
+ .bss.last_measurements_history_max_angle_from_mean
+                0x20000280        0x4 build/accelerometer_controller.o
+                0x20000280                last_measurements_history_max_angle_from_mean
+ .bss.last_measurements_history_full
+                0x20000284        0x1 build/accelerometer_controller.o
+                0x20000284                last_measurements_history_full
+ *fill*         0x20000285        0x3 
+ .bss.last_measurements_history_index
+                0x20000288        0x4 build/accelerometer_controller.o
+                0x20000288                last_measurements_history_index
+ .bss.last_measurements_history
+                0x2000028c      0x4b0 build/accelerometer_controller.o
+                0x2000028c                last_measurements_history
  .bss.latest_accel_data
-                0x20000720        0xc build/accelerometer_controller.o
-                0x20000720                latest_accel_data
+                0x2000073c        0xc build/accelerometer_controller.o
+                0x2000073c                latest_accel_data
  .bss.int2_flag
-                0x2000072c        0x1 build/accelerometer_controller.o
-                0x2000072c                int2_flag
+                0x20000748        0x1 build/accelerometer_controller.o
+                0x20000748                int2_flag
  .bss.int1_flag
-                0x2000072d        0x1 build/accelerometer_controller.o
-                0x2000072d                int1_flag
+                0x20000749        0x1 build/accelerometer_controller.o
+                0x20000749                int1_flag
  .bss.latest_event
-                0x2000072e        0x1 build/button_controller.o
+                0x2000074a        0x1 build/button_controller.o
  .bss.long_press_reported
-                0x2000072f        0x1 build/button_controller.o
+                0x2000074b        0x1 build/button_controller.o
  .bss.press_count
-                0x20000730        0x1 build/button_controller.o
- *fill*         0x20000731        0x3 
+                0x2000074c        0x1 build/button_controller.o
+ *fill*         0x2000074d        0x3 
  .bss.last_release_time
-                0x20000734        0x4 build/button_controller.o
+                0x20000750        0x4 build/button_controller.o
  .bss.press_start_time
-                0x20000738        0x4 build/button_controller.o
+                0x20000754        0x4 build/button_controller.o
  .bss.button_pressed
-                0x2000073c        0x1 build/button_controller.o
- *fill*         0x2000073d        0x3 
+                0x20000758        0x1 build/button_controller.o
+ *fill*         0x20000759        0x3 
  .bss.led_state
-                0x20000740        0xc build/led_controller.o
- .bss.uwTick    0x2000074c        0x4 build/stm32f0xx_hal.o
-                0x2000074c                uwTick
- .bss.__sf      0x20000750      0x138 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc_nano.a(libc_a-findfp.o)
-                0x20000750                __sf
+                0x2000075c        0xc build/led_controller.o
+ .bss.uwTick    0x20000768        0x4 build/stm32f0xx_hal.o
+                0x20000768                uwTick
+ .bss.__sf      0x2000076c      0x138 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc_nano.a(libc_a-findfp.o)
+                0x2000076c                __sf
  *(COMMON)
-                0x20000888                        . = ALIGN (0x4)
-                0x20000888                        _ebss = .
-                0x20000888                        __bss_end__ = _ebss
+                0x200008a4                        . = ALIGN (0x4)
+                0x200008a4                        _ebss = .
+                0x200008a4                        __bss_end__ = _ebss
 
 ._user_heap_stack
-                0x20000888      0x600 load address 0x08006598
-                0x20000888                        . = ALIGN (0x8)
+                0x200008a4      0x604 load address 0x08006798
+                0x200008a8                        . = ALIGN (0x8)
+ *fill*         0x200008a4        0x4 
                 [!provide]                        PROVIDE (end = .)
-                0x20000888                        PROVIDE (_end = .)
-                0x20000a88                        . = (. + _Min_Heap_Size)
- *fill*         0x20000888      0x200 
-                0x20000e88                        . = (. + _Min_Stack_Size)
- *fill*         0x20000a88      0x400 
-                0x20000e88                        . = ALIGN (0x8)
+                0x200008a8                        PROVIDE (_end = .)
+                0x20000aa8                        . = (. + _Min_Heap_Size)
+ *fill*         0x200008a8      0x200 
+                0x20000ea8                        . = (. + _Min_Stack_Size)
+ *fill*         0x20000aa8      0x400 
+                0x20000ea8                        . = ALIGN (0x8)
 
 /DISCARD/
  libc.a(*)
@@ -2298,120 +2332,125 @@ LOAD /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-no
  .ARM.attributes
                 0x00000076       0x2c build/posture_controller.o
  .ARM.attributes
-                0x000000a2       0x2c build/accelerometer_controller.o
+                0x000000a2       0x2c build/posture_math.o
  .ARM.attributes
-                0x000000ce       0x2c build/button_controller.o
+                0x000000ce       0x2c build/accelerometer_controller.o
  .ARM.attributes
-                0x000000fa       0x2c build/haptic_feedback_controller.o
+                0x000000fa       0x2c build/button_controller.o
  .ARM.attributes
-                0x00000126       0x2c build/led_controller.o
+                0x00000126       0x2c build/haptic_feedback_controller.o
  .ARM.attributes
-                0x00000152       0x2c build/stm32f0xx_it.o
+                0x00000152       0x2c build/led_controller.o
  .ARM.attributes
-                0x0000017e       0x2c build/stm32f0xx_hal_msp.o
+                0x0000017e       0x2c build/stm32f0xx_it.o
  .ARM.attributes
-                0x000001aa       0x2c build/stm32f0xx_hal_rcc.o
+                0x000001aa       0x2c build/stm32f0xx_hal_msp.o
  .ARM.attributes
-                0x000001d6       0x2c build/stm32f0xx_hal_rcc_ex.o
+                0x000001d6       0x2c build/stm32f0xx_hal_rcc.o
  .ARM.attributes
-                0x00000202       0x2c build/stm32f0xx_hal.o
+                0x00000202       0x2c build/stm32f0xx_hal_rcc_ex.o
  .ARM.attributes
-                0x0000022e       0x2c build/stm32f0xx_hal_i2c.o
+                0x0000022e       0x2c build/stm32f0xx_hal.o
  .ARM.attributes
-                0x0000025a       0x2c build/stm32f0xx_hal_i2c_ex.o
+                0x0000025a       0x2c build/stm32f0xx_hal_i2c.o
  .ARM.attributes
-                0x00000286       0x2c build/stm32f0xx_hal_gpio.o
+                0x00000286       0x2c build/stm32f0xx_hal_i2c_ex.o
  .ARM.attributes
-                0x000002b2       0x2c build/stm32f0xx_hal_cortex.o
+                0x000002b2       0x2c build/stm32f0xx_hal_gpio.o
  .ARM.attributes
-                0x000002de       0x2c build/system_stm32f0xx.o
+                0x000002de       0x2c build/stm32f0xx_hal_cortex.o
  .ARM.attributes
-                0x0000030a       0x2c build/stm32f0xx_hal_tim.o
+                0x0000030a       0x2c build/system_stm32f0xx.o
  .ARM.attributes
-                0x00000336       0x2c build/stm32f0xx_hal_tim_ex.o
+                0x00000336       0x2c build/stm32f0xx_hal_tim.o
  .ARM.attributes
-                0x00000362       0x2c build/stm32f0xx_hal_uart.o
+                0x00000362       0x2c build/stm32f0xx_hal_tim_ex.o
  .ARM.attributes
-                0x0000038e       0x21 build/startup_stm32f030x8.o
+                0x0000038e       0x2c build/stm32f0xx_hal_uart.o
  .ARM.attributes
-                0x000003af       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc_nano.a(libc_a-findfp.o)
+                0x000003ba       0x21 build/startup_stm32f030x8.o
  .ARM.attributes
-                0x000003db       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc_nano.a(libc_a-memset.o)
+                0x000003db       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc_nano.a(libc_a-findfp.o)
  .ARM.attributes
-                0x00000407       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc_nano.a(libc_a-errno.o)
+                0x00000407       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc_nano.a(libc_a-memset.o)
  .ARM.attributes
-                0x00000433       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc_nano.a(libc_a-init.o)
+                0x00000433       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc_nano.a(libc_a-errno.o)
  .ARM.attributes
-                0x0000045f       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc_nano.a(libc_a-impure.o)
+                0x0000045f       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc_nano.a(libc_a-init.o)
  .ARM.attributes
-                0x0000048b       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-wf_acos.o)
+                0x0000048b       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc_nano.a(libc_a-impure.o)
  .ARM.attributes
-                0x000004b7       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-wf_sqrt.o)
+                0x000004b7       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-wf_acos.o)
  .ARM.attributes
-                0x000004e3       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-sf_fabs.o)
+                0x000004e3       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-wf_sqrt.o)
  .ARM.attributes
-                0x0000050f       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-sf_nan.o)
+                0x0000050f       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-sf_fabs.o)
  .ARM.attributes
-                0x0000053b       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-ef_acos.o)
+                0x0000053b       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-sf_nan.o)
  .ARM.attributes
-                0x00000567       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-ef_sqrt.o)
+                0x00000567       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-ef_acos.o)
  .ARM.attributes
-                0x00000593       0x1e /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_udivsi3.o)
+                0x00000593       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-ef_sqrt.o)
  .ARM.attributes
-                0x000005b1       0x1e /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_divsi3.o)
+                0x000005bf       0x1e /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_udivsi3.o)
  .ARM.attributes
-                0x000005cf       0x1e /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_dvmd_tls.o)
+                0x000005dd       0x1e /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_divsi3.o)
  .ARM.attributes
-                0x000005ed       0x1e /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_arm_cmpsf2.o)
+                0x000005fb       0x1e /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_dvmd_tls.o)
  .ARM.attributes
-                0x0000060b       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_fixunsdfsi.o)
+                0x00000619       0x1e /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_arm_cmpdf2.o)
  .ARM.attributes
-                0x00000637       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(addsf3.o)
+                0x00000637       0x1e /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_arm_cmpsf2.o)
  .ARM.attributes
-                0x00000663       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(divsf3.o)
+                0x00000655       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_fixunsdfsi.o)
  .ARM.attributes
-                0x0000068f       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(eqsf2.o)
+                0x00000681       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(addsf3.o)
  .ARM.attributes
-                0x000006bb       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(gesf2.o)
+                0x000006ad       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(divsf3.o)
  .ARM.attributes
-                0x000006e7       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(lesf2.o)
+                0x000006d9       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(eqsf2.o)
  .ARM.attributes
-                0x00000713       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(mulsf3.o)
+                0x00000705       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(gesf2.o)
  .ARM.attributes
-                0x0000073f       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(subsf3.o)
+                0x00000731       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(lesf2.o)
  .ARM.attributes
-                0x0000076b       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(unordsf2.o)
+                0x0000075d       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(mulsf3.o)
  .ARM.attributes
-                0x00000797       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(floatsisf.o)
+                0x00000789       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(subsf3.o)
  .ARM.attributes
-                0x000007c3       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(divdf3.o)
+                0x000007b5       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(unordsf2.o)
  .ARM.attributes
-                0x000007ef       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(muldf3.o)
+                0x000007e1       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(floatsisf.o)
  .ARM.attributes
-                0x0000081b       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(subdf3.o)
+                0x0000080d       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(divdf3.o)
  .ARM.attributes
-                0x00000847       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(fixdfsi.o)
+                0x00000839       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(eqdf2.o)
  .ARM.attributes
-                0x00000873       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(floatsidf.o)
+                0x00000865       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(gedf2.o)
  .ARM.attributes
-                0x0000089f       0x1e /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_arm_cmpdf2.o)
+                0x00000891       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(ledf2.o)
  .ARM.attributes
-                0x000008bd       0x1e /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_clzsi2.o)
+                0x000008bd       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(muldf3.o)
  .ARM.attributes
-                0x000008db       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(eqdf2.o)
+                0x000008e9       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(subdf3.o)
  .ARM.attributes
-                0x00000907       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(gedf2.o)
+                0x00000915       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(fixdfsi.o)
  .ARM.attributes
-                0x00000933       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(ledf2.o)
+                0x00000941       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(floatsidf.o)
  .ARM.attributes
-                0x0000095f       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/crtend.o
+                0x0000096d       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(extendsfdf2.o)
  .ARM.attributes
-                0x0000098b       0x1e /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/crtn.o
+                0x00000999       0x1e /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_clzsi2.o)
+ .ARM.attributes
+                0x000009b7       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/crtend.o
+ .ARM.attributes
+                0x000009e3       0x1e /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/crtn.o
 
 .comment        0x00000000       0x45
  .comment       0x00000000       0x45 build/main.o
                                  0x46 (size before relaxing)
  .comment       0x00000045       0x46 build/posture_controller.o
+ .comment       0x00000045       0x46 build/posture_math.o
  .comment       0x00000045       0x46 build/accelerometer_controller.o
  .comment       0x00000045       0x46 build/button_controller.o
  .comment       0x00000045       0x46 build/haptic_feedback_controller.o
@@ -2430,56 +2469,59 @@ LOAD /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-no
  .comment       0x00000045       0x46 build/stm32f0xx_hal_tim_ex.o
  .comment       0x00000045       0x46 build/stm32f0xx_hal_uart.o
 
-.debug_info     0x00000000    0x19c35
- .debug_info    0x00000000     0x1d01 build/main.o
- .debug_info    0x00001d01      0xa1b build/posture_controller.o
- .debug_info    0x0000271c     0x111a build/accelerometer_controller.o
- .debug_info    0x00003836      0x40f build/button_controller.o
- .debug_info    0x00003c45     0x16c9 build/haptic_feedback_controller.o
- .debug_info    0x0000530e      0x9e8 build/led_controller.o
- .debug_info    0x00005cf6      0x1ad build/stm32f0xx_it.o
- .debug_info    0x00005ea3     0x13c4 build/stm32f0xx_hal_msp.o
- .debug_info    0x00007267      0xb4c build/stm32f0xx_hal_rcc.o
- .debug_info    0x00007db3      0x41b build/stm32f0xx_hal_rcc_ex.o
- .debug_info    0x000081ce      0x810 build/stm32f0xx_hal.o
- .debug_info    0x000089de     0x4686 build/stm32f0xx_hal_i2c.o
- .debug_info    0x0000d064      0x91c build/stm32f0xx_hal_i2c_ex.o
- .debug_info    0x0000d980      0x6c3 build/stm32f0xx_hal_gpio.o
- .debug_info    0x0000e043      0x8d5 build/stm32f0xx_hal_cortex.o
- .debug_info    0x0000e918      0x2bc build/system_stm32f0xx.o
- .debug_info    0x0000ebd4     0x40e6 build/stm32f0xx_hal_tim.o
- .debug_info    0x00012cba     0x1caf build/stm32f0xx_hal_tim_ex.o
- .debug_info    0x00014969     0x529c build/stm32f0xx_hal_uart.o
- .debug_info    0x00019c05       0x30 build/startup_stm32f030x8.o
+.debug_info     0x00000000    0x19ec2
+ .debug_info    0x00000000     0x1cf4 build/main.o
+ .debug_info    0x00001cf4      0x6e8 build/posture_controller.o
+ .debug_info    0x000023dc      0x344 build/posture_math.o
+ .debug_info    0x00002720     0x1381 build/accelerometer_controller.o
+ .debug_info    0x00003aa1      0x40f build/button_controller.o
+ .debug_info    0x00003eb0     0x16eb build/haptic_feedback_controller.o
+ .debug_info    0x0000559b      0x9e8 build/led_controller.o
+ .debug_info    0x00005f83      0x1ad build/stm32f0xx_it.o
+ .debug_info    0x00006130     0x13c4 build/stm32f0xx_hal_msp.o
+ .debug_info    0x000074f4      0xb4c build/stm32f0xx_hal_rcc.o
+ .debug_info    0x00008040      0x41b build/stm32f0xx_hal_rcc_ex.o
+ .debug_info    0x0000845b      0x810 build/stm32f0xx_hal.o
+ .debug_info    0x00008c6b     0x4686 build/stm32f0xx_hal_i2c.o
+ .debug_info    0x0000d2f1      0x91c build/stm32f0xx_hal_i2c_ex.o
+ .debug_info    0x0000dc0d      0x6c3 build/stm32f0xx_hal_gpio.o
+ .debug_info    0x0000e2d0      0x8d5 build/stm32f0xx_hal_cortex.o
+ .debug_info    0x0000eba5      0x2bc build/system_stm32f0xx.o
+ .debug_info    0x0000ee61     0x40e6 build/stm32f0xx_hal_tim.o
+ .debug_info    0x00012f47     0x1caf build/stm32f0xx_hal_tim_ex.o
+ .debug_info    0x00014bf6     0x529c build/stm32f0xx_hal_uart.o
+ .debug_info    0x00019e92       0x30 build/startup_stm32f030x8.o
 
-.debug_abbrev   0x00000000     0x2e1b
- .debug_abbrev  0x00000000      0x365 build/main.o
- .debug_abbrev  0x00000365      0x2be build/posture_controller.o
- .debug_abbrev  0x00000623      0x326 build/accelerometer_controller.o
- .debug_abbrev  0x00000949      0x1bc build/button_controller.o
- .debug_abbrev  0x00000b05      0x353 build/haptic_feedback_controller.o
- .debug_abbrev  0x00000e58      0x224 build/led_controller.o
- .debug_abbrev  0x0000107c       0xcf build/stm32f0xx_it.o
- .debug_abbrev  0x0000114b      0x234 build/stm32f0xx_hal_msp.o
- .debug_abbrev  0x0000137f      0x2b4 build/stm32f0xx_hal_rcc.o
- .debug_abbrev  0x00001633      0x1aa build/stm32f0xx_hal_rcc_ex.o
- .debug_abbrev  0x000017dd      0x268 build/stm32f0xx_hal.o
- .debug_abbrev  0x00001a45      0x2f5 build/stm32f0xx_hal_i2c.o
- .debug_abbrev  0x00001d3a      0x1c6 build/stm32f0xx_hal_i2c_ex.o
- .debug_abbrev  0x00001f00      0x222 build/stm32f0xx_hal_gpio.o
- .debug_abbrev  0x00002122      0x2f4 build/stm32f0xx_hal_cortex.o
- .debug_abbrev  0x00002416      0x134 build/system_stm32f0xx.o
- .debug_abbrev  0x0000254a      0x2ce build/stm32f0xx_hal_tim.o
- .debug_abbrev  0x00002818      0x2ae build/stm32f0xx_hal_tim_ex.o
- .debug_abbrev  0x00002ac6      0x338 build/stm32f0xx_hal_uart.o
- .debug_abbrev  0x00002dfe       0x1d build/startup_stm32f030x8.o
+.debug_abbrev   0x00000000     0x2e98
+ .debug_abbrev  0x00000000      0x354 build/main.o
+ .debug_abbrev  0x00000354      0x1f8 build/posture_controller.o
+ .debug_abbrev  0x0000054c      0x102 build/posture_math.o
+ .debug_abbrev  0x0000064e      0x378 build/accelerometer_controller.o
+ .debug_abbrev  0x000009c6      0x1bc build/button_controller.o
+ .debug_abbrev  0x00000b82      0x353 build/haptic_feedback_controller.o
+ .debug_abbrev  0x00000ed5      0x224 build/led_controller.o
+ .debug_abbrev  0x000010f9       0xcf build/stm32f0xx_it.o
+ .debug_abbrev  0x000011c8      0x234 build/stm32f0xx_hal_msp.o
+ .debug_abbrev  0x000013fc      0x2b4 build/stm32f0xx_hal_rcc.o
+ .debug_abbrev  0x000016b0      0x1aa build/stm32f0xx_hal_rcc_ex.o
+ .debug_abbrev  0x0000185a      0x268 build/stm32f0xx_hal.o
+ .debug_abbrev  0x00001ac2      0x2f5 build/stm32f0xx_hal_i2c.o
+ .debug_abbrev  0x00001db7      0x1c6 build/stm32f0xx_hal_i2c_ex.o
+ .debug_abbrev  0x00001f7d      0x222 build/stm32f0xx_hal_gpio.o
+ .debug_abbrev  0x0000219f      0x2f4 build/stm32f0xx_hal_cortex.o
+ .debug_abbrev  0x00002493      0x134 build/system_stm32f0xx.o
+ .debug_abbrev  0x000025c7      0x2ce build/stm32f0xx_hal_tim.o
+ .debug_abbrev  0x00002895      0x2ae build/stm32f0xx_hal_tim_ex.o
+ .debug_abbrev  0x00002b43      0x338 build/stm32f0xx_hal_uart.o
+ .debug_abbrev  0x00002e7b       0x1d build/startup_stm32f030x8.o
 
 .debug_loc      0x00000000    0x17332
  .debug_loc     0x00000000      0x1a6 build/main.o
- .debug_loc     0x000001a6      0x541 build/posture_controller.o
- .debug_loc     0x000006e7      0x74b build/accelerometer_controller.o
- .debug_loc     0x00000e32      0x135 build/button_controller.o
- .debug_loc     0x00000f67      0xc16 build/haptic_feedback_controller.o
+ .debug_loc     0x000001a6      0x249 build/posture_controller.o
+ .debug_loc     0x000003ef      0x247 build/posture_math.o
+ .debug_loc     0x00000636      0x7da build/accelerometer_controller.o
+ .debug_loc     0x00000e10      0x135 build/button_controller.o
+ .debug_loc     0x00000f45      0xc38 build/haptic_feedback_controller.o
  .debug_loc     0x00001b7d      0x253 build/led_controller.o
  .debug_loc     0x00001dd0       0x60 build/stm32f0xx_it.o
  .debug_loc     0x00001e30      0x285 build/stm32f0xx_hal_msp.o
@@ -2495,165 +2537,172 @@ LOAD /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-no
  .debug_loc     0x0001085c     0x292c build/stm32f0xx_hal_tim_ex.o
  .debug_loc     0x00013188     0x41aa build/stm32f0xx_hal_uart.o
 
-.debug_aranges  0x00000000     0x1068
+.debug_aranges  0x00000000     0x1088
  .debug_aranges
                 0x00000000       0x58 build/main.o
  .debug_aranges
-                0x00000058       0x70 build/posture_controller.o
+                0x00000058       0x50 build/posture_controller.o
  .debug_aranges
-                0x000000c8       0x88 build/accelerometer_controller.o
+                0x000000a8       0x38 build/posture_math.o
  .debug_aranges
-                0x00000150       0x40 build/button_controller.o
+                0x000000e0       0x90 build/accelerometer_controller.o
  .debug_aranges
-                0x00000190      0x100 build/haptic_feedback_controller.o
+                0x00000170       0x40 build/button_controller.o
  .debug_aranges
-                0x00000290       0x48 build/led_controller.o
+                0x000001b0      0x100 build/haptic_feedback_controller.o
  .debug_aranges
-                0x000002d8       0x50 build/stm32f0xx_it.o
+                0x000002b0       0x48 build/led_controller.o
  .debug_aranges
-                0x00000328       0x58 build/stm32f0xx_hal_msp.o
+                0x000002f8       0x50 build/stm32f0xx_it.o
  .debug_aranges
-                0x00000380       0x80 build/stm32f0xx_hal_rcc.o
+                0x00000348       0x58 build/stm32f0xx_hal_msp.o
  .debug_aranges
-                0x00000400       0x30 build/stm32f0xx_hal_rcc_ex.o
+                0x000003a0       0x80 build/stm32f0xx_hal_rcc.o
  .debug_aranges
-                0x00000430       0xd0 build/stm32f0xx_hal.o
+                0x00000420       0x30 build/stm32f0xx_hal_rcc_ex.o
  .debug_aranges
-                0x00000500      0x2a0 build/stm32f0xx_hal_i2c.o
+                0x00000450       0xd0 build/stm32f0xx_hal.o
  .debug_aranges
-                0x000007a0       0x38 build/stm32f0xx_hal_i2c_ex.o
+                0x00000520      0x2a0 build/stm32f0xx_hal_i2c.o
  .debug_aranges
-                0x000007d8       0x58 build/stm32f0xx_hal_gpio.o
+                0x000007c0       0x38 build/stm32f0xx_hal_i2c_ex.o
  .debug_aranges
-                0x00000830       0x98 build/stm32f0xx_hal_cortex.o
+                0x000007f8       0x58 build/stm32f0xx_hal_gpio.o
  .debug_aranges
-                0x000008c8       0x28 build/system_stm32f0xx.o
+                0x00000850       0x98 build/stm32f0xx_hal_cortex.o
  .debug_aranges
-                0x000008f0      0x3d0 build/stm32f0xx_hal_tim.o
+                0x000008e8       0x28 build/system_stm32f0xx.o
  .debug_aranges
-                0x00000cc0      0x168 build/stm32f0xx_hal_tim_ex.o
+                0x00000910      0x3d0 build/stm32f0xx_hal_tim.o
  .debug_aranges
-                0x00000e28      0x218 build/stm32f0xx_hal_uart.o
+                0x00000ce0      0x168 build/stm32f0xx_hal_tim_ex.o
  .debug_aranges
-                0x00001040       0x28 build/startup_stm32f030x8.o
+                0x00000e48      0x218 build/stm32f0xx_hal_uart.o
+ .debug_aranges
+                0x00001060       0x28 build/startup_stm32f030x8.o
 
-.debug_ranges   0x00000000     0x1050
+.debug_ranges   0x00000000     0x1030
  .debug_ranges  0x00000000       0x60 build/main.o
- .debug_ranges  0x00000060       0x90 build/posture_controller.o
- .debug_ranges  0x000000f0       0x78 build/accelerometer_controller.o
- .debug_ranges  0x00000168       0x48 build/button_controller.o
- .debug_ranges  0x000001b0      0x108 build/haptic_feedback_controller.o
- .debug_ranges  0x000002b8       0x38 build/led_controller.o
- .debug_ranges  0x000002f0       0x40 build/stm32f0xx_it.o
- .debug_ranges  0x00000330       0x48 build/stm32f0xx_hal_msp.o
- .debug_ranges  0x00000378       0x88 build/stm32f0xx_hal_rcc.o
- .debug_ranges  0x00000400       0x38 build/stm32f0xx_hal_rcc_ex.o
- .debug_ranges  0x00000438       0xc0 build/stm32f0xx_hal.o
- .debug_ranges  0x000004f8      0x290 build/stm32f0xx_hal_i2c.o
- .debug_ranges  0x00000788       0x28 build/stm32f0xx_hal_i2c_ex.o
- .debug_ranges  0x000007b0       0x48 build/stm32f0xx_hal_gpio.o
- .debug_ranges  0x000007f8       0xa0 build/stm32f0xx_hal_cortex.o
- .debug_ranges  0x00000898       0x18 build/system_stm32f0xx.o
- .debug_ranges  0x000008b0      0x3c0 build/stm32f0xx_hal_tim.o
- .debug_ranges  0x00000c70      0x158 build/stm32f0xx_hal_tim_ex.o
- .debug_ranges  0x00000dc8      0x268 build/stm32f0xx_hal_uart.o
- .debug_ranges  0x00001030       0x20 build/startup_stm32f030x8.o
+ .debug_ranges  0x00000060       0x40 build/posture_controller.o
+ .debug_ranges  0x000000a0       0x28 build/posture_math.o
+ .debug_ranges  0x000000c8       0x80 build/accelerometer_controller.o
+ .debug_ranges  0x00000148       0x48 build/button_controller.o
+ .debug_ranges  0x00000190      0x108 build/haptic_feedback_controller.o
+ .debug_ranges  0x00000298       0x38 build/led_controller.o
+ .debug_ranges  0x000002d0       0x40 build/stm32f0xx_it.o
+ .debug_ranges  0x00000310       0x48 build/stm32f0xx_hal_msp.o
+ .debug_ranges  0x00000358       0x88 build/stm32f0xx_hal_rcc.o
+ .debug_ranges  0x000003e0       0x38 build/stm32f0xx_hal_rcc_ex.o
+ .debug_ranges  0x00000418       0xc0 build/stm32f0xx_hal.o
+ .debug_ranges  0x000004d8      0x290 build/stm32f0xx_hal_i2c.o
+ .debug_ranges  0x00000768       0x28 build/stm32f0xx_hal_i2c_ex.o
+ .debug_ranges  0x00000790       0x48 build/stm32f0xx_hal_gpio.o
+ .debug_ranges  0x000007d8       0xa0 build/stm32f0xx_hal_cortex.o
+ .debug_ranges  0x00000878       0x18 build/system_stm32f0xx.o
+ .debug_ranges  0x00000890      0x3c0 build/stm32f0xx_hal_tim.o
+ .debug_ranges  0x00000c50      0x158 build/stm32f0xx_hal_tim_ex.o
+ .debug_ranges  0x00000da8      0x268 build/stm32f0xx_hal_uart.o
+ .debug_ranges  0x00001010       0x20 build/startup_stm32f030x8.o
 
-.debug_line     0x00000000    0x14356
- .debug_line    0x00000000      0x780 build/main.o
- .debug_line    0x00000780      0x68e build/posture_controller.o
- .debug_line    0x00000e0e      0x7c6 build/accelerometer_controller.o
- .debug_line    0x000015d4      0x3b2 build/button_controller.o
- .debug_line    0x00001986      0x80a build/haptic_feedback_controller.o
- .debug_line    0x00002190      0x45c build/led_controller.o
- .debug_line    0x000025ec      0x1ef build/stm32f0xx_it.o
- .debug_line    0x000027db      0x409 build/stm32f0xx_hal_msp.o
- .debug_line    0x00002be4      0xc35 build/stm32f0xx_hal_rcc.o
- .debug_line    0x00003819      0x48f build/stm32f0xx_hal_rcc_ex.o
- .debug_line    0x00003ca8      0x513 build/stm32f0xx_hal.o
- .debug_line    0x000041bb     0x4f69 build/stm32f0xx_hal_i2c.o
- .debug_line    0x00009124      0x303 build/stm32f0xx_hal_i2c_ex.o
- .debug_line    0x00009427      0x69a build/stm32f0xx_hal_gpio.o
- .debug_line    0x00009ac1      0x524 build/stm32f0xx_hal_cortex.o
- .debug_line    0x00009fe5      0x216 build/system_stm32f0xx.o
- .debug_line    0x0000a1fb     0x4913 build/stm32f0xx_hal_tim.o
- .debug_line    0x0000eb0e     0x1a46 build/stm32f0xx_hal_tim_ex.o
- .debug_line    0x00010554     0x3d8e build/stm32f0xx_hal_uart.o
- .debug_line    0x000142e2       0x74 build/startup_stm32f030x8.o
+.debug_line     0x00000000    0x1443d
+ .debug_line    0x00000000      0x77f build/main.o
+ .debug_line    0x0000077f      0x467 build/posture_controller.o
+ .debug_line    0x00000be6      0x1a3 build/posture_math.o
+ .debug_line    0x00000d89      0x920 build/accelerometer_controller.o
+ .debug_line    0x000016a9      0x3b2 build/button_controller.o
+ .debug_line    0x00001a5b      0x81c build/haptic_feedback_controller.o
+ .debug_line    0x00002277      0x45c build/led_controller.o
+ .debug_line    0x000026d3      0x1ef build/stm32f0xx_it.o
+ .debug_line    0x000028c2      0x409 build/stm32f0xx_hal_msp.o
+ .debug_line    0x00002ccb      0xc35 build/stm32f0xx_hal_rcc.o
+ .debug_line    0x00003900      0x48f build/stm32f0xx_hal_rcc_ex.o
+ .debug_line    0x00003d8f      0x513 build/stm32f0xx_hal.o
+ .debug_line    0x000042a2     0x4f69 build/stm32f0xx_hal_i2c.o
+ .debug_line    0x0000920b      0x303 build/stm32f0xx_hal_i2c_ex.o
+ .debug_line    0x0000950e      0x69a build/stm32f0xx_hal_gpio.o
+ .debug_line    0x00009ba8      0x524 build/stm32f0xx_hal_cortex.o
+ .debug_line    0x0000a0cc      0x216 build/system_stm32f0xx.o
+ .debug_line    0x0000a2e2     0x4913 build/stm32f0xx_hal_tim.o
+ .debug_line    0x0000ebf5     0x1a46 build/stm32f0xx_hal_tim_ex.o
+ .debug_line    0x0001063b     0x3d8e build/stm32f0xx_hal_uart.o
+ .debug_line    0x000143c9       0x74 build/startup_stm32f030x8.o
 
-.debug_str      0x00000000     0x4ce1
- .debug_str     0x00000000     0x4ce1 build/main.o
-                               0x145b (size before relaxing)
- .debug_str     0x00004ce1      0x6a9 build/posture_controller.o
- .debug_str     0x00004ce1      0x9a4 build/accelerometer_controller.o
- .debug_str     0x00004ce1      0x39e build/button_controller.o
- .debug_str     0x00004ce1      0xbd9 build/haptic_feedback_controller.o
- .debug_str     0x00004ce1      0x805 build/led_controller.o
- .debug_str     0x00004ce1      0x20e build/stm32f0xx_it.o
- .debug_str     0x00004ce1      0xcea build/stm32f0xx_hal_msp.o
- .debug_str     0x00004ce1      0x62e build/stm32f0xx_hal_rcc.o
- .debug_str     0x00004ce1      0x385 build/stm32f0xx_hal_rcc_ex.o
- .debug_str     0x00004ce1      0x680 build/stm32f0xx_hal.o
- .debug_str     0x00004ce1      0xf99 build/stm32f0xx_hal_i2c.o
- .debug_str     0x00004ce1      0x76b build/stm32f0xx_hal_i2c_ex.o
- .debug_str     0x00004ce1      0x3cd build/stm32f0xx_hal_gpio.o
- .debug_str     0x00004ce1      0x5c1 build/stm32f0xx_hal_cortex.o
- .debug_str     0x00004ce1      0x24a build/system_stm32f0xx.o
- .debug_str     0x00004ce1     0x1652 build/stm32f0xx_hal_tim.o
- .debug_str     0x00004ce1      0xe5e build/stm32f0xx_hal_tim_ex.o
- .debug_str     0x00004ce1      0xe6b build/stm32f0xx_hal_uart.o
- .debug_str     0x00004ce1       0x57 build/startup_stm32f030x8.o
+.debug_str      0x00000000     0x4e18
+ .debug_str     0x00000000     0x4e18 build/main.o
+                               0x1441 (size before relaxing)
+ .debug_str     0x00004e18      0x6ab build/posture_controller.o
+ .debug_str     0x00004e18      0x21c build/posture_math.o
+ .debug_str     0x00004e18      0xbae build/accelerometer_controller.o
+ .debug_str     0x00004e18      0x39e build/button_controller.o
+ .debug_str     0x00004e18      0xbd9 build/haptic_feedback_controller.o
+ .debug_str     0x00004e18      0x805 build/led_controller.o
+ .debug_str     0x00004e18      0x20e build/stm32f0xx_it.o
+ .debug_str     0x00004e18      0xcea build/stm32f0xx_hal_msp.o
+ .debug_str     0x00004e18      0x62e build/stm32f0xx_hal_rcc.o
+ .debug_str     0x00004e18      0x385 build/stm32f0xx_hal_rcc_ex.o
+ .debug_str     0x00004e18      0x680 build/stm32f0xx_hal.o
+ .debug_str     0x00004e18      0xf99 build/stm32f0xx_hal_i2c.o
+ .debug_str     0x00004e18      0x76b build/stm32f0xx_hal_i2c_ex.o
+ .debug_str     0x00004e18      0x3cd build/stm32f0xx_hal_gpio.o
+ .debug_str     0x00004e18      0x5c1 build/stm32f0xx_hal_cortex.o
+ .debug_str     0x00004e18      0x24a build/system_stm32f0xx.o
+ .debug_str     0x00004e18     0x1652 build/stm32f0xx_hal_tim.o
+ .debug_str     0x00004e18      0xe5e build/stm32f0xx_hal_tim_ex.o
+ .debug_str     0x00004e18      0xe6b build/stm32f0xx_hal_uart.o
+ .debug_str     0x00004e18       0x57 build/startup_stm32f030x8.o
 
-.debug_frame    0x00000000     0x32f0
+.debug_frame    0x00000000     0x3340
  .debug_frame   0x00000000       0xd4 build/main.o
- .debug_frame   0x000000d4      0x140 build/posture_controller.o
- .debug_frame   0x00000214      0x168 build/accelerometer_controller.o
- .debug_frame   0x0000037c       0x7c build/button_controller.o
- .debug_frame   0x000003f8      0x2d8 build/haptic_feedback_controller.o
- .debug_frame   0x000006d0       0xa4 build/led_controller.o
- .debug_frame   0x00000774       0x98 build/stm32f0xx_it.o
- .debug_frame   0x0000080c       0xcc build/stm32f0xx_hal_msp.o
- .debug_frame   0x000008d8      0x134 build/stm32f0xx_hal_rcc.o
- .debug_frame   0x00000a0c       0x58 build/stm32f0xx_hal_rcc_ex.o
- .debug_frame   0x00000a64      0x1ac build/stm32f0xx_hal.o
- .debug_frame   0x00000c10      0x8b8 build/stm32f0xx_hal_i2c.o
- .debug_frame   0x000014c8       0x78 build/stm32f0xx_hal_i2c_ex.o
- .debug_frame   0x00001540       0xc0 build/stm32f0xx_hal_gpio.o
- .debug_frame   0x00001600      0x144 build/stm32f0xx_hal_cortex.o
- .debug_frame   0x00001744       0x38 build/system_stm32f0xx.o
- .debug_frame   0x0000177c      0xae0 build/stm32f0xx_hal_tim.o
- .debug_frame   0x0000225c      0x420 build/stm32f0xx_hal_tim_ex.o
- .debug_frame   0x0000267c      0x5f8 build/stm32f0xx_hal_uart.o
- .debug_frame   0x00002c74      0x138 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc_nano.a(libc_a-findfp.o)
- .debug_frame   0x00002dac       0x20 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc_nano.a(libc_a-memset.o)
- .debug_frame   0x00002dcc       0x20 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc_nano.a(libc_a-errno.o)
- .debug_frame   0x00002dec       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc_nano.a(libc_a-init.o)
- .debug_frame   0x00002e18       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-wf_acos.o)
- .debug_frame   0x00002e44       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-wf_sqrt.o)
- .debug_frame   0x00002e70       0x20 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-sf_fabs.o)
- .debug_frame   0x00002e90       0x20 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-sf_nan.o)
- .debug_frame   0x00002eb0       0x30 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-ef_acos.o)
- .debug_frame   0x00002ee0       0x34 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-ef_sqrt.o)
- .debug_frame   0x00002f14       0x20 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_udivsi3.o)
- .debug_frame   0x00002f34       0x20 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_divsi3.o)
- .debug_frame   0x00002f54       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_fixunsdfsi.o)
- .debug_frame   0x00002f80       0x38 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(addsf3.o)
- .debug_frame   0x00002fb8       0x38 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(divsf3.o)
- .debug_frame   0x00002ff0       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(eqsf2.o)
- .debug_frame   0x0000301c       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(gesf2.o)
- .debug_frame   0x00003048       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(lesf2.o)
- .debug_frame   0x00003074       0x38 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(mulsf3.o)
- .debug_frame   0x000030ac       0x38 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(subsf3.o)
- .debug_frame   0x000030e4       0x20 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(unordsf2.o)
- .debug_frame   0x00003104       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(floatsisf.o)
- .debug_frame   0x00003130       0x3c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(divdf3.o)
- .debug_frame   0x0000316c       0x3c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(muldf3.o)
- .debug_frame   0x000031a8       0x3c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(subdf3.o)
- .debug_frame   0x000031e4       0x30 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(fixdfsi.o)
- .debug_frame   0x00003214       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(floatsidf.o)
- .debug_frame   0x00003240       0x38 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(eqdf2.o)
- .debug_frame   0x00003278       0x3c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(gedf2.o)
- .debug_frame   0x000032b4       0x3c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(ledf2.o)
+ .debug_frame   0x000000d4       0xc8 build/posture_controller.o
+ .debug_frame   0x0000019c       0x88 build/posture_math.o
+ .debug_frame   0x00000224      0x178 build/accelerometer_controller.o
+ .debug_frame   0x0000039c       0x7c build/button_controller.o
+ .debug_frame   0x00000418      0x2dc build/haptic_feedback_controller.o
+ .debug_frame   0x000006f4       0xa4 build/led_controller.o
+ .debug_frame   0x00000798       0x98 build/stm32f0xx_it.o
+ .debug_frame   0x00000830       0xcc build/stm32f0xx_hal_msp.o
+ .debug_frame   0x000008fc      0x134 build/stm32f0xx_hal_rcc.o
+ .debug_frame   0x00000a30       0x58 build/stm32f0xx_hal_rcc_ex.o
+ .debug_frame   0x00000a88      0x1ac build/stm32f0xx_hal.o
+ .debug_frame   0x00000c34      0x8b8 build/stm32f0xx_hal_i2c.o
+ .debug_frame   0x000014ec       0x78 build/stm32f0xx_hal_i2c_ex.o
+ .debug_frame   0x00001564       0xc0 build/stm32f0xx_hal_gpio.o
+ .debug_frame   0x00001624      0x144 build/stm32f0xx_hal_cortex.o
+ .debug_frame   0x00001768       0x38 build/system_stm32f0xx.o
+ .debug_frame   0x000017a0      0xae0 build/stm32f0xx_hal_tim.o
+ .debug_frame   0x00002280      0x420 build/stm32f0xx_hal_tim_ex.o
+ .debug_frame   0x000026a0      0x5f8 build/stm32f0xx_hal_uart.o
+ .debug_frame   0x00002c98      0x138 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc_nano.a(libc_a-findfp.o)
+ .debug_frame   0x00002dd0       0x20 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc_nano.a(libc_a-memset.o)
+ .debug_frame   0x00002df0       0x20 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc_nano.a(libc_a-errno.o)
+ .debug_frame   0x00002e10       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc_nano.a(libc_a-init.o)
+ .debug_frame   0x00002e3c       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-wf_acos.o)
+ .debug_frame   0x00002e68       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-wf_sqrt.o)
+ .debug_frame   0x00002e94       0x20 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-sf_fabs.o)
+ .debug_frame   0x00002eb4       0x20 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-sf_nan.o)
+ .debug_frame   0x00002ed4       0x30 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-ef_acos.o)
+ .debug_frame   0x00002f04       0x34 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-ef_sqrt.o)
+ .debug_frame   0x00002f38       0x20 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_udivsi3.o)
+ .debug_frame   0x00002f58       0x20 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_divsi3.o)
+ .debug_frame   0x00002f78       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_fixunsdfsi.o)
+ .debug_frame   0x00002fa4       0x38 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(addsf3.o)
+ .debug_frame   0x00002fdc       0x38 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(divsf3.o)
+ .debug_frame   0x00003014       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(eqsf2.o)
+ .debug_frame   0x00003040       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(gesf2.o)
+ .debug_frame   0x0000306c       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(lesf2.o)
+ .debug_frame   0x00003098       0x38 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(mulsf3.o)
+ .debug_frame   0x000030d0       0x38 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(subsf3.o)
+ .debug_frame   0x00003108       0x20 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(unordsf2.o)
+ .debug_frame   0x00003128       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(floatsisf.o)
+ .debug_frame   0x00003154       0x3c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(divdf3.o)
+ .debug_frame   0x00003190       0x38 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(eqdf2.o)
+ .debug_frame   0x000031c8       0x3c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(gedf2.o)
+ .debug_frame   0x00003204       0x3c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(ledf2.o)
+ .debug_frame   0x00003240       0x3c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(muldf3.o)
+ .debug_frame   0x0000327c       0x3c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(subdf3.o)
+ .debug_frame   0x000032b8       0x30 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(fixdfsi.o)
+ .debug_frame   0x000032e8       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(floatsidf.o)
+ .debug_frame   0x00003314       0x2c /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(extendsfdf2.o)
 
 .debug_line_str
                 0x00000000       0xde
@@ -2665,9 +2714,9 @@ LOAD /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-no
  .debug_line_str
                 0x000000de       0xd2 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_dvmd_tls.o)
  .debug_line_str
-                0x000000de       0xd2 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_arm_cmpsf2.o)
- .debug_line_str
                 0x000000de       0xd2 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_arm_cmpdf2.o)
+ .debug_line_str
+                0x000000de       0xd2 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_arm_cmpsf2.o)
  .debug_line_str
                 0x000000de       0xd2 /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_clzsi2.o)
 
@@ -3185,6 +3234,7 @@ __aeabi_dcmpeq                                    /Applications/ArmGNUToolchain/
 __aeabi_dcmpge                                    /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_arm_cmpdf2.o)
                                                   /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_fixunsdfsi.o)
 __aeabi_dcmpgt                                    /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_arm_cmpdf2.o)
+                                                  build/posture_controller.o
 __aeabi_dcmple                                    /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_arm_cmpdf2.o)
 __aeabi_dcmplt                                    /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_arm_cmpdf2.o)
 __aeabi_ddiv                                      /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(divdf3.o)
@@ -3193,23 +3243,30 @@ __aeabi_dmul                                      /Applications/ArmGNUToolchain/
                                                   build/haptic_feedback_controller.o
 __aeabi_dsub                                      /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(subdf3.o)
                                                   /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_fixunsdfsi.o)
+__aeabi_f2d                                       /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(extendsfdf2.o)
+                                                  build/posture_controller.o
 __aeabi_fadd                                      /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(addsf3.o)
                                                   /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-ef_sqrt.o)
                                                   /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-ef_acos.o)
                                                   build/accelerometer_controller.o
+                                                  build/posture_math.o
                                                   build/posture_controller.o
 __aeabi_fcmpeq                                    /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_arm_cmpsf2.o)
 __aeabi_fcmpge                                    /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_arm_cmpsf2.o)
+                                                  build/accelerometer_controller.o
 __aeabi_fcmpgt                                    /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_arm_cmpsf2.o)
                                                   /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-wf_acos.o)
                                                   build/accelerometer_controller.o
+                                                  build/posture_math.o
                                                   build/posture_controller.o
 __aeabi_fcmple                                    /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_arm_cmpsf2.o)
                                                   /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-ef_sqrt.o)
+                                                  build/accelerometer_controller.o
 __aeabi_fcmplt                                    /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_arm_cmpsf2.o)
                                                   /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-ef_sqrt.o)
                                                   /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-wf_sqrt.o)
-                                                  build/posture_controller.o
+                                                  build/accelerometer_controller.o
+                                                  build/posture_math.o
 __aeabi_fcmpun                                    /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(unordsf2.o)
                                                   /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-wf_sqrt.o)
                                                   /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-wf_acos.o)
@@ -3218,16 +3275,16 @@ __aeabi_fdiv                                      /Applications/ArmGNUToolchain/
                                                   /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-ef_acos.o)
                                                   /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-wf_sqrt.o)
                                                   build/accelerometer_controller.o
-                                                  build/posture_controller.o
+                                                  build/posture_math.o
 __aeabi_fmul                                      /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(mulsf3.o)
                                                   /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-ef_sqrt.o)
                                                   /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-ef_acos.o)
                                                   build/accelerometer_controller.o
+                                                  build/posture_math.o
                                                   build/posture_controller.o
 __aeabi_fsub                                      /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(subsf3.o)
                                                   /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-ef_sqrt.o)
                                                   /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-ef_acos.o)
-                                                  build/accelerometer_controller.o
                                                   build/posture_controller.o
 __aeabi_i2d                                       /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(floatsidf.o)
                                                   build/haptic_feedback_controller.o
@@ -3238,6 +3295,7 @@ __aeabi_idiv0                                     /Applications/ArmGNUToolchain/
                                                   /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_divsi3.o)
                                                   /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_udivsi3.o)
 __aeabi_idivmod                                   /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_divsi3.o)
+                                                  build/accelerometer_controller.o
                                                   build/posture_controller.o
 __aeabi_ldiv0                                     /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_dvmd_tls.o)
 __aeabi_uidiv                                     /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_udivsi3.o)
@@ -3253,6 +3311,7 @@ __bss_end__                                       /Applications/ArmGNUToolchain/
 __bss_start__                                     /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/crt0.o
 __call_exitprocs                                  /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc_nano.a(libc_a-exit.o)
 __clzsi2                                          /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_clzsi2.o)
+                                                  /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(extendsfdf2.o)
                                                   /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(floatsidf.o)
                                                   /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(subdf3.o)
                                                   /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(muldf3.o)
@@ -3433,21 +3492,26 @@ _write                                            build/syscalls.o
                                                   /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc_nano.a(libc_a-writer.o)
 _write_r                                          /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc_nano.a(libc_a-writer.o)
                                                   /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc_nano.a(libc_a-stdio.o)
+accelerometer_controller_get_last_measurements_history_max_angle_from_mean build/accelerometer_controller.o
+                                                  build/posture_controller.o
 accelerometer_controller_get_latest_data          build/accelerometer_controller.o
+                                                  build/posture_controller.o
+accelerometer_controller_get_mode                 build/accelerometer_controller.o
                                                   build/posture_controller.o
 accelerometer_controller_initialize               build/accelerometer_controller.o
                                                   build/main.o
-accelerometer_controller_is_in_motion             build/accelerometer_controller.o
-accelerometer_controller_no_motion                build/accelerometer_controller.o
+accelerometer_controller_is_last_measurements_history_full build/accelerometer_controller.o
+                                                  build/posture_controller.o
 accelerometer_controller_update                   build/accelerometer_controller.o
                                                   build/main.o
 accelerometer_handle_int1                         build/accelerometer_controller.o
                                                   build/main.o
 accelerometer_handle_int2                         build/accelerometer_controller.o
                                                   build/main.o
+accelerometer_mode                                build/accelerometer_controller.o
 accelerometer_read_mps2                           build/accelerometer_controller.o
 acosf                                             /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-wf_acos.o)
-                                                  build/posture_controller.o
+                                                  build/posture_math.o
 atexit                                            /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/crt0.o
 button_controller_get_event                       build/button_controller.o
                                                   build/posture_controller.o
@@ -3460,6 +3524,7 @@ clear_accelerometer_interrupts                    build/accelerometer_controller
                                                   build/sleep_controller.o
 current_accelerometer_vector                      build/posture_controller.o
 did_calibrate                                     build/posture_controller.o
+dot_product                                       build/posture_math.o
 environ                                           build/syscalls.o
 errno                                             /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc_nano.a(libc_a-reent.o)
                                                   /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc_nano.a(libc_a-closer.o)
@@ -3473,7 +3538,11 @@ fabsf                                             /Applications/ArmGNUToolchain/
                                                   /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-wf_acos.o)
 fflush                                            /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc_nano.a(libc_a-fflush.o)
 g_pfnVectors                                      build/startup_stm32f030x8.o
-get_angle_between_vectors                         build/posture_controller.o
+get_angle_between_vectors                         build/posture_math.o
+                                                  build/accelerometer_controller.o
+                                                  build/posture_controller.o
+get_magnitude_of_vector                           build/posture_math.o
+                                                  build/accelerometer_controller.o
 good_posture_history                              build/posture_controller.o
 good_posture_history_full                         build/posture_controller.o
 good_posture_history_index                        build/posture_controller.o
@@ -3526,9 +3595,12 @@ is_posture_correct                                build/posture_controller.o
 last_bad_posture_time                             build/posture_controller.o
 last_good_posture_time                            build/posture_controller.o
 last_haptic_feedback_time                         build/posture_controller.o
-last_measurements_history                         build/posture_controller.o
-last_measurements_history_full                    build/posture_controller.o
-last_measurements_history_index                   build/posture_controller.o
+last_measurements_history                         build/accelerometer_controller.o
+last_measurements_history_full                    build/accelerometer_controller.o
+last_measurements_history_index                   build/accelerometer_controller.o
+last_measurements_history_max_angle_from_mean     build/accelerometer_controller.o
+last_measurements_history_max_magnitude_from_mean build/accelerometer_controller.o
+last_measurements_history_mean_vector             build/accelerometer_controller.o
 latest_accel_data                                 build/accelerometer_controller.o
 led_controller_initialize                         build/led_controller.o
                                                   build/main.o
@@ -3540,7 +3612,6 @@ led_execute_sequence                              build/led_controller.o
 led_off                                           build/led_controller.o
                                                   build/posture_controller.o
 led_on                                            build/led_controller.o
-                                                  build/posture_controller.o
 main                                              build/main.o
                                                   build/startup_stm32f030x8.o
                                                   /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/crt0.o
@@ -3551,10 +3622,10 @@ memset                                            /Applications/ArmGNUToolchain/
                                                   /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/crt0.o
 nanf                                              /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-sf_nan.o)
                                                   /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-wf_acos.o)
+normalize_vector                                  build/posture_math.o
 notify_posture_correct                            build/posture_controller.o
 pFlash                                            build/stm32f0xx_hal_flash.o
                                                   build/stm32f0xx_hal_flash_ex.o
-posture_controller_is_posture_correct             build/posture_controller.o
 posture_controller_update                         build/posture_controller.o
                                                   build/main.o
 reset_good_posture_vector                         build/posture_controller.o
@@ -3562,8 +3633,7 @@ sleep_controller_activate_sleep_mode              build/sleep_controller.o
 sleep_controller_wake_device                      build/sleep_controller.o
 software_init_hook                                /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/crt0.o
 sqrtf                                             /Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a(libm_a-wf_sqrt.o)
-                                                  build/accelerometer_controller.o
-                                                  build/posture_controller.o
+                                                  build/posture_math.o
 start_calibration_procedure                       build/posture_controller.o
 threshold_angle                                   build/posture_controller.o
 update_alpha                                      build/posture_controller.o
