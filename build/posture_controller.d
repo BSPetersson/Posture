@@ -29,7 +29,8 @@ build/posture_controller.o: Core/Src/posture_controller.c \
  Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart_ex.h \
  Core/Inc/parameters.h Core/Inc/led_controller.h \
  Core/Inc/haptic_feedback_controller.h Core/Inc/button_controller.h \
- Core/Inc/posture_math.h Core/Inc/accelerometer_controller.h
+ Core/Inc/sleep_controller.h Core/Inc/posture_math.h \
+ Core/Inc/accelerometer_controller.h
 Core/Inc/posture_controller.h:
 Core/Inc/accelerometer_controller.h:
 Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h:
@@ -65,5 +66,6 @@ Core/Inc/parameters.h:
 Core/Inc/led_controller.h:
 Core/Inc/haptic_feedback_controller.h:
 Core/Inc/button_controller.h:
+Core/Inc/sleep_controller.h:
 Core/Inc/posture_math.h:
 Core/Inc/accelerometer_controller.h:

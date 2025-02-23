@@ -3,12 +3,12 @@
 #include "led_controller.h"
 #include "posture_math.h"
 
-#define LAST_MEASUREMENTS_HISTORY_SIZE 100
-#define SUPER_STILL_ANGLE_THRESHOLD_RADIANS 0.01f
-#define SUPER_STILL_MAGNITUDE_THRESHOLD_G 0.01f
+#define LAST_MEASUREMENTS_HISTORY_SIZE 20
+#define SUPER_STILL_ANGLE_THRESHOLD_RADIANS 0.03f
+#define SUPER_STILL_MAGNITUDE_THRESHOLD_G 0.1f
 #define SUPER_STILL_DURATION_MS 300000
-#define ACTIVITY_ANGLE_THRESHOLD_RADIANS 0.1f
-#define ACTIVITY_MAGNITUDE_THRESHOLD_G 0.1f
+#define ACTIVITY_ANGLE_THRESHOLD_RADIANS 1.0f
+#define ACTIVITY_MAGNITUDE_THRESHOLD_G 1.5f
 #define ACTIVITY_DURATION_MS 10000
 #define ACTIVITY_RESET_DURATION_MS 3000
 #define ACTIVITY_TO_NORMAL_DURATION_MS 10000
@@ -189,29 +189,39 @@ void accelerometer_controller_update(void)
     }
 
     // Calculate the mean of the measurements history
+    float magnatude_sum = 0.0f;
     for (int i = 0; i < LAST_MEASUREMENTS_HISTORY_SIZE; i++) {
         last_measurements_history_mean_vector[0] += last_measurements_history[i][0];
         last_measurements_history_mean_vector[1] += last_measurements_history[i][1];
         last_measurements_history_mean_vector[2] += last_measurements_history[i][2];
+        magnatude_sum += get_magnitude_of_vector((float *)last_measurements_history[i]);
     }
     last_measurements_history_mean_vector[0] /= LAST_MEASUREMENTS_HISTORY_SIZE;
     last_measurements_history_mean_vector[1] /= LAST_MEASUREMENTS_HISTORY_SIZE;
     last_measurements_history_mean_vector[2] /= LAST_MEASUREMENTS_HISTORY_SIZE;
+    float last_measurements_history_mean_magnitude = magnatude_sum / LAST_MEASUREMENTS_HISTORY_SIZE;
 
-    // Calculate the max angle from the mean
-    for (int i = 0; i < LAST_MEASUREMENTS_HISTORY_SIZE; i++) {
-        float angle = get_angle_between_vectors((float *)last_measurements_history[i], (float *)last_measurements_history_mean_vector);
-        if (angle > last_measurements_history_max_angle_from_mean) {
-            last_measurements_history_max_angle_from_mean = angle;
-        }
-    }
+    // Calculate the max angle from the mean and the max magnitude from the mean
+    if (last_measurements_history_full) {
+        float max_angle = 0.0f;
+        float max_magnitude_deviation = 0.0f;
+        for (int i = 0; i < LAST_MEASUREMENTS_HISTORY_SIZE; i++) {
 
-    // Calculate the max magnitude from the mean
-    for (int i = 0; i < LAST_MEASUREMENTS_HISTORY_SIZE; i++) {
-        float magnitude = get_magnitude_of_vector((float *)last_measurements_history[i]);
-        if (magnitude > last_measurements_history_max_magnitude_from_mean) {
-            last_measurements_history_max_magnitude_from_mean = magnitude;
+            // Calculate the angle between the current vector and the mean vector
+            float angle = get_angle_between_vectors((float *)last_measurements_history[i], (float *)last_measurements_history_mean_vector);
+            if (angle > max_angle) {
+                max_angle = angle;
+            }
+
+            // Calculate the magnitude of the current vector
+            float magnitude = get_magnitude_of_vector((float *)last_measurements_history[i]);
+            float deviation = fabs(magnitude - last_measurements_history_mean_magnitude);
+            if (deviation > max_magnitude_deviation) {
+                max_magnitude_deviation = deviation;
+            }
         }
+        last_measurements_history_max_magnitude_from_mean = max_magnitude_deviation;
+        last_measurements_history_max_angle_from_mean = max_angle;
     }
 
     // Update the accelerometer mode using a switch statement
@@ -231,8 +241,7 @@ void accelerometer_controller_update(void)
                 if (activity_to_normal_start_time == 0) {
                     // Start the timer to transition back to NORMAL
                     activity_to_normal_start_time = now;
-                } else if ((now - activity_to_normal_start_time) >= ACTIVITY_TO_NORMAL_DURATION_MS) { // 10 seconds
-                    // Transition to NORMAL if below threshold for 10 seconds
+                } else if ((now - activity_to_normal_start_time) >= ACTIVITY_TO_NORMAL_DURATION_MS) {
                     accelerometer_mode = NORMAL;
                     activity_to_normal_start_time = 0;
                 }

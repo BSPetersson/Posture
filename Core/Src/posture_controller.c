@@ -1,54 +1,3 @@
-/*
-The Algorithm
-There should be a good_posture_vector that is representing the ideal posture
-
-If the angle deviates more than x degrees for more than x seconds, then it should go into realign mode
-
-While in realign mode, it should vibrate. There should be x seconds between each vibration
-
-If it is over the threshold by an unrealistic amount, it should not notify
-
-If the posture returns under the threshold for more than x seconds, it should go back into good_posture
-
-There should be a function for asking if the posture is good
-
-Learning the good_posture_vector while correcting
-There are two parameters that can be tuned, the good_posture_vector and the threshold
-
-We can update/learn the good_posture_vector dynamically when the posture goes from bad to good.
-If:
-- the posture returns from bad to good
-- it have been under the threshold for x seconds
-- The max distance between any two out of the last x measurements are under x deg
-This ensures that we know they corrected their posture, and that they are sitting still
-Then update the good_posture_vector by moving it closer to the average of the last x measurements
-
-Learning the good_posture_vector after device have been placed
-If the device have just been placed on the body or if it have been taken off and placed again, the good_posture_vector could be totally off. We need to figure out a way to know if this is the case
-If we have remained outside the threshold for a very long time, we might assume that good_posture_vector is no longer valid.
-If the angle is over threshold by an extreme amount for a long time, we can assume it is not valid anymore
-If the user does not correct the posture when notified, we can assume that they are already at the correct posture
-
-The good_posture_vector should be reset if:
-- It have been over the threshold for over x seconds
-
-If it transitions from moving a lot mode to not moving a lot mode, then we don't want to notify the use of baad posture until they have been inside the threshold. This is because, we can assume that the device is moving a lot while being placed and then we want to give it time to recalibrate without notifying of bad posture.
-
-Actually, if it have been moving a lot, then we want to recalibrate no matter what, so we will not notify until at have recalibrated. It should recalibrate x seconds after movement becomes more stable
-
-Calibrate with button
-If the button is pressed for more than 3 seconds, just recalibrate
-
-Learning the threshold
-The more confident we are about the correct posture vector, the smaller we can make the threshold.
-We should mare sure not to make is too small to get false positives and not to bit so we never detect a bad posture
-
-There should be a min and max threshold
-
-We could keep a buffer of the last x samples from when the posture is corrected dynamically.
-Then we could find a variance from the and use that to scale the threshold in a way where the larger the variance, the bigger the threshold
-We might even wight the newer samples more when computing the variance
-*/
 #include "posture_controller.h"
 #include "posture_math.h"
 #include "accelerometer_controller.h"
@@ -59,24 +8,28 @@ We might even wight the newer samples more when computing the variance
 
 // Public function declarations (these match the header file)
 float get_angle_between_vectors(float vector1[3], float vector2[3]);
-void update_good_posture_vector(float vector[3]);
+void update_good_posture_vector(void);
 void update_good_posture_history(float vector[3]);
 void handle_bad_posture(void);
 void notify_posture_correct(void);
 void start_calibration_procedure(void);
+void handle_initial_still_bad_posture(void);
 
 // Constants
 #define BAD_POSTURE_TRANSITION_TIME_MS 3000
-#define GOOD_POSTURE_TRANSITION_TIME_MS 3000
-#define BAD_POSTURE_HAPTIC_FEEDBACK_INTERVAL_MS 5000
+#define GOOD_POSTURE_TRANSITION_TIME_MS 1000
+#define BAD_POSTURE_HAPTIC_FEEDBACK_INTERVAL_MS 3000
 #define UNREALISTIC_POSTURE_THRESHOLD_RADIANS 1.22173f
-#define GOOD_POSTURE_VECTOR_RECALIBRATION_TIME_MS 10000
+#define GOOD_POSTURE_VECTOR_RECALIBRATION_TIME_MS 5000
 #define GOOD_POSTURE_HISTORY_SIZE 10
 #define GOOD_POSTURE_VECTOR_RECALIBRATION_THRESHOLD_RADIANS 0.06
+#define BAD_POSTURE_RESET_TIME_MS 180000
+#define INITIAL_BAD_POSTURE_THRESHOLD_RADIANS 0.1f
+#define INITIAL_BAD_POSTURE_TIME_MS 10000
 
 float current_accelerometer_vector[3];
 float good_posture_vector[3];
-float threshold_angle = 0.174533f; // angle in radians
+float threshold_angle = 0.174533f;
 bool is_posture_correct = true;
 uint32_t last_bad_posture_time = 0;
 uint32_t last_good_posture_time = 0;
@@ -86,6 +39,7 @@ float update_alpha = 0.2f;
 float good_posture_history[GOOD_POSTURE_HISTORY_SIZE][3];
 int good_posture_history_index = 0;
 bool good_posture_history_full = false;
+bool did_handle_initial_still_bad_posture = false;
 
 void posture_controller_update(void)
 {
@@ -94,7 +48,12 @@ void posture_controller_update(void)
     accelerometer_mode_t accelerometer_mode = accelerometer_controller_get_mode();
 
     if (accelerometer_mode == SUPER_STILL) {
-        
+        reset_good_posture_history();
+        sleep_controller_activate_sleep_mode();
+    }
+
+    if (accelerometer_mode == ACTIVITY) {
+        return;
     }
 
     // Get the latest accelerometer vector
@@ -102,6 +61,24 @@ void posture_controller_update(void)
     current_accelerometer_vector[0] = accelerometer_vector.x_mps2;
     current_accelerometer_vector[1] = accelerometer_vector.y_mps2;
     current_accelerometer_vector[2] = accelerometer_vector.z_mps2;
+
+    if (!good_posture_history_full && good_posture_history_index == 0) {
+        // Check if the user has remained still for 10 seconds
+        if (accelerometer_controller_get_last_measurements_history_max_angle_from_mean() < INITIAL_BAD_POSTURE_THRESHOLD_RADIANS) {
+            if ((now - last_bad_posture_time) > INITIAL_BAD_POSTURE_TIME_MS && !did_handle_initial_still_bad_posture) {
+                handle_initial_still_bad_posture();
+                did_handle_initial_still_bad_posture = true;
+            }
+
+            if ((now - last_bad_posture_time) > GOOD_POSTURE_TRANSITION_TIME_MS && did_handle_initial_still_bad_posture) {
+                update_good_posture_history(current_accelerometer_vector);
+                update_good_posture_vector();
+                notify_posture_correct();
+            }
+        } else {
+            last_bad_posture_time = now;
+        }
+    }
     
     // Check for button long press
     button_event_t button_event = button_controller_get_event();
@@ -142,6 +119,7 @@ void posture_controller_update(void)
         is_posture_correct = true;
         did_calibrate = false;
         notify_posture_correct();
+        return;
     }
 
     // If the last bad posture time is greater than the last good posture time,
@@ -152,6 +130,12 @@ void posture_controller_update(void)
         is_posture_correct)
     {
         is_posture_correct = false;
+        
+        // Check if bad posture has been maintained for 3 minutes (180000 ms)
+        if ((now - last_bad_posture_time) > BAD_POSTURE_RESET_TIME_MS) {
+            reset_good_posture_history(); // Reset history if bad posture for 3 minutes
+        }
+        return;
     }
 
     // If the posture is correct and the last good posture time is greater than the good posture vector recalibration time,
@@ -160,11 +144,13 @@ void posture_controller_update(void)
         !did_calibrate)
     {
         start_calibration_procedure();
+        return;
     }
 
     if (!is_posture_correct)
     {
         handle_bad_posture();
+        return;
     }
 }
 
@@ -174,8 +160,19 @@ void handle_bad_posture(void)
     if (now - last_haptic_feedback_time > BAD_POSTURE_HAPTIC_FEEDBACK_INTERVAL_MS)
     {
         last_haptic_feedback_time = now;
-        led_execute_sequence(LED_SEQ_FADE_IN_OUT);
-        haptic_feedback_play_waveform(1); // Tune this
+        led_on(30);
+        haptic_feedback_play_waveform(1);
+    }
+}
+
+void handle_initial_still_bad_posture(void)
+{
+    uint32_t now = HAL_GetTick();
+    if (now - last_haptic_feedback_time > BAD_POSTURE_HAPTIC_FEEDBACK_INTERVAL_MS)
+    {
+        last_haptic_feedback_time = now;
+        led_on(30);
+        haptic_feedback_play_waveform(3);
     }
 }
 
@@ -206,7 +203,7 @@ void start_calibration_procedure(void)
 
     update_good_posture_history(current_accelerometer_vector);
     
-    update_good_posture_vector(current_accelerometer_vector);
+    update_good_posture_vector();
 
     did_calibrate = true;
 }
@@ -218,10 +215,17 @@ void reset_good_posture_vector(void)
     good_posture_vector[2] = current_accelerometer_vector[2];
 }
 
-void update_good_posture_vector(float vector[3])
+void update_good_posture_vector(void)
 {
-    for (int i = 0; i < 3; i++) {
-        good_posture_vector[i] = (1.0f - update_alpha) * good_posture_vector[i] + update_alpha * vector[i];
+    float sum[3] = {0.0f, 0.0f, 0.0f};
+    int count = good_posture_history_full ? GOOD_POSTURE_HISTORY_SIZE : good_posture_history_index;
+    for (int i = 0; i < count; i++) {
+        for (int j = 0; j < 3; j++) {
+            sum[j] += good_posture_history[i][j];
+        }
+    }
+    for (int j = 0; j < 3; j++) {
+        good_posture_vector[j] = sum[j] / count;
     }
 }
 
@@ -235,4 +239,19 @@ void update_good_posture_history(float vector[3])
     {
         good_posture_history_full = true;
     }
+}
+
+void reset_good_posture_history(void)
+{
+    good_posture_history_index = 0;
+    good_posture_history_full = false;
+    for (int i = 0; i < GOOD_POSTURE_HISTORY_SIZE; i++) {
+        for (int j = 0; j < 3; j++) {
+            good_posture_history[i][j] = 0.0f;
+        }
+    }
+}
+
+void posture_controller_init(void) {
+    reset_good_posture_history();
 }

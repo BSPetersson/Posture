@@ -6,6 +6,7 @@
 #include <stdbool.h>
 #include <math.h>
 #include "parameters.h"
+#include "led_controller.h"
 
 // -----------------------------
 // Register Addresses and Macros

@@ -1,4 +1,4 @@
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMHHbub.s 			page 1
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccz15376.s 			page 1
 
 
    1              		.cpu cortex-m0
@@ -58,7 +58,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMHHbub.s 			page 1
   52 000e 061C     		adds	r6, r0, #0
   53              		.loc 1 4 25 view .LVU6
   54 0010 6868     		ldr	r0, [r5, #4]
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMHHbub.s 			page 2
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccz15376.s 			page 2
 
 
   55              		.loc 1 4 30 view .LVU7
@@ -118,7 +118,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMHHbub.s 			page 1
  108              		.cfi_offset 7, -8
  109              		.cfi_offset 14, -4
  110 0002 C646     		mov	lr, r8
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMHHbub.s 			page 3
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccz15376.s 			page 3
 
 
  111 0004 00B5     		push	{lr}
@@ -178,7 +178,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMHHbub.s 			page 1
  163 0048 0028     		cmp	r0, #0
  164 004a 0ED0     		beq	.L2
   10:Core/Src/posture_math.c ****         v[0] /= mag;
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMHHbub.s 			page 4
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccz15376.s 			page 4
 
 
  165              		.loc 1 10 9 is_stmt 1 view .LVU31
@@ -230,185 +230,212 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMHHbub.s 			page 1
   16:Core/Src/posture_math.c **** float get_angle_between_vectors(float vector1[3], float vector2[3]) {
  208              		.loc 1 16 69 is_stmt 1 view -0
  209              		.cfi_startproc
- 210              		@ args = 0, pretend = 0, frame = 0
+ 210              		@ args = 0, pretend = 0, frame = 24
  211              		@ frame_needed = 0, uses_anonymous_args = 0
  212              		.loc 1 16 69 is_stmt 0 view .LVU40
- 213 0000 70B5     		push	{r4, r5, r6, lr}
+ 213 0000 30B5     		push	{r4, r5, lr}
  214              	.LCFI3:
- 215              		.cfi_def_cfa_offset 16
- 216              		.cfi_offset 4, -16
- 217              		.cfi_offset 5, -12
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMHHbub.s 			page 5
+ 215              		.cfi_def_cfa_offset 12
+ 216              		.cfi_offset 4, -12
+ 217              		.cfi_offset 5, -8
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccz15376.s 			page 5
 
 
- 218              		.cfi_offset 6, -8
- 219              		.cfi_offset 14, -4
- 220 0002 0400     		movs	r4, r0
- 221 0004 0D00     		movs	r5, r1
-  17:Core/Src/posture_math.c ****     normalize_vector(vector1);
+ 218              		.cfi_offset 14, -4
+ 219 0002 87B0     		sub	sp, sp, #28
+ 220              	.LCFI4:
+ 221              		.cfi_def_cfa_offset 40
+  17:Core/Src/posture_math.c ****     float v1[3] = {vector1[0], vector1[1], vector1[2]};
  222              		.loc 1 17 5 is_stmt 1 view .LVU41
- 223 0006 FFF7FEFF 		bl	normalize_vector
- 224              	.LVL26:
-  18:Core/Src/posture_math.c ****     normalize_vector(vector2);
- 225              		.loc 1 18 5 view .LVU42
- 226 000a 2800     		movs	r0, r5
- 227 000c FFF7FEFF 		bl	normalize_vector
- 228              	.LVL27:
-  19:Core/Src/posture_math.c ****     float dot = dot_product(vector1, vector2);
- 229              		.loc 1 19 5 view .LVU43
- 230              		.loc 1 19 17 is_stmt 0 view .LVU44
- 231 0010 2900     		movs	r1, r5
- 232 0012 2000     		movs	r0, r4
- 233 0014 FFF7FEFF 		bl	dot_product
- 234              	.LVL28:
- 235 0018 041C     		adds	r4, r0, #0
- 236              	.LVL29:
-  20:Core/Src/posture_math.c ****     if (dot > 1.0f) dot = 1.0f;
- 237              		.loc 1 20 5 is_stmt 1 view .LVU45
- 238              		.loc 1 20 8 is_stmt 0 view .LVU46
- 239 001a FE21     		movs	r1, #254
- 240 001c 8905     		lsls	r1, r1, #22
- 241 001e FFF7FEFF 		bl	__aeabi_fcmpgt
- 242              	.LVL30:
- 243              		.loc 1 20 8 view .LVU47
- 244 0022 0028     		cmp	r0, #0
- 245 0024 05D0     		beq	.L10
- 246              		.loc 1 20 25 discriminator 1 view .LVU48
- 247 0026 FE24     		movs	r4, #254
- 248              	.LVL31:
- 249              		.loc 1 20 25 discriminator 1 view .LVU49
- 250 0028 A405     		lsls	r4, r4, #22
- 251              	.L7:
- 252              	.LVL32:
-  21:Core/Src/posture_math.c ****     if (dot < -1.0f) dot = -1.0f;
-  22:Core/Src/posture_math.c ****     return acosf(dot);
- 253              		.loc 1 22 5 is_stmt 1 view .LVU50
- 254              		.loc 1 22 12 is_stmt 0 view .LVU51
- 255 002a 201C     		adds	r0, r4, #0
- 256 002c FFF7FEFF 		bl	acosf
- 257              	.LVL33:
-  23:Core/Src/posture_math.c **** }
- 258              		.loc 1 23 1 view .LVU52
- 259              		@ sp needed
- 260              	.LVL34:
- 261              	.LVL35:
- 262              		.loc 1 23 1 view .LVU53
- 263 0030 70BD     		pop	{r4, r5, r6, pc}
- 264              	.LVL36:
- 265              	.L10:
-  21:Core/Src/posture_math.c ****     if (dot < -1.0f) dot = -1.0f;
- 266              		.loc 1 21 5 is_stmt 1 view .LVU54
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMHHbub.s 			page 6
+ 223              		.loc 1 17 27 is_stmt 0 view .LVU42
+ 224 0004 0368     		ldr	r3, [r0]
+ 225              		.loc 1 17 11 view .LVU43
+ 226 0006 03AC     		add	r4, sp, #12
+ 227 0008 0393     		str	r3, [sp, #12]
+ 228 000a 4368     		ldr	r3, [r0, #4]
+ 229 000c 0493     		str	r3, [sp, #16]
+ 230 000e 8368     		ldr	r3, [r0, #8]
+ 231 0010 0593     		str	r3, [sp, #20]
+  18:Core/Src/posture_math.c ****     float v2[3] = {vector2[0], vector2[1], vector2[2]};
+ 232              		.loc 1 18 5 is_stmt 1 view .LVU44
+ 233              		.loc 1 18 27 is_stmt 0 view .LVU45
+ 234 0012 0B68     		ldr	r3, [r1]
+ 235              		.loc 1 18 11 view .LVU46
+ 236 0014 0093     		str	r3, [sp]
+ 237 0016 4B68     		ldr	r3, [r1, #4]
+ 238 0018 0193     		str	r3, [sp, #4]
+ 239 001a 8B68     		ldr	r3, [r1, #8]
+ 240 001c 0293     		str	r3, [sp, #8]
+  19:Core/Src/posture_math.c ****     normalize_vector(v1);
+ 241              		.loc 1 19 5 is_stmt 1 view .LVU47
+ 242 001e 2000     		movs	r0, r4
+ 243              	.LVL26:
+ 244              		.loc 1 19 5 is_stmt 0 view .LVU48
+ 245 0020 FFF7FEFF 		bl	normalize_vector
+ 246              	.LVL27:
+  20:Core/Src/posture_math.c ****     normalize_vector(v2);
+ 247              		.loc 1 20 5 is_stmt 1 view .LVU49
+ 248 0024 6846     		mov	r0, sp
+ 249 0026 FFF7FEFF 		bl	normalize_vector
+ 250              	.LVL28:
+  21:Core/Src/posture_math.c ****     float dot = dot_product(v1, v2);
+ 251              		.loc 1 21 5 view .LVU50
+ 252              		.loc 1 21 17 is_stmt 0 view .LVU51
+ 253 002a 6946     		mov	r1, sp
+ 254 002c 2000     		movs	r0, r4
+ 255 002e FFF7FEFF 		bl	dot_product
+ 256              	.LVL29:
+ 257 0032 041C     		adds	r4, r0, #0
+ 258              	.LVL30:
+  22:Core/Src/posture_math.c ****     if (dot > 1.0f) dot = 1.0f;
+ 259              		.loc 1 22 5 is_stmt 1 view .LVU52
+ 260              		.loc 1 22 8 is_stmt 0 view .LVU53
+ 261 0034 FE21     		movs	r1, #254
+ 262 0036 8905     		lsls	r1, r1, #22
+ 263 0038 FFF7FEFF 		bl	__aeabi_fcmpgt
+ 264              	.LVL31:
+ 265              		.loc 1 22 8 view .LVU54
+ 266 003c 0028     		cmp	r0, #0
+ 267 003e 06D0     		beq	.L10
+ 268              		.loc 1 22 25 discriminator 1 view .LVU55
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccz15376.s 			page 6
 
 
-  21:Core/Src/posture_math.c ****     if (dot < -1.0f) dot = -1.0f;
- 267              		.loc 1 21 8 is_stmt 0 view .LVU55
- 268 0032 0449     		ldr	r1, .L11
- 269 0034 201C     		adds	r0, r4, #0
- 270 0036 FFF7FEFF 		bl	__aeabi_fcmplt
- 271              	.LVL37:
- 272 003a 0028     		cmp	r0, #0
- 273 003c F5D0     		beq	.L7
-  21:Core/Src/posture_math.c ****     if (dot < -1.0f) dot = -1.0f;
- 274              		.loc 1 21 26 discriminator 1 view .LVU56
- 275 003e 014C     		ldr	r4, .L11
- 276              	.LVL38:
-  21:Core/Src/posture_math.c ****     if (dot < -1.0f) dot = -1.0f;
- 277              		.loc 1 21 26 discriminator 1 view .LVU57
- 278 0040 F3E7     		b	.L7
- 279              	.L12:
- 280 0042 C046     		.align	2
- 281              	.L11:
- 282 0044 000080BF 		.word	-1082130432
- 283              		.cfi_endproc
- 284              	.LFE2:
- 286              		.section	.text.get_magnitude_of_vector,"ax",%progbits
- 287              		.align	1
- 288              		.global	get_magnitude_of_vector
- 289              		.syntax unified
- 290              		.code	16
- 291              		.thumb_func
- 293              	get_magnitude_of_vector:
- 294              	.LVL39:
- 295              	.LFB3:
-  24:Core/Src/posture_math.c **** 
-  25:Core/Src/posture_math.c **** float get_magnitude_of_vector(float vector[3]) {
- 296              		.loc 1 25 48 is_stmt 1 view -0
- 297              		.cfi_startproc
- 298              		@ args = 0, pretend = 0, frame = 0
- 299              		@ frame_needed = 0, uses_anonymous_args = 0
- 300              		.loc 1 25 48 is_stmt 0 view .LVU59
- 301 0000 70B5     		push	{r4, r5, r6, lr}
- 302              	.LCFI4:
- 303              		.cfi_def_cfa_offset 16
- 304              		.cfi_offset 4, -16
- 305              		.cfi_offset 5, -12
- 306              		.cfi_offset 6, -8
- 307              		.cfi_offset 14, -4
- 308 0002 0400     		movs	r4, r0
-  26:Core/Src/posture_math.c ****     return sqrtf(vector[0] * vector[0] + vector[1] * vector[1] + vector[2] * vector[2]);
- 309              		.loc 1 26 5 is_stmt 1 view .LVU60
- 310              		.loc 1 26 24 is_stmt 0 view .LVU61
- 311 0004 0068     		ldr	r0, [r0]
- 312              	.LVL40:
- 313              		.loc 1 26 28 view .LVU62
- 314 0006 011C     		adds	r1, r0, #0
- 315 0008 FFF7FEFF 		bl	__aeabi_fmul
- 316              	.LVL41:
- 317 000c 051C     		adds	r5, r0, #0
- 318              		.loc 1 26 48 view .LVU63
- 319 000e 6068     		ldr	r0, [r4, #4]
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMHHbub.s 			page 7
+ 269 0040 FE24     		movs	r4, #254
+ 270              	.LVL32:
+ 271              		.loc 1 22 25 discriminator 1 view .LVU56
+ 272 0042 A405     		lsls	r4, r4, #22
+ 273              	.L7:
+ 274              	.LVL33:
+  23:Core/Src/posture_math.c ****     if (dot < -1.0f) dot = -1.0f;
+  24:Core/Src/posture_math.c ****     return acosf(dot);
+ 275              		.loc 1 24 5 is_stmt 1 view .LVU57
+ 276              		.loc 1 24 12 is_stmt 0 view .LVU58
+ 277 0044 201C     		adds	r0, r4, #0
+ 278 0046 FFF7FEFF 		bl	acosf
+ 279              	.LVL34:
+  25:Core/Src/posture_math.c **** }
+ 280              		.loc 1 25 1 view .LVU59
+ 281 004a 07B0     		add	sp, sp, #28
+ 282              		@ sp needed
+ 283              	.LVL35:
+ 284              		.loc 1 25 1 view .LVU60
+ 285 004c 30BD     		pop	{r4, r5, pc}
+ 286              	.LVL36:
+ 287              	.L10:
+  23:Core/Src/posture_math.c ****     if (dot < -1.0f) dot = -1.0f;
+ 288              		.loc 1 23 5 is_stmt 1 view .LVU61
+  23:Core/Src/posture_math.c ****     if (dot < -1.0f) dot = -1.0f;
+ 289              		.loc 1 23 8 is_stmt 0 view .LVU62
+ 290 004e 0449     		ldr	r1, .L11
+ 291 0050 201C     		adds	r0, r4, #0
+ 292 0052 FFF7FEFF 		bl	__aeabi_fcmplt
+ 293              	.LVL37:
+ 294 0056 0028     		cmp	r0, #0
+ 295 0058 F4D0     		beq	.L7
+  23:Core/Src/posture_math.c ****     if (dot < -1.0f) dot = -1.0f;
+ 296              		.loc 1 23 26 discriminator 1 view .LVU63
+ 297 005a 014C     		ldr	r4, .L11
+ 298              	.LVL38:
+  23:Core/Src/posture_math.c ****     if (dot < -1.0f) dot = -1.0f;
+ 299              		.loc 1 23 26 discriminator 1 view .LVU64
+ 300 005c F2E7     		b	.L7
+ 301              	.L12:
+ 302 005e C046     		.align	2
+ 303              	.L11:
+ 304 0060 000080BF 		.word	-1082130432
+ 305              		.cfi_endproc
+ 306              	.LFE2:
+ 308              		.section	.text.get_magnitude_of_vector,"ax",%progbits
+ 309              		.align	1
+ 310              		.global	get_magnitude_of_vector
+ 311              		.syntax unified
+ 312              		.code	16
+ 313              		.thumb_func
+ 315              	get_magnitude_of_vector:
+ 316              	.LVL39:
+ 317              	.LFB3:
+  26:Core/Src/posture_math.c **** 
+  27:Core/Src/posture_math.c **** float get_magnitude_of_vector(float vector[3]) {
+ 318              		.loc 1 27 48 is_stmt 1 view -0
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccz15376.s 			page 7
 
 
- 320              		.loc 1 26 52 view .LVU64
- 321 0010 011C     		adds	r1, r0, #0
- 322 0012 FFF7FEFF 		bl	__aeabi_fmul
- 323              	.LVL42:
- 324 0016 011C     		adds	r1, r0, #0
- 325              		.loc 1 26 40 view .LVU65
- 326 0018 281C     		adds	r0, r5, #0
- 327 001a FFF7FEFF 		bl	__aeabi_fadd
- 328              	.LVL43:
- 329 001e 051C     		adds	r5, r0, #0
- 330              		.loc 1 26 72 view .LVU66
- 331 0020 A068     		ldr	r0, [r4, #8]
- 332              		.loc 1 26 76 view .LVU67
- 333 0022 011C     		adds	r1, r0, #0
- 334 0024 FFF7FEFF 		bl	__aeabi_fmul
- 335              	.LVL44:
- 336 0028 011C     		adds	r1, r0, #0
- 337              		.loc 1 26 12 view .LVU68
- 338 002a 281C     		adds	r0, r5, #0
- 339 002c FFF7FEFF 		bl	__aeabi_fadd
- 340              	.LVL45:
- 341 0030 FFF7FEFF 		bl	sqrtf
- 342              	.LVL46:
-  27:Core/Src/posture_math.c **** } ...
- 343              		.loc 1 27 1 view .LVU69
- 344              		@ sp needed
- 345              	.LVL47:
- 346              		.loc 1 27 1 view .LVU70
- 347 0034 70BD     		pop	{r4, r5, r6, pc}
- 348              		.cfi_endproc
- 349              	.LFE3:
- 351              		.text
- 352              	.Letext0:
- 353              		.file 2 "/Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/arm-none-eabi/include/math.h"
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMHHbub.s 			page 8
+ 319              		.cfi_startproc
+ 320              		@ args = 0, pretend = 0, frame = 0
+ 321              		@ frame_needed = 0, uses_anonymous_args = 0
+ 322              		.loc 1 27 48 is_stmt 0 view .LVU66
+ 323 0000 70B5     		push	{r4, r5, r6, lr}
+ 324              	.LCFI5:
+ 325              		.cfi_def_cfa_offset 16
+ 326              		.cfi_offset 4, -16
+ 327              		.cfi_offset 5, -12
+ 328              		.cfi_offset 6, -8
+ 329              		.cfi_offset 14, -4
+ 330 0002 0400     		movs	r4, r0
+  28:Core/Src/posture_math.c ****     return sqrtf(vector[0] * vector[0] + vector[1] * vector[1] + vector[2] * vector[2]);
+ 331              		.loc 1 28 5 is_stmt 1 view .LVU67
+ 332              		.loc 1 28 24 is_stmt 0 view .LVU68
+ 333 0004 0068     		ldr	r0, [r0]
+ 334              	.LVL40:
+ 335              		.loc 1 28 28 view .LVU69
+ 336 0006 011C     		adds	r1, r0, #0
+ 337 0008 FFF7FEFF 		bl	__aeabi_fmul
+ 338              	.LVL41:
+ 339 000c 051C     		adds	r5, r0, #0
+ 340              		.loc 1 28 48 view .LVU70
+ 341 000e 6068     		ldr	r0, [r4, #4]
+ 342              		.loc 1 28 52 view .LVU71
+ 343 0010 011C     		adds	r1, r0, #0
+ 344 0012 FFF7FEFF 		bl	__aeabi_fmul
+ 345              	.LVL42:
+ 346 0016 011C     		adds	r1, r0, #0
+ 347              		.loc 1 28 40 view .LVU72
+ 348 0018 281C     		adds	r0, r5, #0
+ 349 001a FFF7FEFF 		bl	__aeabi_fadd
+ 350              	.LVL43:
+ 351 001e 051C     		adds	r5, r0, #0
+ 352              		.loc 1 28 72 view .LVU73
+ 353 0020 A068     		ldr	r0, [r4, #8]
+ 354              		.loc 1 28 76 view .LVU74
+ 355 0022 011C     		adds	r1, r0, #0
+ 356 0024 FFF7FEFF 		bl	__aeabi_fmul
+ 357              	.LVL44:
+ 358 0028 011C     		adds	r1, r0, #0
+ 359              		.loc 1 28 12 view .LVU75
+ 360 002a 281C     		adds	r0, r5, #0
+ 361 002c FFF7FEFF 		bl	__aeabi_fadd
+ 362              	.LVL45:
+ 363 0030 FFF7FEFF 		bl	sqrtf
+ 364              	.LVL46:
+  29:Core/Src/posture_math.c **** } ...
+ 365              		.loc 1 29 1 view .LVU76
+ 366              		@ sp needed
+ 367              	.LVL47:
+ 368              		.loc 1 29 1 view .LVU77
+ 369 0034 70BD     		pop	{r4, r5, r6, pc}
+ 370              		.cfi_endproc
+ 371              	.LFE3:
+ 373              		.text
+ 374              	.Letext0:
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccz15376.s 			page 8
+
+
+ 375              		.file 2 "/Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/arm-none-eabi/include/math.h"
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccz15376.s 			page 9
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 posture_math.c
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMHHbub.s:19     .text.dot_product:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMHHbub.s:25     .text.dot_product:00000000 dot_product
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMHHbub.s:88     .text.normalize_vector:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMHHbub.s:94     .text.normalize_vector:00000000 normalize_vector
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMHHbub.s:199    .text.get_angle_between_vectors:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMHHbub.s:205    .text.get_angle_between_vectors:00000000 get_angle_between_vectors
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMHHbub.s:282    .text.get_angle_between_vectors:00000044 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMHHbub.s:287    .text.get_magnitude_of_vector:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccMHHbub.s:293    .text.get_magnitude_of_vector:00000000 get_magnitude_of_vector
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccz15376.s:19     .text.dot_product:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccz15376.s:25     .text.dot_product:00000000 dot_product
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccz15376.s:88     .text.normalize_vector:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccz15376.s:94     .text.normalize_vector:00000000 normalize_vector
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccz15376.s:199    .text.get_angle_between_vectors:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccz15376.s:205    .text.get_angle_between_vectors:00000000 get_angle_between_vectors
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccz15376.s:304    .text.get_angle_between_vectors:00000060 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccz15376.s:309    .text.get_magnitude_of_vector:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccz15376.s:315    .text.get_magnitude_of_vector:00000000 get_magnitude_of_vector
 
 UNDEFINED SYMBOLS
 __aeabi_fmul

@@ -14,9 +14,11 @@ void normalize_vector(float v[3]) {
 }
 
 float get_angle_between_vectors(float vector1[3], float vector2[3]) {
-    normalize_vector(vector1);
-    normalize_vector(vector2);
-    float dot = dot_product(vector1, vector2);
+    float v1[3] = {vector1[0], vector1[1], vector1[2]};
+    float v2[3] = {vector2[0], vector2[1], vector2[2]};
+    normalize_vector(v1);
+    normalize_vector(v2);
+    float dot = dot_product(v1, v2);
     if (dot > 1.0f) dot = 1.0f;
     if (dot < -1.0f) dot = -1.0f;
     return acosf(dot);
