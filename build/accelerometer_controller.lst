@@ -1,4 +1,4 @@
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 1
 
 
    1              		.cpu cortex-m0
@@ -58,7 +58,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
   30:Core/Src/accelerometer_controller.c **** // Add static variables to track the start time for activity and reset conditions
   31:Core/Src/accelerometer_controller.c **** static uint32_t activity_start_time = 0;
   32:Core/Src/accelerometer_controller.c **** static uint32_t activity_reset_start_time = 0;
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 2
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 2
 
 
   33:Core/Src/accelerometer_controller.c **** 
@@ -118,7 +118,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
   56:Core/Src/accelerometer_controller.c ****                             HAL_MAX_DELAY);
   57:Core/Src/accelerometer_controller.c **** }
   58              		.loc 1 57 1 view .LVU6
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 3
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 3
 
 
   59 001c 04B0     		add	sp, sp, #16
@@ -178,7 +178,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
   62:Core/Src/accelerometer_controller.c ****                             MMA8451Q_I2C_ADDR,
   63:Core/Src/accelerometer_controller.c ****                             start_reg,
   64:Core/Src/accelerometer_controller.c ****                             I2C_MEMADD_SIZE_8BIT,
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 4
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 4
 
 
   65:Core/Src/accelerometer_controller.c ****                             buffer,
@@ -238,7 +238,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
  157              		.loc 1 39 12 view .LVU20
  158 0014 0231     		adds	r1, r1, #2
  159 0016 0191     		str	r1, [sp, #4]
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 5
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 5
 
 
  160 0018 0093     		str	r3, [sp]
@@ -298,7 +298,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
  208 000e 0028     		cmp	r0, #0
  209 0010 01D0     		beq	.L12
  210              	.LVL15:
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 6
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 6
 
 
  211              	.L11:
@@ -358,7 +358,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
  254              	.LCFI9:
  255              		.cfi_def_cfa_offset 16
   82:Core/Src/accelerometer_controller.c ****     uint8_t value;
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 7
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 7
 
 
  256              		.loc 1 82 5 view .LVU37
@@ -418,7 +418,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
  299              		.syntax unified
  300              		.code	16
  301              		.thumb_func
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 8
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 8
 
 
  303              	accelerometer_controller_initialize:
@@ -478,7 +478,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
  105:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
  106:Core/Src/accelerometer_controller.c **** 
  107:Core/Src/accelerometer_controller.c ****     // Configure CTRL_REG1
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 9
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 9
 
 
  108:Core/Src/accelerometer_controller.c ****     status = accelerometer_write_reg(MMA8451Q_REG_CTRL_REG1, CTRL_REG1);
@@ -538,7 +538,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
  162:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
  163:Core/Src/accelerometer_controller.c **** 
  164:Core/Src/accelerometer_controller.c ****     return HAL_OK;
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 10
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 10
 
 
  165:Core/Src/accelerometer_controller.c **** }
@@ -598,7 +598,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
  379              		.loc 1 116 5 is_stmt 1 view .LVU75
  116:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
  380              		.loc 1 116 14 is_stmt 0 view .LVU76
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 11
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 11
 
 
  381 0042 7A21     		movs	r1, #122
@@ -658,7 +658,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
  128:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK) return status;
  420              		.loc 1 128 14 view .LVU92
  421 006a FFF7FEFF 		bl	accelerometer_write_reg
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 12
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 12
 
 
  422              	.LVL39:
@@ -718,7 +718,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
  141:Core/Src/accelerometer_controller.c ****     
  460              		.loc 1 141 8 is_stmt 0 view .LVU109
  461 0092 0028     		cmp	r0, #0
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 13
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 13
 
 
  462 0094 C3D1     		bne	.L17
@@ -778,7 +778,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
  158:Core/Src/accelerometer_controller.c **** 
  501              		.loc 1 158 5 is_stmt 1 view .LVU125
  158:Core/Src/accelerometer_controller.c **** 
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 14
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 14
 
 
  502              		.loc 1 158 14 is_stmt 0 view .LVU126
@@ -838,7 +838,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
  195:Core/Src/accelerometer_controller.c ****         last_measurements_history_mean_vector[1] += last_measurements_history[i][1];
  196:Core/Src/accelerometer_controller.c ****         last_measurements_history_mean_vector[2] += last_measurements_history[i][2];
  197:Core/Src/accelerometer_controller.c ****         magnatude_sum += get_magnitude_of_vector((float *)last_measurements_history[i]);
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 15
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 15
 
 
  198:Core/Src/accelerometer_controller.c ****     }
@@ -898,7 +898,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
  252:Core/Src/accelerometer_controller.c ****             break;
  253:Core/Src/accelerometer_controller.c **** 
  254:Core/Src/accelerometer_controller.c ****         case NORMAL:
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 16
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 16
 
 
  255:Core/Src/accelerometer_controller.c ****         default:
@@ -958,7 +958,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
  530              		.loc 1 304 1 is_stmt 0 view .LVU131
  531 0000 F0B5     		push	{r4, r5, r6, r7, lr}
  532              	.LCFI12:
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 17
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 17
 
 
  533              		.cfi_def_cfa_offset 20
@@ -1018,7 +1018,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
  575              		.loc 1 316 8 is_stmt 0 view .LVU143
  576 0024 6DD1     		bne	.L21
  317:Core/Src/accelerometer_controller.c ****         return status;
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 18
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 18
 
 
  318:Core/Src/accelerometer_controller.c ****     }
@@ -1078,7 +1078,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
  616 0054 5DD1     		bne	.L30
  617 0056 8B23     		movs	r3, #139
  618 0058 DB05     		lsls	r3, r3, #23
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 19
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 19
 
 
  619 005a 9846     		mov	r8, r3
@@ -1138,7 +1138,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
  656 007c 0902     		lsls	r1, r1, #8
  657 007e 0F43     		orrs	r7, r1
  658 0080 3FB2     		sxth	r7, r7
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 20
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 20
 
 
  659              		.loc 1 349 13 view .LVU172
@@ -1198,7 +1198,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
  704              		.loc 1 358 5 is_stmt 1 view .LVU190
  705              		.loc 1 358 17 is_stmt 0 view .LVU191
  706 00a8 FFF7FEFF 		bl	__aeabi_i2f
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 21
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 21
 
 
  707              	.LVL73:
@@ -1258,7 +1258,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
  755              	.LVL86:
  756              		.loc 1 364 18 view .LVU207
  757 00e2 6860     		str	r0, [r5, #4]
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 22
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 22
 
 
  365:Core/Src/accelerometer_controller.c ****     data->z_mps2 = z_g * ACCEL_G;
@@ -1318,7 +1318,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
  332:Core/Src/accelerometer_controller.c ****     {
  804              		.loc 1 332 5 view .LVU219
  805 0112 0124     		movs	r4, #1
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 23
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 23
 
 
  806 0114 F5E7     		b	.L21
@@ -1378,7 +1378,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
  856              	.LVL95:
  174:Core/Src/accelerometer_controller.c ****     if (status != HAL_OK)
  857              		.loc 1 174 32 view .LVU226
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 24
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 24
 
 
  858 0012 FFF7FEFF 		bl	accelerometer_read_mps2
@@ -1438,7 +1438,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
  898              		.loc 1 185 63 is_stmt 0 view .LVU240
  899 0044 2068     		ldr	r0, [r4]
  185:Core/Src/accelerometer_controller.c ****     last_measurements_history_index = (last_measurements_history_index + 1) % LAST_MEASUREMENTS_HIS
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 25
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 25
 
 
  900              		.loc 1 185 87 view .LVU241
@@ -1498,7 +1498,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
  941 0074 7E00     		lsls	r6, r7, #1
  942 0076 F319     		adds	r3, r6, r7
  943 0078 9B00     		lsls	r3, r3, #2
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 26
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 26
 
 
  944 007a 1959     		ldr	r1, [r3, r4]
@@ -1558,7 +1558,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
  193:Core/Src/accelerometer_controller.c ****         last_measurements_history_mean_vector[0] += last_measurements_history[i][0];
  985              		.loc 1 193 58 is_stmt 1 discriminator 3 view .LVU268
  986 00b0 0137     		adds	r7, r7, #1
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 27
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 27
 
 
  987              	.LVL106:
@@ -1618,7 +1618,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
  1027              		.loc 1 205 9 is_stmt 0 view .LVU282
  1028 00e0 714B     		ldr	r3, .L79+12
  1029 00e2 1B78     		ldrb	r3, [r3]
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 28
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 28
 
 
  205:Core/Src/accelerometer_controller.c ****         float max_angle = 0.0f;
@@ -1678,7 +1678,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
  1074              		.loc 1 260 17 is_stmt 1 view .LVU292
  260:Core/Src/accelerometer_controller.c ****                     // Start the timer
  1075              		.loc 1 260 44 is_stmt 0 view .LVU293
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 29
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 29
 
 
  1076 0120 6A4B     		ldr	r3, .L79+48
@@ -1738,7 +1738,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
  212:Core/Src/accelerometer_controller.c ****                 max_angle = angle;
  1120              		.loc 1 212 16 view .LVU304
  1121 0150 FFF7FEFF 		bl	__aeabi_fcmplt
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 30
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 30
 
 
  1122              	.LVL120:
@@ -1798,7 +1798,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
  1163              	.LBE4:
  207:Core/Src/accelerometer_controller.c ****         for (int i = 0; i < LAST_MEASUREMENTS_HISTORY_SIZE; i++) {
  1164              		.loc 1 207 15 view .LVU318
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 31
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 31
 
 
  1165 017c 0023     		movs	r3, #0
@@ -1858,7 +1858,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
  1206 01a6 474B     		ldr	r3, .L79+40
  1207 01a8 1868     		ldr	r0, [r3]
  231:Core/Src/accelerometer_controller.c ****                 last_measurements_history_max_magnitude_from_mean >= SUPER_STILL_MAGNITUDE_THRESHOL
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 32
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 32
 
 
  1208              		.loc 1 231 102 view .LVU332
@@ -1918,7 +1918,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
  1252 01dc 0022     		movs	r2, #0
  1253 01de 1A60     		str	r2, [r3]
  1254 01e0 EBE7     		b	.L50
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 33
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 33
 
 
  1255              	.L77:
@@ -1978,7 +1978,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
  1295 0212 2F4B     		ldr	r3, .L79+52
  1296 0214 0022     		movs	r2, #0
  1297 0216 1A60     		str	r2, [r3]
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 34
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 34
 
 
  1298 0218 CFE7     		b	.L50
@@ -2038,7 +2038,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
  1339 0248 16D1     		bne	.L64
  277:Core/Src/accelerometer_controller.c ****                 } else if ((now - activity_start_time) >= ACTIVITY_DURATION_MS) {
  1340              		.loc 1 277 21 is_stmt 1 view .LVU370
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 35
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 35
 
 
  277:Core/Src/accelerometer_controller.c ****                 } else if ((now - activity_start_time) >= ACTIVITY_DURATION_MS) {
@@ -2098,7 +2098,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
  1382 027c 154A     		ldr	r2, .L79+56
  1383 027e 9342     		cmp	r3, r2
  1384 0280 E6D9     		bls	.L65
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 36
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 36
 
 
  280:Core/Src/accelerometer_controller.c ****                 }
@@ -2158,7 +2158,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
  1433              		.global	clear_accelerometer_interrupts
  1434              		.syntax unified
  1435              		.code	16
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 37
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 37
 
 
  1436              		.thumb_func
@@ -2218,7 +2218,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
  387:Core/Src/accelerometer_controller.c ****         if (status != HAL_OK) return;
  388:Core/Src/accelerometer_controller.c ****     }
  389:Core/Src/accelerometer_controller.c **** 
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 38
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 38
 
 
  390:Core/Src/accelerometer_controller.c ****     // Transient Motion interrupt (TRANSIENT_SRC - 0x1E)
@@ -2278,7 +2278,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
  1504 003c 0733     		adds	r3, r3, #7
  1505 003e 1B78     		ldrb	r3, [r3]
  1506              		.loc 1 412 8 view .LVU412
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 39
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 39
 
 
  1507 0040 DB07     		lsls	r3, r3, #31
@@ -2338,7 +2338,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
  1544              		.loc 1 394 18 view .LVU425
  1545 005e E2E7     		b	.L85
  1546              	.L97:
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 40
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 40
 
 
  1547              	.LBE7:
@@ -2398,7 +2398,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
  419:Core/Src/accelerometer_controller.c **** // -----------------------------
  420:Core/Src/accelerometer_controller.c **** // Interrupt Handlers
  421:Core/Src/accelerometer_controller.c **** // -----------------------------
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 41
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 41
 
 
  422:Core/Src/accelerometer_controller.c **** void accelerometer_handle_int1(void)
@@ -2458,7 +2458,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
  1640              	.LFE50:
  1642              		.section	.text.accelerometer_controller_get_latest_data,"ax",%progbits
  1643              		.align	1
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 42
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 42
 
 
  1644              		.global	accelerometer_controller_get_latest_data
@@ -2518,7 +2518,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
  1690              		@ args = 0, pretend = 0, frame = 0
  1691              		@ frame_needed = 0, uses_anonymous_args = 0
  1692              		@ link register save eliminated.
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 43
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 43
 
 
  442:Core/Src/accelerometer_controller.c ****     return accelerometer_mode;
@@ -2578,7 +2578,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
  1744              	accelerometer_controller_get_last_measurements_history_max_angle_from_mean:
  1745              	.LFB54:
  449:Core/Src/accelerometer_controller.c **** 
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 44
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 44
 
 
  450:Core/Src/accelerometer_controller.c **** float accelerometer_controller_get_last_measurements_history_max_angle_from_mean(void)
@@ -2638,7 +2638,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
  1809              		.global	last_measurements_history_max_angle_from_mean
  1810              		.section	.bss.last_measurements_history_max_angle_from_mean,"aw",%nobits
  1811              		.align	2
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 45
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 45
 
 
  1814              	last_measurements_history_max_angle_from_mean:
@@ -2688,82 +2688,82 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 1
  1864              		.file 9 "Core/Inc/peripherals.h"
  1865              		.file 10 "Core/Inc/posture_math.h"
  1866              		.file 11 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h"
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 46
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 46
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 accelerometer_controller.c
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:19     .text.accelerometer_read_reg:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:24     .text.accelerometer_read_reg:00000000 accelerometer_read_reg
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:65     .text.accelerometer_read_reg:00000020 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:70     .text.accelerometer_read_regs:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:75     .text.accelerometer_read_regs:00000000 accelerometer_read_regs
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:118    .text.accelerometer_read_regs:00000020 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:123    .text.accelerometer_write_reg:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:128    .text.accelerometer_write_reg:00000000 accelerometer_write_reg
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:175    .text.accelerometer_write_reg:00000028 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:180    .text.accel_goto_standby:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:185    .text.accel_goto_standby:00000000 accel_goto_standby
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:238    .text.accel_goto_active:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:243    .text.accel_goto_active:00000000 accel_goto_active
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:297    .text.accelerometer_controller_initialize:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:303    .text.accelerometer_controller_initialize:00000000 accelerometer_controller_initialize
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:517    .text.accelerometer_read_mps2:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:523    .text.accelerometer_read_mps2:00000000 accelerometer_read_mps2
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:810    .text.accelerometer_read_mps2:00000118 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:816    .text.accelerometer_controller_update:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:822    .text.accelerometer_controller_update:00000000 accelerometer_controller_update
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1409   .text.accelerometer_controller_update:0000029c $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1841   .bss.latest_accel_data:00000000 latest_accel_data
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1827   .bss.last_measurements_history_index:00000000 last_measurements_history_index
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1834   .bss.last_measurements_history:00000000 last_measurements_history
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1820   .bss.last_measurements_history_full:00000000 last_measurements_history_full
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1800   .bss.last_measurements_history_mean_vector:00000000 last_measurements_history_mean_vector
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1793   .data.accelerometer_mode:00000000 accelerometer_mode
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1853   .bss.int1_flag:00000000 int1_flag
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1814   .bss.last_measurements_history_max_angle_from_mean:00000000 last_measurements_history_max_angle_from_mean
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1807   .bss.last_measurements_history_max_magnitude_from_mean:00000000 last_measurements_history_max_magnitude_from_mean
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1787   .bss.super_still_start_time:00000000 super_still_start_time
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1769   .bss.activity_to_normal_start_time:00000000 activity_to_normal_start_time
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1781   .bss.activity_start_time:00000000 activity_start_time
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1775   .bss.activity_reset_start_time:00000000 activity_reset_start_time
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1432   .text.clear_accelerometer_interrupts:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1438   .text.clear_accelerometer_interrupts:00000000 clear_accelerometer_interrupts
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1585   .text.accelerometer_handle_int1:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1591   .text.accelerometer_handle_int1:00000000 accelerometer_handle_int1
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1609   .text.accelerometer_handle_int1:00000008 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1614   .text.accelerometer_handle_int2:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1620   .text.accelerometer_handle_int2:00000000 accelerometer_handle_int2
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1638   .text.accelerometer_handle_int2:00000008 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1847   .bss.int2_flag:00000000 int2_flag
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1643   .text.accelerometer_controller_get_latest_data:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1649   .text.accelerometer_controller_get_latest_data:00000000 accelerometer_controller_get_latest_data
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1675   .text.accelerometer_controller_get_latest_data:0000000c $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1680   .text.accelerometer_controller_get_mode:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1686   .text.accelerometer_controller_get_mode:00000000 accelerometer_controller_get_mode
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1704   .text.accelerometer_controller_get_mode:00000008 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1709   .text.accelerometer_controller_is_last_measurements_history_full:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1715   .text.accelerometer_controller_is_last_measurements_history_full:00000000 accelerometer_controller_is_last_measurements_history_full
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1733   .text.accelerometer_controller_is_last_measurements_history_full:00000008 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1738   .text.accelerometer_controller_get_last_measurements_history_max_angle_from_mean:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1744   .text.accelerometer_controller_get_last_measurements_history_max_angle_from_mean:00000000 accelerometer_controller_get_last_measurements_history_max_angle_from_mean
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1761   .text.accelerometer_controller_get_last_measurements_history_max_angle_from_mean:00000008 $d
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s 			page 47
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:19     .text.accelerometer_read_reg:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:24     .text.accelerometer_read_reg:00000000 accelerometer_read_reg
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:65     .text.accelerometer_read_reg:00000020 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:70     .text.accelerometer_read_regs:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:75     .text.accelerometer_read_regs:00000000 accelerometer_read_regs
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:118    .text.accelerometer_read_regs:00000020 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:123    .text.accelerometer_write_reg:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:128    .text.accelerometer_write_reg:00000000 accelerometer_write_reg
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:175    .text.accelerometer_write_reg:00000028 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:180    .text.accel_goto_standby:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:185    .text.accel_goto_standby:00000000 accel_goto_standby
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:238    .text.accel_goto_active:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:243    .text.accel_goto_active:00000000 accel_goto_active
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:297    .text.accelerometer_controller_initialize:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:303    .text.accelerometer_controller_initialize:00000000 accelerometer_controller_initialize
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:517    .text.accelerometer_read_mps2:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:523    .text.accelerometer_read_mps2:00000000 accelerometer_read_mps2
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:810    .text.accelerometer_read_mps2:00000118 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:816    .text.accelerometer_controller_update:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:822    .text.accelerometer_controller_update:00000000 accelerometer_controller_update
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1409   .text.accelerometer_controller_update:0000029c $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1841   .bss.latest_accel_data:00000000 latest_accel_data
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1827   .bss.last_measurements_history_index:00000000 last_measurements_history_index
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1834   .bss.last_measurements_history:00000000 last_measurements_history
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1820   .bss.last_measurements_history_full:00000000 last_measurements_history_full
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1800   .bss.last_measurements_history_mean_vector:00000000 last_measurements_history_mean_vector
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1793   .data.accelerometer_mode:00000000 accelerometer_mode
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1853   .bss.int1_flag:00000000 int1_flag
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1814   .bss.last_measurements_history_max_angle_from_mean:00000000 last_measurements_history_max_angle_from_mean
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1807   .bss.last_measurements_history_max_magnitude_from_mean:00000000 last_measurements_history_max_magnitude_from_mean
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1787   .bss.super_still_start_time:00000000 super_still_start_time
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1769   .bss.activity_to_normal_start_time:00000000 activity_to_normal_start_time
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1781   .bss.activity_start_time:00000000 activity_start_time
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1775   .bss.activity_reset_start_time:00000000 activity_reset_start_time
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1432   .text.clear_accelerometer_interrupts:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1438   .text.clear_accelerometer_interrupts:00000000 clear_accelerometer_interrupts
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1585   .text.accelerometer_handle_int1:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1591   .text.accelerometer_handle_int1:00000000 accelerometer_handle_int1
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1609   .text.accelerometer_handle_int1:00000008 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1614   .text.accelerometer_handle_int2:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1620   .text.accelerometer_handle_int2:00000000 accelerometer_handle_int2
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1638   .text.accelerometer_handle_int2:00000008 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1847   .bss.int2_flag:00000000 int2_flag
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1643   .text.accelerometer_controller_get_latest_data:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1649   .text.accelerometer_controller_get_latest_data:00000000 accelerometer_controller_get_latest_data
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1675   .text.accelerometer_controller_get_latest_data:0000000c $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1680   .text.accelerometer_controller_get_mode:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1686   .text.accelerometer_controller_get_mode:00000000 accelerometer_controller_get_mode
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1704   .text.accelerometer_controller_get_mode:00000008 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1709   .text.accelerometer_controller_is_last_measurements_history_full:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1715   .text.accelerometer_controller_is_last_measurements_history_full:00000000 accelerometer_controller_is_last_measurements_history_full
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1733   .text.accelerometer_controller_is_last_measurements_history_full:00000008 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1738   .text.accelerometer_controller_get_last_measurements_history_max_angle_from_mean:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1744   .text.accelerometer_controller_get_last_measurements_history_max_angle_from_mean:00000000 accelerometer_controller_get_last_measurements_history_max_angle_from_mean
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1761   .text.accelerometer_controller_get_last_measurements_history_max_angle_from_mean:00000008 $d
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s 			page 47
 
 
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1766   .bss.activity_to_normal_start_time:00000000 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1772   .bss.activity_reset_start_time:00000000 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1778   .bss.activity_start_time:00000000 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1784   .bss.super_still_start_time:00000000 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1797   .bss.last_measurements_history_mean_vector:00000000 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1804   .bss.last_measurements_history_max_magnitude_from_mean:00000000 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1811   .bss.last_measurements_history_max_angle_from_mean:00000000 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1821   .bss.last_measurements_history_full:00000000 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1824   .bss.last_measurements_history_index:00000000 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1831   .bss.last_measurements_history:00000000 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1838   .bss.latest_accel_data:00000000 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1848   .bss.int2_flag:00000000 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cchyEqRL.s:1854   .bss.int1_flag:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1766   .bss.activity_to_normal_start_time:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1772   .bss.activity_reset_start_time:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1778   .bss.activity_start_time:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1784   .bss.super_still_start_time:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1797   .bss.last_measurements_history_mean_vector:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1804   .bss.last_measurements_history_max_magnitude_from_mean:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1811   .bss.last_measurements_history_max_angle_from_mean:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1821   .bss.last_measurements_history_full:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1824   .bss.last_measurements_history_index:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1831   .bss.last_measurements_history:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1838   .bss.latest_accel_data:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1848   .bss.int2_flag:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2zqZVE.s:1854   .bss.int1_flag:00000000 $d
 
 UNDEFINED SYMBOLS
 HAL_I2C_Mem_Read

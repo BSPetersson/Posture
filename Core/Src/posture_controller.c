@@ -40,12 +40,22 @@ float good_posture_history[GOOD_POSTURE_HISTORY_SIZE][3];
 int good_posture_history_index = 0;
 bool good_posture_history_full = false;
 bool did_handle_initial_still_bad_posture = false;
+static uint32_t still_posture_start_time = 0; // Added static variable for time tracking
 
 void posture_controller_update(void)
 {
     uint32_t now = HAL_GetTick();
 
     accelerometer_mode_t accelerometer_mode = accelerometer_controller_get_mode();
+
+    // Check for button long press
+    button_event_t button_event = button_controller_get_event();
+    if (button_event == BUTTON_EVENT_LONG_PRESS) {
+        reset_good_posture_vector();
+        notify_posture_correct(); // Provide feedback that recalibration occurred
+        did_calibrate = true;
+        return;
+    }
 
     if (accelerometer_mode == SUPER_STILL) {
         reset_good_posture_history();
@@ -65,28 +75,23 @@ void posture_controller_update(void)
     if (!good_posture_history_full && good_posture_history_index == 0) {
         // Check if the user has remained still for 10 seconds
         if (accelerometer_controller_get_last_measurements_history_max_angle_from_mean() < INITIAL_BAD_POSTURE_THRESHOLD_RADIANS) {
-            if ((now - last_bad_posture_time) > INITIAL_BAD_POSTURE_TIME_MS && !did_handle_initial_still_bad_posture) {
-                handle_initial_still_bad_posture();
-                did_handle_initial_still_bad_posture = true;
+            uint32_t current_time = HAL_GetTick();
+            
+            // If this is the first time we're detecting still posture, store the start time
+            if (still_posture_start_time == 0) {
+                still_posture_start_time = current_time;
             }
-
-            if ((now - last_bad_posture_time) > GOOD_POSTURE_TRANSITION_TIME_MS && did_handle_initial_still_bad_posture) {
+            // Check if the still posture has been maintained for the required time
+            else if ((current_time - still_posture_start_time) >= INITIAL_BAD_POSTURE_TIME_MS) {
+                // Condition fulfilled for the required time, update good posture history and vector
                 update_good_posture_history(current_accelerometer_vector);
                 update_good_posture_vector();
-                notify_posture_correct();
+                still_posture_start_time = 0; // Reset the timer after updating
             }
         } else {
-            last_bad_posture_time = now;
+            // Reset the timer if the condition is not met
+            still_posture_start_time = 0;
         }
-    }
-    
-    // Check for button long press
-    button_event_t button_event = button_controller_get_event();
-    if (button_event == BUTTON_EVENT_LONG_PRESS) {
-        reset_good_posture_vector();
-        notify_posture_correct(); // Provide feedback that recalibration occurred
-        did_calibrate = true;
-        return;
     }
 
     // Get the angle between the current accelerometer vector and the good posture vector
@@ -243,6 +248,7 @@ void update_good_posture_history(float vector[3])
 
 void reset_good_posture_history(void)
 {
+    still_posture_start_time = 0;
     good_posture_history_index = 0;
     good_posture_history_full = false;
     for (int i = 0; i < GOOD_POSTURE_HISTORY_SIZE; i++) {

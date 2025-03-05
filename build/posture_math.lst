@@ -1,4 +1,4 @@
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccz15376.s 			page 1
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccftHhmJ.s 			page 1
 
 
    1              		.cpu cortex-m0
@@ -58,7 +58,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccz15376.s 			page 1
   52 000e 061C     		adds	r6, r0, #0
   53              		.loc 1 4 25 view .LVU6
   54 0010 6868     		ldr	r0, [r5, #4]
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccz15376.s 			page 2
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccftHhmJ.s 			page 2
 
 
   55              		.loc 1 4 30 view .LVU7
@@ -118,7 +118,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccz15376.s 			page 1
  108              		.cfi_offset 7, -8
  109              		.cfi_offset 14, -4
  110 0002 C646     		mov	lr, r8
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccz15376.s 			page 3
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccftHhmJ.s 			page 3
 
 
  111 0004 00B5     		push	{lr}
@@ -178,7 +178,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccz15376.s 			page 1
  163 0048 0028     		cmp	r0, #0
  164 004a 0ED0     		beq	.L2
   10:Core/Src/posture_math.c ****         v[0] /= mag;
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccz15376.s 			page 4
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccftHhmJ.s 			page 4
 
 
  165              		.loc 1 10 9 is_stmt 1 view .LVU31
@@ -238,7 +238,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccz15376.s 			page 1
  215              		.cfi_def_cfa_offset 12
  216              		.cfi_offset 4, -12
  217              		.cfi_offset 5, -8
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccz15376.s 			page 5
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccftHhmJ.s 			page 5
 
 
  218              		.cfi_offset 14, -4
@@ -298,7 +298,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccz15376.s 			page 1
  266 003c 0028     		cmp	r0, #0
  267 003e 06D0     		beq	.L10
  268              		.loc 1 22 25 discriminator 1 view .LVU55
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccz15376.s 			page 6
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccftHhmJ.s 			page 6
 
 
  269 0040 FE24     		movs	r4, #254
@@ -358,7 +358,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccz15376.s 			page 1
   26:Core/Src/posture_math.c **** 
   27:Core/Src/posture_math.c **** float get_magnitude_of_vector(float vector[3]) {
  318              		.loc 1 27 48 is_stmt 1 view -0
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccz15376.s 			page 7
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccftHhmJ.s 			page 7
 
 
  319              		.cfi_startproc
@@ -418,24 +418,24 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccz15376.s 			page 1
  371              	.LFE3:
  373              		.text
  374              	.Letext0:
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccz15376.s 			page 8
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccftHhmJ.s 			page 8
 
 
  375              		.file 2 "/Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/arm-none-eabi/include/math.h"
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccz15376.s 			page 9
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccftHhmJ.s 			page 9
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 posture_math.c
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccz15376.s:19     .text.dot_product:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccz15376.s:25     .text.dot_product:00000000 dot_product
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccz15376.s:88     .text.normalize_vector:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccz15376.s:94     .text.normalize_vector:00000000 normalize_vector
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccz15376.s:199    .text.get_angle_between_vectors:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccz15376.s:205    .text.get_angle_between_vectors:00000000 get_angle_between_vectors
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccz15376.s:304    .text.get_angle_between_vectors:00000060 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccz15376.s:309    .text.get_magnitude_of_vector:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccz15376.s:315    .text.get_magnitude_of_vector:00000000 get_magnitude_of_vector
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccftHhmJ.s:19     .text.dot_product:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccftHhmJ.s:25     .text.dot_product:00000000 dot_product
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccftHhmJ.s:88     .text.normalize_vector:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccftHhmJ.s:94     .text.normalize_vector:00000000 normalize_vector
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccftHhmJ.s:199    .text.get_angle_between_vectors:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccftHhmJ.s:205    .text.get_angle_between_vectors:00000000 get_angle_between_vectors
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccftHhmJ.s:304    .text.get_angle_between_vectors:00000060 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccftHhmJ.s:309    .text.get_magnitude_of_vector:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccftHhmJ.s:315    .text.get_magnitude_of_vector:00000000 get_magnitude_of_vector
 
 UNDEFINED SYMBOLS
 __aeabi_fmul
