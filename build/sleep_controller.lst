@@ -1,4 +1,4 @@
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc4mixPD.s 			page 1
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccce4gav.s 			page 1
 
 
    1              		.cpu cortex-m0
@@ -58,7 +58,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc4mixPD.s 			page 1
   38              		.loc 1 18 5 view .LVU1
   39 0002 FFF7FEFF 		bl	clear_accelerometer_interrupts
   40              	.LVL0:
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc4mixPD.s 			page 2
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccce4gav.s 			page 2
 
 
   19:Core/Src/sleep_controller.c ****     if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_1) == GPIO_PIN_SET)
@@ -118,7 +118,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc4mixPD.s 			page 1
   71              	.LVL4:
   43:Core/Src/sleep_controller.c **** 
   44:Core/Src/sleep_controller.c ****     /* When an interrupt wakes the MCU, execution resumes here */
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc4mixPD.s 			page 3
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccce4gav.s 			page 3
 
 
   45:Core/Src/sleep_controller.c **** 
@@ -178,7 +178,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc4mixPD.s 			page 1
  112              		.code	16
  113              		.thumb_func
  115              	sleep_controller_wake_device:
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc4mixPD.s 			page 4
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccce4gav.s 			page 4
 
 
  116              	.LFB41:
@@ -223,7 +223,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc4mixPD.s 			page 1
  144              	sleep_controller_was_woken_by_button:
  145              	.LFB42:
   73:Core/Src/sleep_controller.c **** 
-  74:Core/Src/sleep_controller.c **** /* Returns 1 if wake-up was caused by button, 0 otherwise */
+  74:Core/Src/sleep_controller.c **** /* Returns true if wake-up was caused by button, false otherwise */
   75:Core/Src/sleep_controller.c **** bool sleep_controller_was_woken_by_button(void)
   76:Core/Src/sleep_controller.c **** {
  146              		.loc 1 76 1 is_stmt 1 view -0
@@ -238,7 +238,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc4mixPD.s 			page 1
  154 0002 1878     		ldrb	r0, [r3]
  155 0004 C0B2     		uxtb	r0, r0
  156              	.LVL8:
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc4mixPD.s 			page 5
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccce4gav.s 			page 5
 
 
   78:Core/Src/sleep_controller.c ****     // Reset flag after reading
@@ -275,24 +275,24 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc4mixPD.s 			page 1
  189              		.file 7 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h"
  190              		.file 8 "Core/Inc/accelerometer_controller.h"
  191              		.file 9 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_pwr.h"
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc4mixPD.s 			page 6
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccce4gav.s 			page 6
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 sleep_controller.c
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc4mixPD.s:19     .text.sleep_controller_activate_sleep_mode:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc4mixPD.s:25     .text.sleep_controller_activate_sleep_mode:00000000 sleep_controller_activate_sleep_mode
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc4mixPD.s:102    .text.sleep_controller_activate_sleep_mode:0000004c $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc4mixPD.s:175    .bss.wakeup_by_button:00000000 wakeup_by_button
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc4mixPD.s:180    .bss.sleep_mode_active:00000000 sleep_mode_active
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc4mixPD.s:109    .text.sleep_controller_wake_device:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc4mixPD.s:115    .text.sleep_controller_wake_device:00000000 sleep_controller_wake_device
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc4mixPD.s:133    .text.sleep_controller_wake_device:00000008 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc4mixPD.s:138    .text.sleep_controller_was_woken_by_button:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc4mixPD.s:144    .text.sleep_controller_was_woken_by_button:00000000 sleep_controller_was_woken_by_button
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc4mixPD.s:168    .text.sleep_controller_was_woken_by_button:0000000c $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc4mixPD.s:176    .bss.wakeup_by_button:00000000 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc4mixPD.s:181    .bss.sleep_mode_active:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccce4gav.s:19     .text.sleep_controller_activate_sleep_mode:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccce4gav.s:25     .text.sleep_controller_activate_sleep_mode:00000000 sleep_controller_activate_sleep_mode
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccce4gav.s:102    .text.sleep_controller_activate_sleep_mode:0000004c $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccce4gav.s:175    .bss.wakeup_by_button:00000000 wakeup_by_button
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccce4gav.s:180    .bss.sleep_mode_active:00000000 sleep_mode_active
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccce4gav.s:109    .text.sleep_controller_wake_device:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccce4gav.s:115    .text.sleep_controller_wake_device:00000000 sleep_controller_wake_device
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccce4gav.s:133    .text.sleep_controller_wake_device:00000008 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccce4gav.s:138    .text.sleep_controller_was_woken_by_button:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccce4gav.s:144    .text.sleep_controller_was_woken_by_button:00000000 sleep_controller_was_woken_by_button
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccce4gav.s:168    .text.sleep_controller_was_woken_by_button:0000000c $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccce4gav.s:176    .bss.wakeup_by_button:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccce4gav.s:181    .bss.sleep_mode_active:00000000 $d
 
 UNDEFINED SYMBOLS
 clear_accelerometer_interrupts

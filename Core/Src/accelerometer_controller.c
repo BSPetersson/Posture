@@ -35,6 +35,9 @@ static uint32_t activity_reset_start_time = 0;
 // Add a static variable to track the time when activity conditions fall below the threshold
 static uint32_t activity_to_normal_start_time = 0;
 
+// Timestamp for when haptic feedback was last active
+static uint32_t last_haptic_active_time = 0;
+
 static HAL_StatusTypeDef accelerometer_write_reg(uint8_t reg, uint8_t value)
 {
     return HAL_I2C_Mem_Write(&hi2c1,
@@ -86,6 +89,24 @@ static HAL_StatusTypeDef accel_goto_active(void)
 
     value |= 0x01;  // Set ACTIVE bit
     return accelerometer_write_reg(MMA8451Q_REG_CTRL_REG1, value);
+}
+
+// Function to check if accelerometer readings should be ignored
+bool should_ignore_accelerometer_readings(void) {
+    uint32_t now = HAL_GetTick();
+    
+    // If haptic feedback is currently active, update the timestamp and return true
+    if (haptic_feedback_is_active()) {
+        last_haptic_active_time = now;
+        return true;
+    }
+    
+    // If we're within the cooldown period after haptic feedback was active
+    if ((now - last_haptic_active_time) < ACCEL_HAPTIC_COOLDOWN_MS) {
+        return true;
+    }
+    
+    return false;
 }
 
 // -----------------------------
@@ -172,11 +193,6 @@ void accelerometer_controller_update(void)
 {
     uint32_t now = HAL_GetTick();
     
-    // Skip accelerometer readings if haptic feedback is active
-    if (haptic_feedback_is_active()) {
-        return;
-    }
-    
     accel_data_t accelerometer_data;
     HAL_StatusTypeDef status = accelerometer_read_mps2(&accelerometer_data);
     if (status != HAL_OK)
@@ -184,6 +200,13 @@ void accelerometer_controller_update(void)
         return;
     }
 
+    // Check if we should ignore these readings for processing
+    if (should_ignore_accelerometer_readings()) {
+        // Still update latest_accel_data to clear the queue, but don't process further
+        latest_accel_data = accelerometer_data;
+        return;
+    }
+    
     latest_accel_data = accelerometer_data;
 
     // Store the current vector in the measurements history

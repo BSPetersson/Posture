@@ -1,4 +1,4 @@
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 1
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccvpiNZc.s 			page 1
 
 
    1              		.cpu cortex-m0
@@ -58,7 +58,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 1
   30              		@ frame_needed = 0, uses_anonymous_args = 0
   31              		.loc 1 26 1 is_stmt 0 view .LVU1
   32 0000 10B5     		push	{r4, lr}
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 2
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccvpiNZc.s 			page 2
 
 
   33              	.LCFI0:
@@ -118,7 +118,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 1
   35:Core/Src/led_controller.c **** void led_controller_initialize(void)
   36:Core/Src/led_controller.c **** {
   81              		.loc 1 36 1 is_stmt 1 view -0
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 3
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccvpiNZc.s 			page 3
 
 
   82              		.cfi_startproc
@@ -178,7 +178,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 1
  124              	.L7:
  125 0020 00000000 		.word	htim16
  126 0024 00000000 		.word	led_state
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 4
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccvpiNZc.s 			page 4
 
 
  127              		.cfi_endproc
@@ -238,7 +238,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 1
  173              	.LCFI3:
  174              		.cfi_def_cfa_offset 8
  175              		.cfi_offset 4, -8
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 5
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccvpiNZc.s 			page 5
 
 
  176              		.cfi_offset 14, -4
@@ -298,7 +298,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 1
  219              		.loc 1 73 5 is_stmt 1 view .LVU43
  220              		.loc 1 73 24 is_stmt 0 view .LVU44
  221 000e 5A72     		strb	r2, [r3, #9]
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 6
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccvpiNZc.s 			page 6
 
 
   74:Core/Src/led_controller.c ****     // For fade sequence, initialize brightness and direction.
@@ -358,7 +358,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 1
  263              		.loc 1 84 1 is_stmt 1 view -0
  264              		.cfi_startproc
  265              		@ args = 0, pretend = 0, frame = 0
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 7
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccvpiNZc.s 			page 7
 
 
  266              		@ frame_needed = 0, uses_anonymous_args = 0
@@ -418,7 +418,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 1
  316              	.L19:
   91:Core/Src/led_controller.c ****     {
   92:Core/Src/led_controller.c ****         return;
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 8
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccvpiNZc.s 			page 8
 
 
   93:Core/Src/led_controller.c ****     }
@@ -478,7 +478,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 1
  147:Core/Src/led_controller.c ****         case LED_SEQ_FADE_IN_OUT:
  148:Core/Src/led_controller.c ****             if (now >= led_state.next_update)
  149:Core/Src/led_controller.c ****             {
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 9
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccvpiNZc.s 			page 9
 
 
  150:Core/Src/led_controller.c ****                 update_pwm(led_state.brightness);
@@ -538,7 +538,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 1
  100:Core/Src/led_controller.c ****             if (now >= led_state.next_update)
  342              		.loc 1 100 16 view .LVU74
  343 002e 8342     		cmp	r3, r0
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 10
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccvpiNZc.s 			page 10
 
 
  344 0030 EFD8     		bhi	.L19
@@ -598,7 +598,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 1
  383 0054 2E4A     		ldr	r2, .L27
  384 0056 5460     		str	r4, [r2, #4]
  112:Core/Src/led_controller.c ****                     led_state.substate = 0;
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 11
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccvpiNZc.s 			page 11
 
 
  385              		.loc 1 112 21 is_stmt 1 view .LVU90
@@ -658,7 +658,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 1
  423 007e 002B     		cmp	r3, #0
  424 0080 09D1     		bne	.L24
  128:Core/Src/led_controller.c ****                     update_pwm(LED_DOUBLE_BLINK_BRIGHTNESS);
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 12
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccvpiNZc.s 			page 12
 
 
  425              		.loc 1 128 21 is_stmt 1 view .LVU107
@@ -718,7 +718,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 1
  136:Core/Src/led_controller.c ****                     led_state.substate = 0;
  465              		.loc 1 136 40 is_stmt 0 view .LVU122
  466 00a4 0023     		movs	r3, #0
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 13
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccvpiNZc.s 			page 13
 
 
  467 00a6 5372     		strb	r3, [r2, #9]
@@ -778,7 +778,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 1
  505              		.loc 1 151 45 is_stmt 0 view .LVU138
  506 00ce 0A34     		adds	r4, r4, #10
  507              	.LVL34:
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 14
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccvpiNZc.s 			page 14
 
 
  151:Core/Src/led_controller.c ****                 led_state.next_update = now + LED_FADE_UPDATE_TIME_MS;
@@ -838,7 +838,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 1
  547 00fc 00DB     		blt	.LCB398
  548 00fe 88E7     		b	.L19	@long jump
  549              	.LCB398:
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 15
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccvpiNZc.s 			page 15
 
 
  160:Core/Src/led_controller.c ****                     update_pwm(0);
@@ -881,32 +881,32 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 1
  583              		.file 7 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_tim.h"
  584              		.file 8 "Core/Inc/led_controller.h"
  585              		.file 9 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h"
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 16
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccvpiNZc.s 			page 16
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 led_controller.c
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s:19     .text.update_pwm:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s:24     .text.update_pwm:00000000 update_pwm
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s:68     .text.update_pwm:00000020 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s:73     .text.led_controller_initialize:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s:79     .text.led_controller_initialize:00000000 led_controller_initialize
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s:125    .text.led_controller_initialize:00000020 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s:574    .bss.led_state:00000000 led_state
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s:131    .text.led_on:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s:137    .text.led_on:00000000 led_on
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s:160    .text.led_off:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s:166    .text.led_off:00000000 led_off
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s:188    .text.led_execute_sequence:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s:194    .text.led_execute_sequence:00000000 led_execute_sequence
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s:250    .text.led_execute_sequence:00000028 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s:255    .text.led_is_sequence_running:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s:261    .text.led_is_sequence_running:00000000 led_is_sequence_running
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s:279    .text.led_is_sequence_running:00000008 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s:284    .text.led_controller_update:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s:290    .text.led_controller_update:00000000 led_controller_update
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s:566    .text.led_controller_update:00000110 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s:571    .bss.led_state:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccvpiNZc.s:19     .text.update_pwm:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccvpiNZc.s:24     .text.update_pwm:00000000 update_pwm
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccvpiNZc.s:68     .text.update_pwm:00000020 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccvpiNZc.s:73     .text.led_controller_initialize:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccvpiNZc.s:79     .text.led_controller_initialize:00000000 led_controller_initialize
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccvpiNZc.s:125    .text.led_controller_initialize:00000020 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccvpiNZc.s:574    .bss.led_state:00000000 led_state
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccvpiNZc.s:131    .text.led_on:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccvpiNZc.s:137    .text.led_on:00000000 led_on
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccvpiNZc.s:160    .text.led_off:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccvpiNZc.s:166    .text.led_off:00000000 led_off
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccvpiNZc.s:188    .text.led_execute_sequence:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccvpiNZc.s:194    .text.led_execute_sequence:00000000 led_execute_sequence
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccvpiNZc.s:250    .text.led_execute_sequence:00000028 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccvpiNZc.s:255    .text.led_is_sequence_running:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccvpiNZc.s:261    .text.led_is_sequence_running:00000000 led_is_sequence_running
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccvpiNZc.s:279    .text.led_is_sequence_running:00000008 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccvpiNZc.s:284    .text.led_controller_update:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccvpiNZc.s:290    .text.led_controller_update:00000000 led_controller_update
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccvpiNZc.s:566    .text.led_controller_update:00000110 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccvpiNZc.s:571    .bss.led_state:00000000 $d
 
 UNDEFINED SYMBOLS
 __aeabi_uidiv

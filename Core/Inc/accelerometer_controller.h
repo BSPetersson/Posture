@@ -8,6 +8,9 @@
 #include "parameters.h"
 #include "led_controller.h"
 
+// Duration to ignore accelerometer readings after haptic feedback stops (in ms)
+#define ACCEL_HAPTIC_COOLDOWN_MS 100
+
 // -----------------------------
 // Register Addresses and Macros
 // -----------------------------
@@ -220,4 +223,7 @@ bool accelerometer_controller_is_last_measurements_history_full(void);
 float accelerometer_controller_get_last_measurements_history_max_angle_from_mean(void);
 
 accelerometer_mode_t accelerometer_controller_get_mode(void);
+
+bool should_ignore_accelerometer_readings(void);
+
 #endif // ACCELEROMETER_CONTROLLER_H
