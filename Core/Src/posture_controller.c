@@ -10,10 +10,10 @@
 float get_angle_between_vectors(float vector1[3], float vector2[3]);
 void update_good_posture_vector(void);
 void update_good_posture_history(float vector[3]);
-void handle_bad_posture(void);
-void notify_posture_correct(void);
+void react_to_bad_posture(void);
+void react_to_posture_correct(void);
 void start_calibration_procedure(void);
-void handle_initial_still_bad_posture(void);
+void react_to_initial_still_bad_posture(void);
 
 // Constants
 #define BAD_POSTURE_TRANSITION_TIME_MS 3000
@@ -40,7 +40,9 @@ float good_posture_history[GOOD_POSTURE_HISTORY_SIZE][3];
 int good_posture_history_index = 0;
 bool good_posture_history_full = false;
 bool did_handle_initial_still_bad_posture = false;
-static uint32_t still_posture_start_time = 0; // Added static variable for time tracking
+static uint32_t still_posture_start_time = 0;
+bool device_is_off = false;
+bool device_is_shutting_down = false;  // New state to track shutdown process
 
 void posture_controller_update(void)
 {
@@ -48,22 +50,48 @@ void posture_controller_update(void)
 
     accelerometer_mode_t accelerometer_mode = accelerometer_controller_get_mode();
 
-    // Check for button long press
     button_event_t button_event = button_controller_get_event();
-    if (button_event == BUTTON_EVENT_LONG_PRESS) {
+
+    if (button_event == BUTTON_EVENT_SINGLE_PRESS) {
         reset_good_posture_vector();
-        notify_posture_correct(); // Provide feedback that recalibration occurred
         did_calibrate = true;
+        react_to_calibration();
         return;
     }
 
-    if (accelerometer_mode == SUPER_STILL) {
+    if (button_event == BUTTON_EVENT_LONG_PRESS) {
+        if (!device_is_off && !device_is_shutting_down) {
+            device_is_shutting_down = true;  // Start shutdown process
+            react_to_device_off();           // Run LED sequence
+        }
+    } else if (button_event != BUTTON_EVENT_NONE && device_is_off) {
+        device_is_off = false;
+        react_to_device_on();
+    }
+
+    // Check if shutdown sequence is complete
+    if (device_is_shutting_down && !led_is_sequence_running()) {
+        device_is_shutting_down = false;  // Shutdown sequence complete
+        device_is_off = true;             // Now officially off
+    }
+
+    if (accelerometer_mode == SUPER_STILL || device_is_off) {
         reset_good_posture_history();
+        led_off();
         sleep_controller_activate_sleep_mode();
+        
+        // Check if we were woken up by a button press
+        if (sleep_controller_was_woken_by_button()) {
+            // We were woken by button, so react as if we received a button event
+            led_on(100);
+            device_is_off = false;
+            react_to_device_on();
+        }
+        
+        return;
     }
 
     if (accelerometer_mode == ACTIVITY) {
-        led_on(100);
         return;
     }
 
@@ -101,11 +129,8 @@ void posture_controller_update(void)
     // If the angle is greater than the unrealistic posture threshold, do nothing
     if (error_angle > UNREALISTIC_POSTURE_THRESHOLD_RADIANS)
     {
-        led_on(100);
         return;
     }
-
-    led_off();
 
     // If the angle is less than the threshold, update the last good posture time
     // Otherwise, update the last bad posture time
@@ -127,7 +152,7 @@ void posture_controller_update(void)
     {
         is_posture_correct = true;
         did_calibrate = false;
-        notify_posture_correct();
+        react_to_posture_correct();
         return;
     }
 
@@ -158,12 +183,12 @@ void posture_controller_update(void)
 
     if (!is_posture_correct)
     {
-        handle_bad_posture();
+        react_to_bad_posture();
         return;
     }
 }
 
-void handle_bad_posture(void)
+void react_to_bad_posture(void)
 {
     uint32_t now = HAL_GetTick();
     if (now - last_haptic_feedback_time > BAD_POSTURE_HAPTIC_FEEDBACK_INTERVAL_MS)
@@ -173,7 +198,7 @@ void handle_bad_posture(void)
     }
 }
 
-void handle_initial_still_bad_posture(void)
+void react_to_initial_still_bad_posture(void)
 {
     uint32_t now = HAL_GetTick();
     if (now - last_haptic_feedback_time > BAD_POSTURE_HAPTIC_FEEDBACK_INTERVAL_MS)
@@ -183,7 +208,7 @@ void handle_initial_still_bad_posture(void)
     }
 }
 
-void notify_posture_correct(void)
+void react_to_posture_correct(void)
 {
     led_execute_sequence(LED_SEQ_THREE_BLINKS);
     haptic_feedback_play_waveform(2); // Tune this
@@ -259,6 +284,18 @@ void reset_good_posture_history(void)
     }
 }
 
-void posture_controller_init(void) {
+void posture_controller_initialize(void) {
     reset_good_posture_history();
+}
+
+void react_to_device_off(void) {
+    led_execute_sequence(LED_SEQ_THREE_BLINKS);
+}
+
+void react_to_device_on(void) {
+    led_execute_sequence(LED_SEQ_THREE_BLINKS);
+}
+
+void react_to_calibration(void) {
+    led_execute_sequence(LED_SEQ_THREE_BLINKS);
 }

@@ -1,4 +1,4 @@
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 1
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s 			page 1
 
 
    1              		.cpu cortex-m0
@@ -18,13 +18,13 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 1
   15              	.Ltext0:
   16              		.cfi_sections	.debug_frame
   17              		.file 1 "Core/Src/posture_controller.c"
-  18              		.section	.text.handle_bad_posture,"ax",%progbits
+  18              		.section	.text.react_to_bad_posture,"ax",%progbits
   19              		.align	1
-  20              		.global	handle_bad_posture
+  20              		.global	react_to_bad_posture
   21              		.syntax unified
   22              		.code	16
   23              		.thumb_func
-  25              	handle_bad_posture:
+  25              	react_to_bad_posture:
   26              	.LFB41:
    1:Core/Src/posture_controller.c **** #include "posture_controller.h"
    2:Core/Src/posture_controller.c **** #include "posture_math.h"
@@ -38,10 +38,10 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 1
   10:Core/Src/posture_controller.c **** float get_angle_between_vectors(float vector1[3], float vector2[3]);
   11:Core/Src/posture_controller.c **** void update_good_posture_vector(void);
   12:Core/Src/posture_controller.c **** void update_good_posture_history(float vector[3]);
-  13:Core/Src/posture_controller.c **** void handle_bad_posture(void);
-  14:Core/Src/posture_controller.c **** void notify_posture_correct(void);
+  13:Core/Src/posture_controller.c **** void react_to_bad_posture(void);
+  14:Core/Src/posture_controller.c **** void react_to_posture_correct(void);
   15:Core/Src/posture_controller.c **** void start_calibration_procedure(void);
-  16:Core/Src/posture_controller.c **** void handle_initial_still_bad_posture(void);
+  16:Core/Src/posture_controller.c **** void react_to_initial_still_bad_posture(void);
   17:Core/Src/posture_controller.c **** 
   18:Core/Src/posture_controller.c **** // Constants
   19:Core/Src/posture_controller.c **** #define BAD_POSTURE_TRANSITION_TIME_MS 3000
@@ -58,7 +58,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 1
   30:Core/Src/posture_controller.c **** float current_accelerometer_vector[3];
   31:Core/Src/posture_controller.c **** float good_posture_vector[3];
   32:Core/Src/posture_controller.c **** float threshold_angle = 0.174533f;
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 2
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s 			page 2
 
 
   33:Core/Src/posture_controller.c **** bool is_posture_correct = true;
@@ -71,138 +71,163 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 1
   40:Core/Src/posture_controller.c **** int good_posture_history_index = 0;
   41:Core/Src/posture_controller.c **** bool good_posture_history_full = false;
   42:Core/Src/posture_controller.c **** bool did_handle_initial_still_bad_posture = false;
-  43:Core/Src/posture_controller.c **** static uint32_t still_posture_start_time = 0; // Added static variable for time tracking
-  44:Core/Src/posture_controller.c **** 
-  45:Core/Src/posture_controller.c **** void posture_controller_update(void)
-  46:Core/Src/posture_controller.c **** {
-  47:Core/Src/posture_controller.c ****     uint32_t now = HAL_GetTick();
-  48:Core/Src/posture_controller.c **** 
-  49:Core/Src/posture_controller.c ****     accelerometer_mode_t accelerometer_mode = accelerometer_controller_get_mode();
+  43:Core/Src/posture_controller.c **** static uint32_t still_posture_start_time = 0;
+  44:Core/Src/posture_controller.c **** bool device_is_off = false;
+  45:Core/Src/posture_controller.c **** bool device_is_shutting_down = false;  // New state to track shutdown process
+  46:Core/Src/posture_controller.c **** 
+  47:Core/Src/posture_controller.c **** void posture_controller_update(void)
+  48:Core/Src/posture_controller.c **** {
+  49:Core/Src/posture_controller.c ****     uint32_t now = HAL_GetTick();
   50:Core/Src/posture_controller.c **** 
-  51:Core/Src/posture_controller.c ****     // Check for button long press
-  52:Core/Src/posture_controller.c ****     button_event_t button_event = button_controller_get_event();
-  53:Core/Src/posture_controller.c ****     if (button_event == BUTTON_EVENT_LONG_PRESS) {
-  54:Core/Src/posture_controller.c ****         reset_good_posture_vector();
-  55:Core/Src/posture_controller.c ****         notify_posture_correct(); // Provide feedback that recalibration occurred
-  56:Core/Src/posture_controller.c ****         did_calibrate = true;
-  57:Core/Src/posture_controller.c ****         return;
-  58:Core/Src/posture_controller.c ****     }
-  59:Core/Src/posture_controller.c **** 
-  60:Core/Src/posture_controller.c ****     if (accelerometer_mode == SUPER_STILL) {
-  61:Core/Src/posture_controller.c ****         reset_good_posture_history();
-  62:Core/Src/posture_controller.c ****         sleep_controller_activate_sleep_mode();
-  63:Core/Src/posture_controller.c ****     }
-  64:Core/Src/posture_controller.c **** 
-  65:Core/Src/posture_controller.c ****     if (accelerometer_mode == ACTIVITY) {
-  66:Core/Src/posture_controller.c ****         led_on(100);
-  67:Core/Src/posture_controller.c ****         return;
-  68:Core/Src/posture_controller.c ****     }
-  69:Core/Src/posture_controller.c **** 
-  70:Core/Src/posture_controller.c ****     // Get the latest accelerometer vector
-  71:Core/Src/posture_controller.c ****     accel_data_t accelerometer_vector = accelerometer_controller_get_latest_data();
-  72:Core/Src/posture_controller.c ****     current_accelerometer_vector[0] = accelerometer_vector.x_mps2;
-  73:Core/Src/posture_controller.c ****     current_accelerometer_vector[1] = accelerometer_vector.y_mps2;
-  74:Core/Src/posture_controller.c ****     current_accelerometer_vector[2] = accelerometer_vector.z_mps2;
-  75:Core/Src/posture_controller.c **** 
-  76:Core/Src/posture_controller.c ****     if (!good_posture_history_full && good_posture_history_index == 0) {
-  77:Core/Src/posture_controller.c ****         // Check if the user has remained still for 10 seconds
-  78:Core/Src/posture_controller.c ****         if (accelerometer_controller_get_last_measurements_history_max_angle_from_mean() < INITIAL_
-  79:Core/Src/posture_controller.c ****             uint32_t current_time = HAL_GetTick();
-  80:Core/Src/posture_controller.c ****             
-  81:Core/Src/posture_controller.c ****             // If this is the first time we're detecting still posture, store the start time
-  82:Core/Src/posture_controller.c ****             if (still_posture_start_time == 0) {
-  83:Core/Src/posture_controller.c ****                 still_posture_start_time = current_time;
-  84:Core/Src/posture_controller.c ****             }
-  85:Core/Src/posture_controller.c ****             // Check if the still posture has been maintained for the required time
-  86:Core/Src/posture_controller.c ****             else if ((current_time - still_posture_start_time) >= INITIAL_BAD_POSTURE_TIME_MS) {
-  87:Core/Src/posture_controller.c ****                 // Condition fulfilled for the required time, update good posture history and vecto
-  88:Core/Src/posture_controller.c ****                 update_good_posture_history(current_accelerometer_vector);
-  89:Core/Src/posture_controller.c ****                 update_good_posture_vector();
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 3
+  51:Core/Src/posture_controller.c ****     accelerometer_mode_t accelerometer_mode = accelerometer_controller_get_mode();
+  52:Core/Src/posture_controller.c **** 
+  53:Core/Src/posture_controller.c ****     button_event_t button_event = button_controller_get_event();
+  54:Core/Src/posture_controller.c **** 
+  55:Core/Src/posture_controller.c ****     if (button_event == BUTTON_EVENT_SINGLE_PRESS) {
+  56:Core/Src/posture_controller.c ****         reset_good_posture_vector();
+  57:Core/Src/posture_controller.c ****         did_calibrate = true;
+  58:Core/Src/posture_controller.c ****         react_to_calibration();
+  59:Core/Src/posture_controller.c ****         return;
+  60:Core/Src/posture_controller.c ****     }
+  61:Core/Src/posture_controller.c **** 
+  62:Core/Src/posture_controller.c ****     if (button_event == BUTTON_EVENT_LONG_PRESS) {
+  63:Core/Src/posture_controller.c ****         if (!device_is_off && !device_is_shutting_down) {
+  64:Core/Src/posture_controller.c ****             device_is_shutting_down = true;  // Start shutdown process
+  65:Core/Src/posture_controller.c ****             react_to_device_off();           // Run LED sequence
+  66:Core/Src/posture_controller.c ****         }
+  67:Core/Src/posture_controller.c ****     } else if (button_event != BUTTON_EVENT_NONE && device_is_off) {
+  68:Core/Src/posture_controller.c ****         device_is_off = false;
+  69:Core/Src/posture_controller.c ****         react_to_device_on();
+  70:Core/Src/posture_controller.c ****     }
+  71:Core/Src/posture_controller.c **** 
+  72:Core/Src/posture_controller.c ****     // Check if shutdown sequence is complete
+  73:Core/Src/posture_controller.c ****     if (device_is_shutting_down && !led_is_sequence_running()) {
+  74:Core/Src/posture_controller.c ****         device_is_shutting_down = false;  // Shutdown sequence complete
+  75:Core/Src/posture_controller.c ****         device_is_off = true;             // Now officially off
+  76:Core/Src/posture_controller.c ****     }
+  77:Core/Src/posture_controller.c **** 
+  78:Core/Src/posture_controller.c ****     if (accelerometer_mode == SUPER_STILL || device_is_off) {
+  79:Core/Src/posture_controller.c ****         reset_good_posture_history();
+  80:Core/Src/posture_controller.c ****         led_off();
+  81:Core/Src/posture_controller.c ****         sleep_controller_activate_sleep_mode();
+  82:Core/Src/posture_controller.c ****         
+  83:Core/Src/posture_controller.c ****         // Check if we were woken up by a button press
+  84:Core/Src/posture_controller.c ****         if (sleep_controller_was_woken_by_button()) {
+  85:Core/Src/posture_controller.c ****             // We were woken by button, so react as if we received a button event
+  86:Core/Src/posture_controller.c ****             led_on(100);
+  87:Core/Src/posture_controller.c ****             device_is_off = false;
+  88:Core/Src/posture_controller.c ****             react_to_device_on();
+  89:Core/Src/posture_controller.c ****         }
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s 			page 3
 
 
-  90:Core/Src/posture_controller.c ****                 still_posture_start_time = 0; // Reset the timer after updating
-  91:Core/Src/posture_controller.c ****             }
-  92:Core/Src/posture_controller.c ****         } else {
-  93:Core/Src/posture_controller.c ****             // Reset the timer if the condition is not met
-  94:Core/Src/posture_controller.c ****             still_posture_start_time = 0;
-  95:Core/Src/posture_controller.c ****         }
+  90:Core/Src/posture_controller.c ****         
+  91:Core/Src/posture_controller.c ****         return;
+  92:Core/Src/posture_controller.c ****     }
+  93:Core/Src/posture_controller.c **** 
+  94:Core/Src/posture_controller.c ****     if (accelerometer_mode == ACTIVITY) {
+  95:Core/Src/posture_controller.c ****         return;
   96:Core/Src/posture_controller.c ****     }
   97:Core/Src/posture_controller.c **** 
-  98:Core/Src/posture_controller.c ****     // Get the angle between the current accelerometer vector and the good posture vector
-  99:Core/Src/posture_controller.c ****     float error_angle = get_angle_between_vectors(current_accelerometer_vector, good_posture_vector
- 100:Core/Src/posture_controller.c **** 
- 101:Core/Src/posture_controller.c ****     // If the angle is greater than the unrealistic posture threshold, do nothing
- 102:Core/Src/posture_controller.c ****     if (error_angle > UNREALISTIC_POSTURE_THRESHOLD_RADIANS)
- 103:Core/Src/posture_controller.c ****     {
- 104:Core/Src/posture_controller.c ****         led_on(100);
- 105:Core/Src/posture_controller.c ****         return;
- 106:Core/Src/posture_controller.c ****     }
- 107:Core/Src/posture_controller.c **** 
- 108:Core/Src/posture_controller.c ****     led_off();
- 109:Core/Src/posture_controller.c **** 
- 110:Core/Src/posture_controller.c ****     // If the angle is less than the threshold, update the last good posture time
- 111:Core/Src/posture_controller.c ****     // Otherwise, update the last bad posture time
- 112:Core/Src/posture_controller.c ****     if (error_angle < threshold_angle)
- 113:Core/Src/posture_controller.c ****     {
- 114:Core/Src/posture_controller.c ****         last_good_posture_time = now;
- 115:Core/Src/posture_controller.c ****     }
- 116:Core/Src/posture_controller.c ****     else
- 117:Core/Src/posture_controller.c ****     {
- 118:Core/Src/posture_controller.c ****         last_bad_posture_time = now;
- 119:Core/Src/posture_controller.c ****     }
- 120:Core/Src/posture_controller.c **** 
- 121:Core/Src/posture_controller.c ****     // If the last good posture time is greater than the last bad posture time,
- 122:Core/Src/posture_controller.c ****     // and the difference is greater than the good posture transition time,
- 123:Core/Src/posture_controller.c ****     // then we are in good posture.
- 124:Core/Src/posture_controller.c ****     if (last_good_posture_time > last_bad_posture_time &&
- 125:Core/Src/posture_controller.c ****         (last_good_posture_time - last_bad_posture_time) > GOOD_POSTURE_TRANSITION_TIME_MS &&
- 126:Core/Src/posture_controller.c ****         !is_posture_correct)
- 127:Core/Src/posture_controller.c ****     {
- 128:Core/Src/posture_controller.c ****         is_posture_correct = true;
- 129:Core/Src/posture_controller.c ****         did_calibrate = false;
- 130:Core/Src/posture_controller.c ****         notify_posture_correct();
- 131:Core/Src/posture_controller.c ****         return;
- 132:Core/Src/posture_controller.c ****     }
- 133:Core/Src/posture_controller.c **** 
- 134:Core/Src/posture_controller.c ****     // If the last bad posture time is greater than the last good posture time,
- 135:Core/Src/posture_controller.c ****     // and the difference is greater than the bad posture transition time,
- 136:Core/Src/posture_controller.c ****     // then we are in bad posture.
- 137:Core/Src/posture_controller.c ****     if (last_bad_posture_time > last_good_posture_time &&
- 138:Core/Src/posture_controller.c ****         (last_bad_posture_time - last_good_posture_time) > BAD_POSTURE_TRANSITION_TIME_MS &&
- 139:Core/Src/posture_controller.c ****         is_posture_correct)
- 140:Core/Src/posture_controller.c ****     {
- 141:Core/Src/posture_controller.c ****         is_posture_correct = false;
- 142:Core/Src/posture_controller.c ****         
- 143:Core/Src/posture_controller.c ****         // Check if bad posture has been maintained for 3 minutes (180000 ms)
- 144:Core/Src/posture_controller.c ****         if ((now - last_bad_posture_time) > BAD_POSTURE_RESET_TIME_MS) {
- 145:Core/Src/posture_controller.c ****             reset_good_posture_history(); // Reset history if bad posture for 3 minutes
- 146:Core/Src/posture_controller.c ****         }
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 4
+  98:Core/Src/posture_controller.c ****     // Get the latest accelerometer vector
+  99:Core/Src/posture_controller.c ****     accel_data_t accelerometer_vector = accelerometer_controller_get_latest_data();
+ 100:Core/Src/posture_controller.c ****     current_accelerometer_vector[0] = accelerometer_vector.x_mps2;
+ 101:Core/Src/posture_controller.c ****     current_accelerometer_vector[1] = accelerometer_vector.y_mps2;
+ 102:Core/Src/posture_controller.c ****     current_accelerometer_vector[2] = accelerometer_vector.z_mps2;
+ 103:Core/Src/posture_controller.c **** 
+ 104:Core/Src/posture_controller.c ****     if (!good_posture_history_full && good_posture_history_index == 0) {
+ 105:Core/Src/posture_controller.c ****         // Check if the user has remained still for 10 seconds
+ 106:Core/Src/posture_controller.c ****         if (accelerometer_controller_get_last_measurements_history_max_angle_from_mean() < INITIAL_
+ 107:Core/Src/posture_controller.c ****             uint32_t current_time = HAL_GetTick();
+ 108:Core/Src/posture_controller.c ****             
+ 109:Core/Src/posture_controller.c ****             // If this is the first time we're detecting still posture, store the start time
+ 110:Core/Src/posture_controller.c ****             if (still_posture_start_time == 0) {
+ 111:Core/Src/posture_controller.c ****                 still_posture_start_time = current_time;
+ 112:Core/Src/posture_controller.c ****             }
+ 113:Core/Src/posture_controller.c ****             // Check if the still posture has been maintained for the required time
+ 114:Core/Src/posture_controller.c ****             else if ((current_time - still_posture_start_time) >= INITIAL_BAD_POSTURE_TIME_MS) {
+ 115:Core/Src/posture_controller.c ****                 // Condition fulfilled for the required time, update good posture history and vecto
+ 116:Core/Src/posture_controller.c ****                 update_good_posture_history(current_accelerometer_vector);
+ 117:Core/Src/posture_controller.c ****                 update_good_posture_vector();
+ 118:Core/Src/posture_controller.c ****                 still_posture_start_time = 0; // Reset the timer after updating
+ 119:Core/Src/posture_controller.c ****             }
+ 120:Core/Src/posture_controller.c ****         } else {
+ 121:Core/Src/posture_controller.c ****             // Reset the timer if the condition is not met
+ 122:Core/Src/posture_controller.c ****             still_posture_start_time = 0;
+ 123:Core/Src/posture_controller.c ****         }
+ 124:Core/Src/posture_controller.c ****     }
+ 125:Core/Src/posture_controller.c **** 
+ 126:Core/Src/posture_controller.c ****     // Get the angle between the current accelerometer vector and the good posture vector
+ 127:Core/Src/posture_controller.c ****     float error_angle = get_angle_between_vectors(current_accelerometer_vector, good_posture_vector
+ 128:Core/Src/posture_controller.c **** 
+ 129:Core/Src/posture_controller.c ****     // If the angle is greater than the unrealistic posture threshold, do nothing
+ 130:Core/Src/posture_controller.c ****     if (error_angle > UNREALISTIC_POSTURE_THRESHOLD_RADIANS)
+ 131:Core/Src/posture_controller.c ****     {
+ 132:Core/Src/posture_controller.c ****         return;
+ 133:Core/Src/posture_controller.c ****     }
+ 134:Core/Src/posture_controller.c **** 
+ 135:Core/Src/posture_controller.c ****     // If the angle is less than the threshold, update the last good posture time
+ 136:Core/Src/posture_controller.c ****     // Otherwise, update the last bad posture time
+ 137:Core/Src/posture_controller.c ****     if (error_angle < threshold_angle)
+ 138:Core/Src/posture_controller.c ****     {
+ 139:Core/Src/posture_controller.c ****         last_good_posture_time = now;
+ 140:Core/Src/posture_controller.c ****     }
+ 141:Core/Src/posture_controller.c ****     else
+ 142:Core/Src/posture_controller.c ****     {
+ 143:Core/Src/posture_controller.c ****         last_bad_posture_time = now;
+ 144:Core/Src/posture_controller.c ****     }
+ 145:Core/Src/posture_controller.c **** 
+ 146:Core/Src/posture_controller.c ****     // If the last good posture time is greater than the last bad posture time,
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s 			page 4
 
 
- 147:Core/Src/posture_controller.c ****         return;
- 148:Core/Src/posture_controller.c ****     }
- 149:Core/Src/posture_controller.c **** 
- 150:Core/Src/posture_controller.c ****     // If the posture is correct and the last good posture time is greater than the good posture ve
- 151:Core/Src/posture_controller.c ****     // and the device have not calibrated yet, then start the calibration procedure.
- 152:Core/Src/posture_controller.c ****     if (is_posture_correct &&
- 153:Core/Src/posture_controller.c ****         !did_calibrate)
- 154:Core/Src/posture_controller.c ****     {
- 155:Core/Src/posture_controller.c ****         start_calibration_procedure();
+ 147:Core/Src/posture_controller.c ****     // and the difference is greater than the good posture transition time,
+ 148:Core/Src/posture_controller.c ****     // then we are in good posture.
+ 149:Core/Src/posture_controller.c ****     if (last_good_posture_time > last_bad_posture_time &&
+ 150:Core/Src/posture_controller.c ****         (last_good_posture_time - last_bad_posture_time) > GOOD_POSTURE_TRANSITION_TIME_MS &&
+ 151:Core/Src/posture_controller.c ****         !is_posture_correct)
+ 152:Core/Src/posture_controller.c ****     {
+ 153:Core/Src/posture_controller.c ****         is_posture_correct = true;
+ 154:Core/Src/posture_controller.c ****         did_calibrate = false;
+ 155:Core/Src/posture_controller.c ****         react_to_posture_correct();
  156:Core/Src/posture_controller.c ****         return;
  157:Core/Src/posture_controller.c ****     }
  158:Core/Src/posture_controller.c **** 
- 159:Core/Src/posture_controller.c ****     if (!is_posture_correct)
- 160:Core/Src/posture_controller.c ****     {
- 161:Core/Src/posture_controller.c ****         handle_bad_posture();
- 162:Core/Src/posture_controller.c ****         return;
- 163:Core/Src/posture_controller.c ****     }
- 164:Core/Src/posture_controller.c **** }
- 165:Core/Src/posture_controller.c **** 
- 166:Core/Src/posture_controller.c **** void handle_bad_posture(void)
- 167:Core/Src/posture_controller.c **** {
-  27              		.loc 1 167 1 view -0
+ 159:Core/Src/posture_controller.c ****     // If the last bad posture time is greater than the last good posture time,
+ 160:Core/Src/posture_controller.c ****     // and the difference is greater than the bad posture transition time,
+ 161:Core/Src/posture_controller.c ****     // then we are in bad posture.
+ 162:Core/Src/posture_controller.c ****     if (last_bad_posture_time > last_good_posture_time &&
+ 163:Core/Src/posture_controller.c ****         (last_bad_posture_time - last_good_posture_time) > BAD_POSTURE_TRANSITION_TIME_MS &&
+ 164:Core/Src/posture_controller.c ****         is_posture_correct)
+ 165:Core/Src/posture_controller.c ****     {
+ 166:Core/Src/posture_controller.c ****         is_posture_correct = false;
+ 167:Core/Src/posture_controller.c ****         
+ 168:Core/Src/posture_controller.c ****         // Check if bad posture has been maintained for 3 minutes (180000 ms)
+ 169:Core/Src/posture_controller.c ****         if ((now - last_bad_posture_time) > BAD_POSTURE_RESET_TIME_MS) {
+ 170:Core/Src/posture_controller.c ****             reset_good_posture_history(); // Reset history if bad posture for 3 minutes
+ 171:Core/Src/posture_controller.c ****         }
+ 172:Core/Src/posture_controller.c ****         return;
+ 173:Core/Src/posture_controller.c ****     }
+ 174:Core/Src/posture_controller.c **** 
+ 175:Core/Src/posture_controller.c ****     // If the posture is correct and the last good posture time is greater than the good posture ve
+ 176:Core/Src/posture_controller.c ****     // and the device have not calibrated yet, then start the calibration procedure.
+ 177:Core/Src/posture_controller.c ****     if (is_posture_correct &&
+ 178:Core/Src/posture_controller.c ****         !did_calibrate)
+ 179:Core/Src/posture_controller.c ****     {
+ 180:Core/Src/posture_controller.c ****         start_calibration_procedure();
+ 181:Core/Src/posture_controller.c ****         return;
+ 182:Core/Src/posture_controller.c ****     }
+ 183:Core/Src/posture_controller.c **** 
+ 184:Core/Src/posture_controller.c ****     if (!is_posture_correct)
+ 185:Core/Src/posture_controller.c ****     {
+ 186:Core/Src/posture_controller.c ****         react_to_bad_posture();
+ 187:Core/Src/posture_controller.c ****         return;
+ 188:Core/Src/posture_controller.c ****     }
+ 189:Core/Src/posture_controller.c **** }
+ 190:Core/Src/posture_controller.c **** 
+ 191:Core/Src/posture_controller.c **** void react_to_bad_posture(void)
+ 192:Core/Src/posture_controller.c **** {
+  27              		.loc 1 192 1 view -0
   28              		.cfi_startproc
   29              		@ args = 0, pretend = 0, frame = 0
   30              		@ frame_needed = 0, uses_anonymous_args = 0
@@ -211,51 +236,51 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 1
   33              		.cfi_def_cfa_offset 8
   34              		.cfi_offset 4, -8
   35              		.cfi_offset 14, -4
- 168:Core/Src/posture_controller.c ****     uint32_t now = HAL_GetTick();
-  36              		.loc 1 168 5 view .LVU1
-  37              		.loc 1 168 20 is_stmt 0 view .LVU2
+ 193:Core/Src/posture_controller.c ****     uint32_t now = HAL_GetTick();
+  36              		.loc 1 193 5 view .LVU1
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s 			page 5
+
+
+  37              		.loc 1 193 20 is_stmt 0 view .LVU2
   38 0002 FFF7FEFF 		bl	HAL_GetTick
   39              	.LVL0:
- 169:Core/Src/posture_controller.c ****     if (now - last_haptic_feedback_time > BAD_POSTURE_HAPTIC_FEEDBACK_INTERVAL_MS)
-  40              		.loc 1 169 5 is_stmt 1 view .LVU3
-  41              		.loc 1 169 13 is_stmt 0 view .LVU4
+ 194:Core/Src/posture_controller.c ****     if (now - last_haptic_feedback_time > BAD_POSTURE_HAPTIC_FEEDBACK_INTERVAL_MS)
+  40              		.loc 1 194 5 is_stmt 1 view .LVU3
+  41              		.loc 1 194 13 is_stmt 0 view .LVU4
   42 0006 064B     		ldr	r3, .L4
   43 0008 1B68     		ldr	r3, [r3]
   44 000a C31A     		subs	r3, r0, r3
-  45              		.loc 1 169 8 view .LVU5
+  45              		.loc 1 194 8 view .LVU5
   46 000c 054A     		ldr	r2, .L4+4
   47 000e 9342     		cmp	r3, r2
   48 0010 00D8     		bhi	.L3
   49              	.LVL1:
   50              	.L1:
- 170:Core/Src/posture_controller.c ****     {
- 171:Core/Src/posture_controller.c ****         last_haptic_feedback_time = now;
- 172:Core/Src/posture_controller.c ****         haptic_feedback_play_waveform(1);
- 173:Core/Src/posture_controller.c ****     }
- 174:Core/Src/posture_controller.c **** }
-  51              		.loc 1 174 1 view .LVU6
+ 195:Core/Src/posture_controller.c ****     {
+ 196:Core/Src/posture_controller.c ****         last_haptic_feedback_time = now;
+ 197:Core/Src/posture_controller.c ****         haptic_feedback_play_waveform(1);
+ 198:Core/Src/posture_controller.c ****     }
+ 199:Core/Src/posture_controller.c **** }
+  51              		.loc 1 199 1 view .LVU6
   52              		@ sp needed
   53 0012 10BD     		pop	{r4, pc}
   54              	.LVL2:
   55              	.L3:
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 5
-
-
- 171:Core/Src/posture_controller.c ****         haptic_feedback_play_waveform(1);
-  56              		.loc 1 171 9 is_stmt 1 view .LVU7
- 171:Core/Src/posture_controller.c ****         haptic_feedback_play_waveform(1);
-  57              		.loc 1 171 35 is_stmt 0 view .LVU8
+ 196:Core/Src/posture_controller.c ****         haptic_feedback_play_waveform(1);
+  56              		.loc 1 196 9 is_stmt 1 view .LVU7
+ 196:Core/Src/posture_controller.c ****         haptic_feedback_play_waveform(1);
+  57              		.loc 1 196 35 is_stmt 0 view .LVU8
   58 0014 024B     		ldr	r3, .L4
   59 0016 1860     		str	r0, [r3]
- 172:Core/Src/posture_controller.c ****     }
-  60              		.loc 1 172 9 is_stmt 1 view .LVU9
+ 197:Core/Src/posture_controller.c ****     }
+  60              		.loc 1 197 9 is_stmt 1 view .LVU9
   61 0018 0120     		movs	r0, #1
   62              	.LVL3:
- 172:Core/Src/posture_controller.c ****     }
-  63              		.loc 1 172 9 is_stmt 0 view .LVU10
+ 197:Core/Src/posture_controller.c ****     }
+  63              		.loc 1 197 9 is_stmt 0 view .LVU10
   64 001a FFF7FEFF 		bl	haptic_feedback_play_waveform
   65              	.LVL4:
-  66              		.loc 1 174 1 view .LVU11
+  66              		.loc 1 199 1 view .LVU11
   67 001e F8E7     		b	.L1
   68              	.L5:
   69              		.align	2
@@ -264,18 +289,21 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 1
   72 0024 B80B0000 		.word	3000
   73              		.cfi_endproc
   74              	.LFE41:
-  76              		.section	.text.handle_initial_still_bad_posture,"ax",%progbits
+  76              		.section	.text.react_to_initial_still_bad_posture,"ax",%progbits
   77              		.align	1
-  78              		.global	handle_initial_still_bad_posture
+  78              		.global	react_to_initial_still_bad_posture
   79              		.syntax unified
   80              		.code	16
   81              		.thumb_func
-  83              	handle_initial_still_bad_posture:
+  83              	react_to_initial_still_bad_posture:
   84              	.LFB42:
- 175:Core/Src/posture_controller.c **** 
- 176:Core/Src/posture_controller.c **** void handle_initial_still_bad_posture(void)
- 177:Core/Src/posture_controller.c **** {
-  85              		.loc 1 177 1 is_stmt 1 view -0
+ 200:Core/Src/posture_controller.c **** 
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s 			page 6
+
+
+ 201:Core/Src/posture_controller.c **** void react_to_initial_still_bad_posture(void)
+ 202:Core/Src/posture_controller.c **** {
+  85              		.loc 1 202 1 is_stmt 1 view -0
   86              		.cfi_startproc
   87              		@ args = 0, pretend = 0, frame = 0
   88              		@ frame_needed = 0, uses_anonymous_args = 0
@@ -284,71 +312,71 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 1
   91              		.cfi_def_cfa_offset 8
   92              		.cfi_offset 4, -8
   93              		.cfi_offset 14, -4
- 178:Core/Src/posture_controller.c ****     uint32_t now = HAL_GetTick();
-  94              		.loc 1 178 5 view .LVU13
-  95              		.loc 1 178 20 is_stmt 0 view .LVU14
+ 203:Core/Src/posture_controller.c ****     uint32_t now = HAL_GetTick();
+  94              		.loc 1 203 5 view .LVU13
+  95              		.loc 1 203 20 is_stmt 0 view .LVU14
   96 0002 FFF7FEFF 		bl	HAL_GetTick
   97              	.LVL5:
- 179:Core/Src/posture_controller.c ****     if (now - last_haptic_feedback_time > BAD_POSTURE_HAPTIC_FEEDBACK_INTERVAL_MS)
-  98              		.loc 1 179 5 is_stmt 1 view .LVU15
-  99              		.loc 1 179 13 is_stmt 0 view .LVU16
+ 204:Core/Src/posture_controller.c ****     if (now - last_haptic_feedback_time > BAD_POSTURE_HAPTIC_FEEDBACK_INTERVAL_MS)
+  98              		.loc 1 204 5 is_stmt 1 view .LVU15
+  99              		.loc 1 204 13 is_stmt 0 view .LVU16
  100 0006 064B     		ldr	r3, .L9
  101 0008 1B68     		ldr	r3, [r3]
  102 000a C31A     		subs	r3, r0, r3
- 103              		.loc 1 179 8 view .LVU17
+ 103              		.loc 1 204 8 view .LVU17
  104 000c 054A     		ldr	r2, .L9+4
  105 000e 9342     		cmp	r3, r2
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 6
-
-
  106 0010 00D8     		bhi	.L8
  107              	.LVL6:
  108              	.L6:
- 180:Core/Src/posture_controller.c ****     {
- 181:Core/Src/posture_controller.c ****         last_haptic_feedback_time = now;
- 182:Core/Src/posture_controller.c ****         haptic_feedback_play_waveform(3);
- 183:Core/Src/posture_controller.c ****     }
- 184:Core/Src/posture_controller.c **** }
- 109              		.loc 1 184 1 view .LVU18
+ 205:Core/Src/posture_controller.c ****     {
+ 206:Core/Src/posture_controller.c ****         last_haptic_feedback_time = now;
+ 207:Core/Src/posture_controller.c ****         haptic_feedback_play_waveform(3);
+ 208:Core/Src/posture_controller.c ****     }
+ 209:Core/Src/posture_controller.c **** }
+ 109              		.loc 1 209 1 view .LVU18
  110              		@ sp needed
  111 0012 10BD     		pop	{r4, pc}
  112              	.LVL7:
  113              	.L8:
- 181:Core/Src/posture_controller.c ****         haptic_feedback_play_waveform(3);
- 114              		.loc 1 181 9 is_stmt 1 view .LVU19
- 181:Core/Src/posture_controller.c ****         haptic_feedback_play_waveform(3);
- 115              		.loc 1 181 35 is_stmt 0 view .LVU20
+ 206:Core/Src/posture_controller.c ****         haptic_feedback_play_waveform(3);
+ 114              		.loc 1 206 9 is_stmt 1 view .LVU19
+ 206:Core/Src/posture_controller.c ****         haptic_feedback_play_waveform(3);
+ 115              		.loc 1 206 35 is_stmt 0 view .LVU20
  116 0014 024B     		ldr	r3, .L9
  117 0016 1860     		str	r0, [r3]
- 182:Core/Src/posture_controller.c ****     }
- 118              		.loc 1 182 9 is_stmt 1 view .LVU21
+ 207:Core/Src/posture_controller.c ****     }
+ 118              		.loc 1 207 9 is_stmt 1 view .LVU21
  119 0018 0320     		movs	r0, #3
  120              	.LVL8:
- 182:Core/Src/posture_controller.c ****     }
- 121              		.loc 1 182 9 is_stmt 0 view .LVU22
+ 207:Core/Src/posture_controller.c ****     }
+ 121              		.loc 1 207 9 is_stmt 0 view .LVU22
  122 001a FFF7FEFF 		bl	haptic_feedback_play_waveform
  123              	.LVL9:
- 124              		.loc 1 184 1 view .LVU23
+ 124              		.loc 1 209 1 view .LVU23
  125 001e F8E7     		b	.L6
  126              	.L10:
  127              		.align	2
  128              	.L9:
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s 			page 7
+
+
  129 0020 00000000 		.word	last_haptic_feedback_time
  130 0024 B80B0000 		.word	3000
  131              		.cfi_endproc
  132              	.LFE42:
- 134              		.section	.text.notify_posture_correct,"ax",%progbits
+ 134              		.section	.text.react_to_posture_correct,"ax",%progbits
  135              		.align	1
- 136              		.global	notify_posture_correct
+ 136              		.global	react_to_posture_correct
  137              		.syntax unified
  138              		.code	16
  139              		.thumb_func
- 141              	notify_posture_correct:
+ 141              	react_to_posture_correct:
  142              	.LFB43:
- 185:Core/Src/posture_controller.c **** 
- 186:Core/Src/posture_controller.c **** void notify_posture_correct(void)
- 187:Core/Src/posture_controller.c **** {
- 143              		.loc 1 187 1 is_stmt 1 view -0
+ 210:Core/Src/posture_controller.c **** 
+ 211:Core/Src/posture_controller.c **** void react_to_posture_correct(void)
+ 212:Core/Src/posture_controller.c **** {
+ 143              		.loc 1 212 1 is_stmt 1 view -0
  144              		.cfi_startproc
  145              		@ args = 0, pretend = 0, frame = 0
  146              		@ frame_needed = 0, uses_anonymous_args = 0
@@ -357,21 +385,18 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 1
  149              		.cfi_def_cfa_offset 8
  150              		.cfi_offset 4, -8
  151              		.cfi_offset 14, -4
- 188:Core/Src/posture_controller.c ****     led_execute_sequence(LED_SEQ_THREE_BLINKS);
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 7
-
-
- 152              		.loc 1 188 5 view .LVU25
+ 213:Core/Src/posture_controller.c ****     led_execute_sequence(LED_SEQ_THREE_BLINKS);
+ 152              		.loc 1 213 5 view .LVU25
  153 0002 0120     		movs	r0, #1
  154 0004 FFF7FEFF 		bl	led_execute_sequence
  155              	.LVL10:
- 189:Core/Src/posture_controller.c ****     haptic_feedback_play_waveform(2); // Tune this
- 156              		.loc 1 189 5 view .LVU26
+ 214:Core/Src/posture_controller.c ****     haptic_feedback_play_waveform(2); // Tune this
+ 156              		.loc 1 214 5 view .LVU26
  157 0008 0220     		movs	r0, #2
  158 000a FFF7FEFF 		bl	haptic_feedback_play_waveform
  159              	.LVL11:
- 190:Core/Src/posture_controller.c **** }
- 160              		.loc 1 190 1 is_stmt 0 view .LVU27
+ 215:Core/Src/posture_controller.c **** }
+ 160              		.loc 1 215 1 is_stmt 0 view .LVU27
  161              		@ sp needed
  162 000e 10BD     		pop	{r4, pc}
  163              		.cfi_endproc
@@ -384,64 +409,64 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 1
  171              		.thumb_func
  173              	reset_good_posture_vector:
  174              	.LFB45:
- 191:Core/Src/posture_controller.c **** 
- 192:Core/Src/posture_controller.c **** void start_calibration_procedure(void)
- 193:Core/Src/posture_controller.c **** {
- 194:Core/Src/posture_controller.c ****     uint32_t now = HAL_GetTick();
- 195:Core/Src/posture_controller.c ****     if ((now - last_bad_posture_time) < GOOD_POSTURE_VECTOR_RECALIBRATION_TIME_MS)
- 196:Core/Src/posture_controller.c ****     {
- 197:Core/Src/posture_controller.c ****         return;
- 198:Core/Src/posture_controller.c ****     }
- 199:Core/Src/posture_controller.c **** 
- 200:Core/Src/posture_controller.c ****     if (!accelerometer_controller_is_last_measurements_history_full())
- 201:Core/Src/posture_controller.c ****     {
- 202:Core/Src/posture_controller.c ****         return;
- 203:Core/Src/posture_controller.c ****     }
- 204:Core/Src/posture_controller.c **** 
- 205:Core/Src/posture_controller.c ****     if (accelerometer_controller_get_last_measurements_history_max_angle_from_mean() > GOOD_POSTURE
- 206:Core/Src/posture_controller.c ****     {
- 207:Core/Src/posture_controller.c ****         return;
- 208:Core/Src/posture_controller.c ****     }
- 209:Core/Src/posture_controller.c **** 
- 210:Core/Src/posture_controller.c ****     update_good_posture_history(current_accelerometer_vector);
- 211:Core/Src/posture_controller.c ****     
- 212:Core/Src/posture_controller.c ****     update_good_posture_vector();
- 213:Core/Src/posture_controller.c **** 
- 214:Core/Src/posture_controller.c ****     did_calibrate = true;
- 215:Core/Src/posture_controller.c **** }
  216:Core/Src/posture_controller.c **** 
- 217:Core/Src/posture_controller.c **** void reset_good_posture_vector(void)
+ 217:Core/Src/posture_controller.c **** void start_calibration_procedure(void)
  218:Core/Src/posture_controller.c **** {
- 175              		.loc 1 218 1 is_stmt 1 view -0
+ 219:Core/Src/posture_controller.c ****     uint32_t now = HAL_GetTick();
+ 220:Core/Src/posture_controller.c ****     if ((now - last_bad_posture_time) < GOOD_POSTURE_VECTOR_RECALIBRATION_TIME_MS)
+ 221:Core/Src/posture_controller.c ****     {
+ 222:Core/Src/posture_controller.c ****         return;
+ 223:Core/Src/posture_controller.c ****     }
+ 224:Core/Src/posture_controller.c **** 
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s 			page 8
+
+
+ 225:Core/Src/posture_controller.c ****     if (!accelerometer_controller_is_last_measurements_history_full())
+ 226:Core/Src/posture_controller.c ****     {
+ 227:Core/Src/posture_controller.c ****         return;
+ 228:Core/Src/posture_controller.c ****     }
+ 229:Core/Src/posture_controller.c **** 
+ 230:Core/Src/posture_controller.c ****     if (accelerometer_controller_get_last_measurements_history_max_angle_from_mean() > GOOD_POSTURE
+ 231:Core/Src/posture_controller.c ****     {
+ 232:Core/Src/posture_controller.c ****         return;
+ 233:Core/Src/posture_controller.c ****     }
+ 234:Core/Src/posture_controller.c **** 
+ 235:Core/Src/posture_controller.c ****     update_good_posture_history(current_accelerometer_vector);
+ 236:Core/Src/posture_controller.c ****     
+ 237:Core/Src/posture_controller.c ****     update_good_posture_vector();
+ 238:Core/Src/posture_controller.c **** 
+ 239:Core/Src/posture_controller.c ****     did_calibrate = true;
+ 240:Core/Src/posture_controller.c **** }
+ 241:Core/Src/posture_controller.c **** 
+ 242:Core/Src/posture_controller.c **** void reset_good_posture_vector(void)
+ 243:Core/Src/posture_controller.c **** {
+ 175              		.loc 1 243 1 is_stmt 1 view -0
  176              		.cfi_startproc
  177              		@ args = 0, pretend = 0, frame = 0
  178              		@ frame_needed = 0, uses_anonymous_args = 0
  179              		@ link register save eliminated.
- 219:Core/Src/posture_controller.c ****     good_posture_vector[0] = current_accelerometer_vector[0];
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 8
-
-
- 180              		.loc 1 219 5 view .LVU29
- 181              		.loc 1 219 58 is_stmt 0 view .LVU30
+ 244:Core/Src/posture_controller.c ****     good_posture_vector[0] = current_accelerometer_vector[0];
+ 180              		.loc 1 244 5 view .LVU29
+ 181              		.loc 1 244 58 is_stmt 0 view .LVU30
  182 0000 044A     		ldr	r2, .L13
  183 0002 1168     		ldr	r1, [r2]
- 184              		.loc 1 219 28 view .LVU31
+ 184              		.loc 1 244 28 view .LVU31
  185 0004 044B     		ldr	r3, .L13+4
  186 0006 1960     		str	r1, [r3]
- 220:Core/Src/posture_controller.c ****     good_posture_vector[1] = current_accelerometer_vector[1];
- 187              		.loc 1 220 5 is_stmt 1 view .LVU32
- 188              		.loc 1 220 58 is_stmt 0 view .LVU33
+ 245:Core/Src/posture_controller.c ****     good_posture_vector[1] = current_accelerometer_vector[1];
+ 187              		.loc 1 245 5 is_stmt 1 view .LVU32
+ 188              		.loc 1 245 58 is_stmt 0 view .LVU33
  189 0008 5168     		ldr	r1, [r2, #4]
- 190              		.loc 1 220 28 view .LVU34
+ 190              		.loc 1 245 28 view .LVU34
  191 000a 5960     		str	r1, [r3, #4]
- 221:Core/Src/posture_controller.c ****     good_posture_vector[2] = current_accelerometer_vector[2];
- 192              		.loc 1 221 5 is_stmt 1 view .LVU35
- 193              		.loc 1 221 58 is_stmt 0 view .LVU36
+ 246:Core/Src/posture_controller.c ****     good_posture_vector[2] = current_accelerometer_vector[2];
+ 192              		.loc 1 246 5 is_stmt 1 view .LVU35
+ 193              		.loc 1 246 58 is_stmt 0 view .LVU36
  194 000c 9268     		ldr	r2, [r2, #8]
- 195              		.loc 1 221 28 view .LVU37
+ 195              		.loc 1 246 28 view .LVU37
  196 000e 9A60     		str	r2, [r3, #8]
- 222:Core/Src/posture_controller.c **** }
- 197              		.loc 1 222 1 view .LVU38
+ 247:Core/Src/posture_controller.c **** }
+ 197              		.loc 1 247 1 view .LVU38
  198              		@ sp needed
  199 0010 7047     		bx	lr
  200              	.L14:
@@ -453,16 +478,19 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 1
  206              	.LFE45:
  208              		.section	.text.update_good_posture_vector,"ax",%progbits
  209              		.align	1
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s 			page 9
+
+
  210              		.global	update_good_posture_vector
  211              		.syntax unified
  212              		.code	16
  213              		.thumb_func
  215              	update_good_posture_vector:
  216              	.LFB46:
- 223:Core/Src/posture_controller.c **** 
- 224:Core/Src/posture_controller.c **** void update_good_posture_vector(void)
- 225:Core/Src/posture_controller.c **** {
- 217              		.loc 1 225 1 is_stmt 1 view -0
+ 248:Core/Src/posture_controller.c **** 
+ 249:Core/Src/posture_controller.c **** void update_good_posture_vector(void)
+ 250:Core/Src/posture_controller.c **** {
+ 217              		.loc 1 250 1 is_stmt 1 view -0
  218              		.cfi_startproc
  219              		@ args = 0, pretend = 0, frame = 16
  220              		@ frame_needed = 0, uses_anonymous_args = 0
@@ -478,47 +506,47 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 1
  230 0004 00B5     		push	{lr}
  231              	.LCFI4:
  232              		.cfi_def_cfa_offset 24
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 9
-
-
  233              		.cfi_offset 8, -24
  234 0006 84B0     		sub	sp, sp, #16
  235              	.LCFI5:
  236              		.cfi_def_cfa_offset 40
- 226:Core/Src/posture_controller.c ****     float sum[3] = {0.0f, 0.0f, 0.0f};
- 237              		.loc 1 226 5 view .LVU40
- 238              		.loc 1 226 11 is_stmt 0 view .LVU41
+ 251:Core/Src/posture_controller.c ****     float sum[3] = {0.0f, 0.0f, 0.0f};
+ 237              		.loc 1 251 5 view .LVU40
+ 238              		.loc 1 251 11 is_stmt 0 view .LVU41
  239 0008 0023     		movs	r3, #0
  240 000a 0193     		str	r3, [sp, #4]
  241 000c 0293     		str	r3, [sp, #8]
  242 000e 0393     		str	r3, [sp, #12]
- 227:Core/Src/posture_controller.c ****     int count = good_posture_history_full ? GOOD_POSTURE_HISTORY_SIZE : good_posture_history_index;
- 243              		.loc 1 227 5 is_stmt 1 view .LVU42
- 244              		.loc 1 227 71 is_stmt 0 view .LVU43
+ 252:Core/Src/posture_controller.c ****     int count = good_posture_history_full ? GOOD_POSTURE_HISTORY_SIZE : good_posture_history_index;
+ 243              		.loc 1 252 5 is_stmt 1 view .LVU42
+ 244              		.loc 1 252 71 is_stmt 0 view .LVU43
  245 0010 1A4B     		ldr	r3, .L25
  246 0012 1B78     		ldrb	r3, [r3]
  247 0014 002B     		cmp	r3, #0
  248 0016 04D1     		bne	.L22
- 249              		.loc 1 227 71 discriminator 2 view .LVU44
+ 249              		.loc 1 252 71 discriminator 2 view .LVU44
  250 0018 194B     		ldr	r3, .L25+4
  251 001a 1B68     		ldr	r3, [r3]
  252 001c 9846     		mov	r8, r3
  253              	.L16:
  254              	.LVL12:
- 228:Core/Src/posture_controller.c ****     for (int i = 0; i < count; i++) {
- 255              		.loc 1 228 5 is_stmt 1 view .LVU45
+ 253:Core/Src/posture_controller.c ****     for (int i = 0; i < count; i++) {
+ 255              		.loc 1 253 5 is_stmt 1 view .LVU45
  256              	.LBB2:
- 257              		.loc 1 228 10 view .LVU46
- 258              		.loc 1 228 14 is_stmt 0 view .LVU47
+ 257              		.loc 1 253 10 view .LVU46
+ 258              		.loc 1 253 14 is_stmt 0 view .LVU47
  259 001e 0025     		movs	r5, #0
- 260              		.loc 1 228 5 view .LVU48
+ 260              		.loc 1 253 5 view .LVU48
  261 0020 12E0     		b	.L17
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s 			page 10
+
+
  262              	.LVL13:
  263              	.L22:
- 264              		.loc 1 228 5 view .LVU49
+ 264              		.loc 1 253 5 view .LVU49
  265              	.LBE2:
- 227:Core/Src/posture_controller.c ****     int count = good_posture_history_full ? GOOD_POSTURE_HISTORY_SIZE : good_posture_history_index;
- 266              		.loc 1 227 71 discriminator 1 view .LVU50
+ 252:Core/Src/posture_controller.c ****     int count = good_posture_history_full ? GOOD_POSTURE_HISTORY_SIZE : good_posture_history_index;
+ 266              		.loc 1 252 71 discriminator 1 view .LVU50
  267 0022 0A23     		movs	r3, #10
  268 0024 9846     		mov	r8, r3
  269 0026 FAE7     		b	.L16
@@ -526,70 +554,70 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 1
  271              	.L18:
  272              	.LBB5:
  273              	.LBB3:
- 229:Core/Src/posture_controller.c ****         for (int j = 0; j < 3; j++) {
- 230:Core/Src/posture_controller.c ****             sum[j] += good_posture_history[i][j];
- 274              		.loc 1 230 13 is_stmt 1 view .LVU51
- 275              		.loc 1 230 16 is_stmt 0 view .LVU52
+ 254:Core/Src/posture_controller.c ****         for (int j = 0; j < 3; j++) {
+ 255:Core/Src/posture_controller.c ****             sum[j] += good_posture_history[i][j];
+ 274              		.loc 1 255 13 is_stmt 1 view .LVU51
+ 275              		.loc 1 255 16 is_stmt 0 view .LVU52
  276 0028 01AF     		add	r7, sp, #4
  277 002a A600     		lsls	r6, r4, #2
  278 002c F059     		ldr	r0, [r6, r7]
- 279              		.loc 1 230 46 view .LVU53
+ 279              		.loc 1 255 46 view .LVU53
  280 002e 154A     		ldr	r2, .L25+8
  281 0030 6B00     		lsls	r3, r5, #1
  282 0032 5B19     		adds	r3, r3, r5
  283 0034 1B19     		adds	r3, r3, r4
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 10
-
-
  284 0036 9B00     		lsls	r3, r3, #2
  285 0038 9958     		ldr	r1, [r3, r2]
- 286              		.loc 1 230 20 view .LVU54
+ 286              		.loc 1 255 20 view .LVU54
  287 003a FFF7FEFF 		bl	__aeabi_fadd
  288              	.LVL15:
  289 003e B851     		str	r0, [r7, r6]
- 229:Core/Src/posture_controller.c ****         for (int j = 0; j < 3; j++) {
- 290              		.loc 1 229 33 is_stmt 1 discriminator 3 view .LVU55
+ 254:Core/Src/posture_controller.c ****         for (int j = 0; j < 3; j++) {
+ 290              		.loc 1 254 33 is_stmt 1 discriminator 3 view .LVU55
  291 0040 0134     		adds	r4, r4, #1
  292              	.LVL16:
  293              	.L19:
- 229:Core/Src/posture_controller.c ****         for (int j = 0; j < 3; j++) {
- 294              		.loc 1 229 27 discriminator 1 view .LVU56
+ 254:Core/Src/posture_controller.c ****         for (int j = 0; j < 3; j++) {
+ 294              		.loc 1 254 27 discriminator 1 view .LVU56
  295 0042 022C     		cmp	r4, #2
  296 0044 F0DD     		ble	.L18
  297              	.LBE3:
- 228:Core/Src/posture_controller.c ****     for (int i = 0; i < count; i++) {
- 298              		.loc 1 228 33 discriminator 2 view .LVU57
+ 253:Core/Src/posture_controller.c ****     for (int i = 0; i < count; i++) {
+ 298              		.loc 1 253 33 discriminator 2 view .LVU57
  299 0046 0135     		adds	r5, r5, #1
  300              	.LVL17:
  301              	.L17:
- 228:Core/Src/posture_controller.c ****     for (int i = 0; i < count; i++) {
- 302              		.loc 1 228 23 discriminator 1 view .LVU58
+ 253:Core/Src/posture_controller.c ****     for (int i = 0; i < count; i++) {
+ 302              		.loc 1 253 23 discriminator 1 view .LVU58
  303 0048 4545     		cmp	r5, r8
  304 004a 01DA     		bge	.L24
  305              	.LBB4:
- 229:Core/Src/posture_controller.c ****         for (int j = 0; j < 3; j++) {
- 306              		.loc 1 229 18 is_stmt 0 view .LVU59
+ 254:Core/Src/posture_controller.c ****         for (int j = 0; j < 3; j++) {
+ 306              		.loc 1 254 18 is_stmt 0 view .LVU59
  307 004c 0024     		movs	r4, #0
  308 004e F8E7     		b	.L19
  309              	.L24:
  310              	.LBE4:
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s 			page 11
+
+
  311              	.LBE5:
  312              	.LBB6:
- 231:Core/Src/posture_controller.c ****         }
- 232:Core/Src/posture_controller.c ****     }
- 233:Core/Src/posture_controller.c ****     for (int j = 0; j < 3; j++) {
- 313              		.loc 1 233 14 view .LVU60
+ 256:Core/Src/posture_controller.c ****         }
+ 257:Core/Src/posture_controller.c ****     }
+ 258:Core/Src/posture_controller.c ****     for (int j = 0; j < 3; j++) {
+ 313              		.loc 1 258 14 view .LVU60
  314 0050 0024     		movs	r4, #0
  315 0052 0CE0     		b	.L20
  316              	.LVL18:
  317              	.L21:
- 234:Core/Src/posture_controller.c ****         good_posture_vector[j] = sum[j] / count;
- 318              		.loc 1 234 9 is_stmt 1 view .LVU61
- 319              		.loc 1 234 37 is_stmt 0 view .LVU62
+ 259:Core/Src/posture_controller.c ****         good_posture_vector[j] = sum[j] / count;
+ 318              		.loc 1 259 9 is_stmt 1 view .LVU61
+ 319              		.loc 1 259 37 is_stmt 0 view .LVU62
  320 0054 A500     		lsls	r5, r4, #2
  321 0056 01AB     		add	r3, sp, #4
  322 0058 EE58     		ldr	r6, [r5, r3]
- 323              		.loc 1 234 41 view .LVU63
+ 323              		.loc 1 259 41 view .LVU63
  324 005a 4046     		mov	r0, r8
  325 005c FFF7FEFF 		bl	__aeabi_i2f
  326              	.LVL19:
@@ -597,30 +625,27 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 1
  328 0062 301C     		adds	r0, r6, #0
  329 0064 FFF7FEFF 		bl	__aeabi_fdiv
  330              	.LVL20:
- 331              		.loc 1 234 32 view .LVU64
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 11
-
-
+ 331              		.loc 1 259 32 view .LVU64
  332 0068 074B     		ldr	r3, .L25+12
  333 006a 5851     		str	r0, [r3, r5]
- 233:Core/Src/posture_controller.c ****         good_posture_vector[j] = sum[j] / count;
- 334              		.loc 1 233 29 is_stmt 1 discriminator 3 view .LVU65
+ 258:Core/Src/posture_controller.c ****         good_posture_vector[j] = sum[j] / count;
+ 334              		.loc 1 258 29 is_stmt 1 discriminator 3 view .LVU65
  335 006c 0134     		adds	r4, r4, #1
  336              	.LVL21:
  337              	.L20:
- 233:Core/Src/posture_controller.c ****         good_posture_vector[j] = sum[j] / count;
- 338              		.loc 1 233 23 discriminator 1 view .LVU66
+ 258:Core/Src/posture_controller.c ****         good_posture_vector[j] = sum[j] / count;
+ 338              		.loc 1 258 23 discriminator 1 view .LVU66
  339 006e 022C     		cmp	r4, #2
  340 0070 F0DD     		ble	.L21
  341              	.LBE6:
- 235:Core/Src/posture_controller.c ****     }
- 236:Core/Src/posture_controller.c **** }
- 342              		.loc 1 236 1 is_stmt 0 view .LVU67
+ 260:Core/Src/posture_controller.c ****     }
+ 261:Core/Src/posture_controller.c **** }
+ 342              		.loc 1 261 1 is_stmt 0 view .LVU67
  343 0072 04B0     		add	sp, sp, #16
  344              		@ sp needed
  345              	.LVL22:
  346              	.LVL23:
- 347              		.loc 1 236 1 view .LVU68
+ 347              		.loc 1 261 1 view .LVU68
  348 0074 80BC     		pop	{r7}
  349 0076 B846     		mov	r8, r7
  350 0078 F0BD     		pop	{r4, r5, r6, r7, pc}
@@ -633,6 +658,9 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 1
  357 0088 00000000 		.word	good_posture_vector
  358              		.cfi_endproc
  359              	.LFE46:
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s 			page 12
+
+
  361              		.section	.text.update_good_posture_history,"ax",%progbits
  362              		.align	1
  363              		.global	update_good_posture_history
@@ -642,14 +670,14 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 1
  368              	update_good_posture_history:
  369              	.LVL24:
  370              	.LFB47:
- 237:Core/Src/posture_controller.c **** 
- 238:Core/Src/posture_controller.c **** void update_good_posture_history(float vector[3])
- 239:Core/Src/posture_controller.c **** {
- 371              		.loc 1 239 1 is_stmt 1 view -0
+ 262:Core/Src/posture_controller.c **** 
+ 263:Core/Src/posture_controller.c **** void update_good_posture_history(float vector[3])
+ 264:Core/Src/posture_controller.c **** {
+ 371              		.loc 1 264 1 is_stmt 1 view -0
  372              		.cfi_startproc
  373              		@ args = 0, pretend = 0, frame = 0
  374              		@ frame_needed = 0, uses_anonymous_args = 0
- 375              		.loc 1 239 1 is_stmt 0 view .LVU70
+ 375              		.loc 1 264 1 is_stmt 0 view .LVU70
  376 0000 70B5     		push	{r4, r5, r6, lr}
  377              	.LCFI6:
  378              		.cfi_def_cfa_offset 16
@@ -657,79 +685,76 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 1
  380              		.cfi_offset 5, -12
  381              		.cfi_offset 6, -8
  382              		.cfi_offset 14, -4
- 240:Core/Src/posture_controller.c ****     for (int i = 0; i < 3; i++) {
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 12
-
-
- 383              		.loc 1 240 5 is_stmt 1 view .LVU71
+ 265:Core/Src/posture_controller.c ****     for (int i = 0; i < 3; i++) {
+ 383              		.loc 1 265 5 is_stmt 1 view .LVU71
  384              	.LBB7:
- 385              		.loc 1 240 10 view .LVU72
+ 385              		.loc 1 265 10 view .LVU72
  386              	.LVL25:
- 387              		.loc 1 240 14 is_stmt 0 view .LVU73
+ 387              		.loc 1 265 14 is_stmt 0 view .LVU73
  388 0002 0022     		movs	r2, #0
- 389              		.loc 1 240 5 view .LVU74
+ 389              		.loc 1 265 5 view .LVU74
  390 0004 0AE0     		b	.L28
  391              	.LVL26:
  392              	.L29:
- 241:Core/Src/posture_controller.c ****         good_posture_history[good_posture_history_index][i] = vector[i];
- 393              		.loc 1 241 9 is_stmt 1 view .LVU75
- 394              		.loc 1 241 57 is_stmt 0 view .LVU76
+ 266:Core/Src/posture_controller.c ****         good_posture_history[good_posture_history_index][i] = vector[i];
+ 393              		.loc 1 266 9 is_stmt 1 view .LVU75
+ 394              		.loc 1 266 57 is_stmt 0 view .LVU76
  395 0006 0D4B     		ldr	r3, .L31
  396 0008 1C68     		ldr	r4, [r3]
- 397              		.loc 1 241 69 view .LVU77
+ 397              		.loc 1 266 69 view .LVU77
  398 000a 9300     		lsls	r3, r2, #2
  399 000c 1D58     		ldr	r5, [r3, r0]
- 400              		.loc 1 241 61 view .LVU78
+ 400              		.loc 1 266 61 view .LVU78
  401 000e 0C49     		ldr	r1, .L31+4
  402 0010 6300     		lsls	r3, r4, #1
  403 0012 1B19     		adds	r3, r3, r4
  404 0014 9B18     		adds	r3, r3, r2
  405 0016 9B00     		lsls	r3, r3, #2
  406 0018 5D50     		str	r5, [r3, r1]
- 240:Core/Src/posture_controller.c ****     for (int i = 0; i < 3; i++) {
- 407              		.loc 1 240 29 is_stmt 1 discriminator 3 view .LVU79
+ 265:Core/Src/posture_controller.c ****     for (int i = 0; i < 3; i++) {
+ 407              		.loc 1 265 29 is_stmt 1 discriminator 3 view .LVU79
  408 001a 0132     		adds	r2, r2, #1
  409              	.LVL27:
  410              	.L28:
- 240:Core/Src/posture_controller.c ****     for (int i = 0; i < 3; i++) {
- 411              		.loc 1 240 23 discriminator 1 view .LVU80
+ 265:Core/Src/posture_controller.c ****     for (int i = 0; i < 3; i++) {
+ 411              		.loc 1 265 23 discriminator 1 view .LVU80
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s 			page 13
+
+
  412 001c 022A     		cmp	r2, #2
  413 001e F2DD     		ble	.L29
  414              	.LBE7:
- 242:Core/Src/posture_controller.c ****     }
- 243:Core/Src/posture_controller.c ****     good_posture_history_index = (good_posture_history_index + 1) % GOOD_POSTURE_HISTORY_SIZE;
- 415              		.loc 1 243 5 view .LVU81
- 416              		.loc 1 243 62 is_stmt 0 view .LVU82
+ 267:Core/Src/posture_controller.c ****     }
+ 268:Core/Src/posture_controller.c ****     good_posture_history_index = (good_posture_history_index + 1) % GOOD_POSTURE_HISTORY_SIZE;
+ 415              		.loc 1 268 5 view .LVU81
+ 416              		.loc 1 268 62 is_stmt 0 view .LVU82
  417 0020 064C     		ldr	r4, .L31
  418 0022 2068     		ldr	r0, [r4]
  419              	.LVL28:
- 420              		.loc 1 243 62 view .LVU83
+ 420              		.loc 1 268 62 view .LVU83
  421 0024 0130     		adds	r0, r0, #1
- 422              		.loc 1 243 67 view .LVU84
+ 422              		.loc 1 268 67 view .LVU84
  423 0026 0A21     		movs	r1, #10
  424 0028 FFF7FEFF 		bl	__aeabi_idivmod
  425              	.LVL29:
- 426              		.loc 1 243 32 view .LVU85
+ 426              		.loc 1 268 32 view .LVU85
  427 002c 2160     		str	r1, [r4]
- 244:Core/Src/posture_controller.c ****     if (good_posture_history_index == 0)
- 428              		.loc 1 244 5 is_stmt 1 view .LVU86
- 429              		.loc 1 244 8 is_stmt 0 view .LVU87
+ 269:Core/Src/posture_controller.c ****     if (good_posture_history_index == 0)
+ 428              		.loc 1 269 5 is_stmt 1 view .LVU86
+ 429              		.loc 1 269 8 is_stmt 0 view .LVU87
  430 002e 0029     		cmp	r1, #0
  431 0030 02D1     		bne	.L27
- 245:Core/Src/posture_controller.c ****     {
- 246:Core/Src/posture_controller.c ****         good_posture_history_full = true;
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 13
-
-
- 432              		.loc 1 246 9 is_stmt 1 view .LVU88
- 433              		.loc 1 246 35 is_stmt 0 view .LVU89
+ 270:Core/Src/posture_controller.c ****     {
+ 271:Core/Src/posture_controller.c ****         good_posture_history_full = true;
+ 432              		.loc 1 271 9 is_stmt 1 view .LVU88
+ 433              		.loc 1 271 35 is_stmt 0 view .LVU89
  434 0032 044B     		ldr	r3, .L31+8
  435 0034 0122     		movs	r2, #1
  436 0036 1A70     		strb	r2, [r3]
  437              	.L27:
- 247:Core/Src/posture_controller.c ****     }
- 248:Core/Src/posture_controller.c **** }
- 438              		.loc 1 248 1 view .LVU90
+ 272:Core/Src/posture_controller.c ****     }
+ 273:Core/Src/posture_controller.c **** }
+ 438              		.loc 1 273 1 view .LVU90
  439              		@ sp needed
  440 0038 70BD     		pop	{r4, r5, r6, pc}
  441              	.L32:
@@ -748,85 +773,88 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 1
  455              		.thumb_func
  457              	start_calibration_procedure:
  458              	.LFB44:
- 193:Core/Src/posture_controller.c ****     uint32_t now = HAL_GetTick();
- 459              		.loc 1 193 1 is_stmt 1 view -0
+ 218:Core/Src/posture_controller.c ****     uint32_t now = HAL_GetTick();
+ 459              		.loc 1 218 1 is_stmt 1 view -0
  460              		.cfi_startproc
  461              		@ args = 0, pretend = 0, frame = 0
  462              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s 			page 14
+
+
  463 0000 10B5     		push	{r4, lr}
  464              	.LCFI7:
  465              		.cfi_def_cfa_offset 8
  466              		.cfi_offset 4, -8
  467              		.cfi_offset 14, -4
- 194:Core/Src/posture_controller.c ****     if ((now - last_bad_posture_time) < GOOD_POSTURE_VECTOR_RECALIBRATION_TIME_MS)
- 468              		.loc 1 194 5 view .LVU92
- 194:Core/Src/posture_controller.c ****     if ((now - last_bad_posture_time) < GOOD_POSTURE_VECTOR_RECALIBRATION_TIME_MS)
- 469              		.loc 1 194 20 is_stmt 0 view .LVU93
+ 219:Core/Src/posture_controller.c ****     if ((now - last_bad_posture_time) < GOOD_POSTURE_VECTOR_RECALIBRATION_TIME_MS)
+ 468              		.loc 1 219 5 view .LVU92
+ 219:Core/Src/posture_controller.c ****     if ((now - last_bad_posture_time) < GOOD_POSTURE_VECTOR_RECALIBRATION_TIME_MS)
+ 469              		.loc 1 219 20 is_stmt 0 view .LVU93
  470 0002 FFF7FEFF 		bl	HAL_GetTick
  471              	.LVL30:
- 195:Core/Src/posture_controller.c ****     {
- 472              		.loc 1 195 5 is_stmt 1 view .LVU94
- 195:Core/Src/posture_controller.c ****     {
- 473              		.loc 1 195 14 is_stmt 0 view .LVU95
+ 220:Core/Src/posture_controller.c ****     {
+ 472              		.loc 1 220 5 is_stmt 1 view .LVU94
+ 220:Core/Src/posture_controller.c ****     {
+ 473              		.loc 1 220 14 is_stmt 0 view .LVU95
  474 0006 0F4B     		ldr	r3, .L36
  475 0008 1B68     		ldr	r3, [r3]
  476 000a C01A     		subs	r0, r0, r3
  477              	.LVL31:
- 195:Core/Src/posture_controller.c ****     {
- 478              		.loc 1 195 8 view .LVU96
+ 220:Core/Src/posture_controller.c ****     {
+ 478              		.loc 1 220 8 view .LVU96
  479 000c 0E4B     		ldr	r3, .L36+4
  480 000e 9842     		cmp	r0, r3
  481 0010 00D8     		bhi	.L35
  482              	.L33:
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 14
-
-
- 215:Core/Src/posture_controller.c **** 
- 483              		.loc 1 215 1 view .LVU97
+ 240:Core/Src/posture_controller.c **** 
+ 483              		.loc 1 240 1 view .LVU97
  484              		@ sp needed
  485 0012 10BD     		pop	{r4, pc}
  486              	.L35:
- 200:Core/Src/posture_controller.c ****     {
- 487              		.loc 1 200 5 is_stmt 1 view .LVU98
- 200:Core/Src/posture_controller.c ****     {
- 488              		.loc 1 200 10 is_stmt 0 view .LVU99
+ 225:Core/Src/posture_controller.c ****     {
+ 487              		.loc 1 225 5 is_stmt 1 view .LVU98
+ 225:Core/Src/posture_controller.c ****     {
+ 488              		.loc 1 225 10 is_stmt 0 view .LVU99
  489 0014 FFF7FEFF 		bl	accelerometer_controller_is_last_measurements_history_full
  490              	.LVL32:
- 200:Core/Src/posture_controller.c ****     {
- 491              		.loc 1 200 8 discriminator 1 view .LVU100
+ 225:Core/Src/posture_controller.c ****     {
+ 491              		.loc 1 225 8 discriminator 1 view .LVU100
  492 0018 0028     		cmp	r0, #0
  493 001a FAD0     		beq	.L33
- 205:Core/Src/posture_controller.c ****     {
- 494              		.loc 1 205 5 is_stmt 1 view .LVU101
- 205:Core/Src/posture_controller.c ****     {
- 495              		.loc 1 205 9 is_stmt 0 view .LVU102
+ 230:Core/Src/posture_controller.c ****     {
+ 494              		.loc 1 230 5 is_stmt 1 view .LVU101
+ 230:Core/Src/posture_controller.c ****     {
+ 495              		.loc 1 230 9 is_stmt 0 view .LVU102
  496 001c FFF7FEFF 		bl	accelerometer_controller_get_last_measurements_history_max_angle_from_mean
  497              	.LVL33:
- 205:Core/Src/posture_controller.c ****     {
- 498              		.loc 1 205 9 discriminator 1 view .LVU103
+ 230:Core/Src/posture_controller.c ****     {
+ 498              		.loc 1 230 9 discriminator 1 view .LVU103
  499 0020 FFF7FEFF 		bl	__aeabi_f2d
  500              	.LVL34:
- 205:Core/Src/posture_controller.c ****     {
- 501              		.loc 1 205 8 discriminator 1 view .LVU104
+ 230:Core/Src/posture_controller.c ****     {
+ 501              		.loc 1 230 8 discriminator 1 view .LVU104
  502 0024 094A     		ldr	r2, .L36+8
  503 0026 0A4B     		ldr	r3, .L36+12
  504 0028 FFF7FEFF 		bl	__aeabi_dcmpgt
  505              	.LVL35:
  506 002c 0028     		cmp	r0, #0
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s 			page 15
+
+
  507 002e F0D1     		bne	.L33
- 210:Core/Src/posture_controller.c ****     
- 508              		.loc 1 210 5 is_stmt 1 view .LVU105
+ 235:Core/Src/posture_controller.c ****     
+ 508              		.loc 1 235 5 is_stmt 1 view .LVU105
  509 0030 0848     		ldr	r0, .L36+16
  510 0032 FFF7FEFF 		bl	update_good_posture_history
  511              	.LVL36:
- 212:Core/Src/posture_controller.c **** 
- 512              		.loc 1 212 5 view .LVU106
+ 237:Core/Src/posture_controller.c **** 
+ 512              		.loc 1 237 5 view .LVU106
  513 0036 FFF7FEFF 		bl	update_good_posture_vector
  514              	.LVL37:
- 214:Core/Src/posture_controller.c **** }
- 515              		.loc 1 214 5 view .LVU107
- 214:Core/Src/posture_controller.c **** }
- 516              		.loc 1 214 19 is_stmt 0 view .LVU108
+ 239:Core/Src/posture_controller.c **** }
+ 515              		.loc 1 239 5 view .LVU107
+ 239:Core/Src/posture_controller.c **** }
+ 516              		.loc 1 239 19 is_stmt 0 view .LVU108
  517 003a 074B     		ldr	r3, .L36+20
  518 003c 0122     		movs	r2, #1
  519 003e 1A70     		strb	r2, [r3]
@@ -838,9 +866,6 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 1
  525 0048 87130000 		.word	4999
  526 004c B81E85EB 		.word	-343597384
  527 0050 51B8AE3F 		.word	1068415057
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 15
-
-
  528 0054 00000000 		.word	current_accelerometer_vector
  529 0058 00000000 		.word	did_calibrate
  530              		.cfi_endproc
@@ -853,10 +878,10 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 1
  538              		.thumb_func
  540              	reset_good_posture_history:
  541              	.LFB48:
- 249:Core/Src/posture_controller.c **** 
- 250:Core/Src/posture_controller.c **** void reset_good_posture_history(void)
- 251:Core/Src/posture_controller.c **** {
- 542              		.loc 1 251 1 is_stmt 1 view -0
+ 274:Core/Src/posture_controller.c **** 
+ 275:Core/Src/posture_controller.c **** void reset_good_posture_history(void)
+ 276:Core/Src/posture_controller.c **** {
+ 542              		.loc 1 276 1 is_stmt 1 view -0
  543              		.cfi_startproc
  544              		@ args = 0, pretend = 0, frame = 0
  545              		@ frame_needed = 0, uses_anonymous_args = 0
@@ -865,79 +890,82 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 1
  548              		.cfi_def_cfa_offset 8
  549              		.cfi_offset 4, -8
  550              		.cfi_offset 14, -4
- 252:Core/Src/posture_controller.c ****     still_posture_start_time = 0;
- 551              		.loc 1 252 5 view .LVU110
- 552              		.loc 1 252 30 is_stmt 0 view .LVU111
+ 277:Core/Src/posture_controller.c ****     still_posture_start_time = 0;
+ 551              		.loc 1 277 5 view .LVU110
+ 552              		.loc 1 277 30 is_stmt 0 view .LVU111
  553 0002 0C4A     		ldr	r2, .L44
  554 0004 0023     		movs	r3, #0
  555 0006 1360     		str	r3, [r2]
- 253:Core/Src/posture_controller.c ****     good_posture_history_index = 0;
- 556              		.loc 1 253 5 is_stmt 1 view .LVU112
- 557              		.loc 1 253 32 is_stmt 0 view .LVU113
+ 278:Core/Src/posture_controller.c ****     good_posture_history_index = 0;
+ 556              		.loc 1 278 5 is_stmt 1 view .LVU112
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s 			page 16
+
+
+ 557              		.loc 1 278 32 is_stmt 0 view .LVU113
  558 0008 0B4A     		ldr	r2, .L44+4
  559 000a 1360     		str	r3, [r2]
- 254:Core/Src/posture_controller.c ****     good_posture_history_full = false;
- 560              		.loc 1 254 5 is_stmt 1 view .LVU114
- 561              		.loc 1 254 31 is_stmt 0 view .LVU115
+ 279:Core/Src/posture_controller.c ****     good_posture_history_full = false;
+ 560              		.loc 1 279 5 is_stmt 1 view .LVU114
+ 561              		.loc 1 279 31 is_stmt 0 view .LVU115
  562 000c 0B4A     		ldr	r2, .L44+8
  563 000e 1370     		strb	r3, [r2]
- 255:Core/Src/posture_controller.c ****     for (int i = 0; i < GOOD_POSTURE_HISTORY_SIZE; i++) {
- 564              		.loc 1 255 5 is_stmt 1 view .LVU116
+ 280:Core/Src/posture_controller.c ****     for (int i = 0; i < GOOD_POSTURE_HISTORY_SIZE; i++) {
+ 564              		.loc 1 280 5 is_stmt 1 view .LVU116
  565              	.LBB8:
- 566              		.loc 1 255 10 view .LVU117
+ 566              		.loc 1 280 10 view .LVU117
  567              	.LVL38:
- 568              		.loc 1 255 14 is_stmt 0 view .LVU118
+ 568              		.loc 1 280 14 is_stmt 0 view .LVU118
  569 0010 0020     		movs	r0, #0
- 570              		.loc 1 255 5 view .LVU119
+ 570              		.loc 1 280 5 view .LVU119
  571 0012 0AE0     		b	.L39
  572              	.LVL39:
  573              	.L40:
  574              	.LBB9:
- 256:Core/Src/posture_controller.c ****         for (int j = 0; j < 3; j++) {
- 257:Core/Src/posture_controller.c ****             good_posture_history[i][j] = 0.0f;
- 575              		.loc 1 257 13 is_stmt 1 view .LVU120
- 576              		.loc 1 257 40 is_stmt 0 view .LVU121
+ 281:Core/Src/posture_controller.c ****         for (int j = 0; j < 3; j++) {
+ 282:Core/Src/posture_controller.c ****             good_posture_history[i][j] = 0.0f;
+ 575              		.loc 1 282 13 is_stmt 1 view .LVU120
+ 576              		.loc 1 282 40 is_stmt 0 view .LVU121
  577 0014 0A49     		ldr	r1, .L44+12
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 16
-
-
  578 0016 4300     		lsls	r3, r0, #1
  579 0018 1B18     		adds	r3, r3, r0
  580 001a 9B18     		adds	r3, r3, r2
  581 001c 9B00     		lsls	r3, r3, #2
  582 001e 0024     		movs	r4, #0
  583 0020 5C50     		str	r4, [r3, r1]
- 256:Core/Src/posture_controller.c ****         for (int j = 0; j < 3; j++) {
- 584              		.loc 1 256 33 is_stmt 1 discriminator 3 view .LVU122
+ 281:Core/Src/posture_controller.c ****         for (int j = 0; j < 3; j++) {
+ 584              		.loc 1 281 33 is_stmt 1 discriminator 3 view .LVU122
  585 0022 0132     		adds	r2, r2, #1
  586              	.LVL40:
  587              	.L41:
- 256:Core/Src/posture_controller.c ****         for (int j = 0; j < 3; j++) {
- 588              		.loc 1 256 27 discriminator 1 view .LVU123
+ 281:Core/Src/posture_controller.c ****         for (int j = 0; j < 3; j++) {
+ 588              		.loc 1 281 27 discriminator 1 view .LVU123
  589 0024 022A     		cmp	r2, #2
  590 0026 F5DD     		ble	.L40
  591              	.LBE9:
- 255:Core/Src/posture_controller.c ****     for (int i = 0; i < GOOD_POSTURE_HISTORY_SIZE; i++) {
- 592              		.loc 1 255 53 discriminator 2 view .LVU124
+ 280:Core/Src/posture_controller.c ****     for (int i = 0; i < GOOD_POSTURE_HISTORY_SIZE; i++) {
+ 592              		.loc 1 280 53 discriminator 2 view .LVU124
  593 0028 0130     		adds	r0, r0, #1
  594              	.LVL41:
  595              	.L39:
- 255:Core/Src/posture_controller.c ****     for (int i = 0; i < GOOD_POSTURE_HISTORY_SIZE; i++) {
- 596              		.loc 1 255 23 discriminator 1 view .LVU125
+ 280:Core/Src/posture_controller.c ****     for (int i = 0; i < GOOD_POSTURE_HISTORY_SIZE; i++) {
+ 596              		.loc 1 280 23 discriminator 1 view .LVU125
  597 002a 0928     		cmp	r0, #9
  598 002c 01DC     		bgt	.L43
  599              	.LBB10:
- 256:Core/Src/posture_controller.c ****         for (int j = 0; j < 3; j++) {
- 600              		.loc 1 256 18 is_stmt 0 view .LVU126
+ 281:Core/Src/posture_controller.c ****         for (int j = 0; j < 3; j++) {
+ 600              		.loc 1 281 18 is_stmt 0 view .LVU126
  601 002e 0022     		movs	r2, #0
  602 0030 F8E7     		b	.L41
  603              	.L43:
  604              	.LBE10:
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s 			page 17
+
+
  605              	.LBE8:
- 258:Core/Src/posture_controller.c ****         }
- 259:Core/Src/posture_controller.c ****     }
- 260:Core/Src/posture_controller.c **** }
- 606              		.loc 1 260 1 view .LVU127
+ 283:Core/Src/posture_controller.c ****         }
+ 284:Core/Src/posture_controller.c ****     }
+ 285:Core/Src/posture_controller.c **** }
+ 606              		.loc 1 285 1 view .LVU127
  607              		@ sp needed
  608 0032 10BD     		pop	{r4, pc}
  609              	.L45:
@@ -949,687 +977,939 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 1
  615 0040 00000000 		.word	good_posture_history
  616              		.cfi_endproc
  617              	.LFE48:
- 619              		.section	.text.posture_controller_update,"ax",%progbits
+ 619              		.section	.text.posture_controller_initialize,"ax",%progbits
  620              		.align	1
- 621              		.global	posture_controller_update
+ 621              		.global	posture_controller_initialize
  622              		.syntax unified
  623              		.code	16
  624              		.thumb_func
- 626              	posture_controller_update:
- 627              	.LFB40:
-  46:Core/Src/posture_controller.c ****     uint32_t now = HAL_GetTick();
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 17
-
-
- 628              		.loc 1 46 1 is_stmt 1 view -0
+ 626              	posture_controller_initialize:
+ 627              	.LFB49:
+ 286:Core/Src/posture_controller.c **** 
+ 287:Core/Src/posture_controller.c **** void posture_controller_initialize(void) {
+ 628              		.loc 1 287 42 is_stmt 1 view -0
  629              		.cfi_startproc
- 630              		@ args = 0, pretend = 0, frame = 16
+ 630              		@ args = 0, pretend = 0, frame = 0
  631              		@ frame_needed = 0, uses_anonymous_args = 0
- 632 0000 30B5     		push	{r4, r5, lr}
+ 632 0000 10B5     		push	{r4, lr}
  633              	.LCFI9:
- 634              		.cfi_def_cfa_offset 12
- 635              		.cfi_offset 4, -12
- 636              		.cfi_offset 5, -8
- 637              		.cfi_offset 14, -4
- 638 0002 85B0     		sub	sp, sp, #20
- 639              	.LCFI10:
- 640              		.cfi_def_cfa_offset 32
-  47:Core/Src/posture_controller.c **** 
- 641              		.loc 1 47 5 view .LVU129
-  47:Core/Src/posture_controller.c **** 
- 642              		.loc 1 47 20 is_stmt 0 view .LVU130
- 643 0004 FFF7FEFF 		bl	HAL_GetTick
- 644              	.LVL42:
- 645 0008 0500     		movs	r5, r0
- 646              	.LVL43:
-  49:Core/Src/posture_controller.c **** 
- 647              		.loc 1 49 5 is_stmt 1 view .LVU131
-  49:Core/Src/posture_controller.c **** 
- 648              		.loc 1 49 47 is_stmt 0 view .LVU132
- 649 000a FFF7FEFF 		bl	accelerometer_controller_get_mode
- 650              	.LVL44:
-  49:Core/Src/posture_controller.c **** 
- 651              		.loc 1 49 47 view .LVU133
- 652 000e 0400     		movs	r4, r0
- 653              	.LVL45:
-  52:Core/Src/posture_controller.c ****     if (button_event == BUTTON_EVENT_LONG_PRESS) {
- 654              		.loc 1 52 5 is_stmt 1 view .LVU134
-  52:Core/Src/posture_controller.c ****     if (button_event == BUTTON_EVENT_LONG_PRESS) {
- 655              		.loc 1 52 35 is_stmt 0 view .LVU135
- 656 0010 FFF7FEFF 		bl	button_controller_get_event
- 657              	.LVL46:
-  53:Core/Src/posture_controller.c ****         reset_good_posture_vector();
- 658              		.loc 1 53 5 is_stmt 1 view .LVU136
-  53:Core/Src/posture_controller.c ****         reset_good_posture_vector();
- 659              		.loc 1 53 8 is_stmt 0 view .LVU137
- 660 0014 0428     		cmp	r0, #4
- 661 0016 50D0     		beq	.L72
-  60:Core/Src/posture_controller.c ****         reset_good_posture_history();
- 662              		.loc 1 60 5 is_stmt 1 view .LVU138
-  60:Core/Src/posture_controller.c ****         reset_good_posture_history();
- 663              		.loc 1 60 8 is_stmt 0 view .LVU139
- 664 0018 002C     		cmp	r4, #0
- 665 001a 56D0     		beq	.L73
- 666              	.LVL47:
- 667              	.L49:
-  65:Core/Src/posture_controller.c ****         led_on(100);
- 668              		.loc 1 65 5 is_stmt 1 view .LVU140
-  65:Core/Src/posture_controller.c ****         led_on(100);
- 669              		.loc 1 65 8 is_stmt 0 view .LVU141
- 670 001c 022C     		cmp	r4, #2
- 671 001e 59D0     		beq	.L74
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 18
+ 634              		.cfi_def_cfa_offset 8
+ 635              		.cfi_offset 4, -8
+ 636              		.cfi_offset 14, -4
+ 288:Core/Src/posture_controller.c ****     reset_good_posture_history();
+ 637              		.loc 1 288 5 view .LVU129
+ 638 0002 FFF7FEFF 		bl	reset_good_posture_history
+ 639              	.LVL42:
+ 289:Core/Src/posture_controller.c **** }
+ 640              		.loc 1 289 1 is_stmt 0 view .LVU130
+ 641              		@ sp needed
+ 642 0006 10BD     		pop	{r4, pc}
+ 643              		.cfi_endproc
+ 644              	.LFE49:
+ 646              		.section	.text.react_to_device_off,"ax",%progbits
+ 647              		.align	1
+ 648              		.global	react_to_device_off
+ 649              		.syntax unified
+ 650              		.code	16
+ 651              		.thumb_func
+ 653              	react_to_device_off:
+ 654              	.LFB50:
+ 290:Core/Src/posture_controller.c **** 
+ 291:Core/Src/posture_controller.c **** void react_to_device_off(void) {
+ 655              		.loc 1 291 32 is_stmt 1 view -0
+ 656              		.cfi_startproc
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s 			page 18
 
 
-  71:Core/Src/posture_controller.c ****     current_accelerometer_vector[0] = accelerometer_vector.x_mps2;
- 672              		.loc 1 71 5 is_stmt 1 view .LVU142
-  71:Core/Src/posture_controller.c ****     current_accelerometer_vector[0] = accelerometer_vector.x_mps2;
- 673              		.loc 1 71 41 is_stmt 0 view .LVU143
- 674 0020 01AC     		add	r4, sp, #4
- 675              	.LVL48:
-  71:Core/Src/posture_controller.c ****     current_accelerometer_vector[0] = accelerometer_vector.x_mps2;
- 676              		.loc 1 71 41 view .LVU144
- 677 0022 2000     		movs	r0, r4
- 678 0024 FFF7FEFF 		bl	accelerometer_controller_get_latest_data
- 679              	.LVL49:
-  72:Core/Src/posture_controller.c ****     current_accelerometer_vector[1] = accelerometer_vector.y_mps2;
- 680              		.loc 1 72 5 is_stmt 1 view .LVU145
-  72:Core/Src/posture_controller.c ****     current_accelerometer_vector[1] = accelerometer_vector.y_mps2;
- 681              		.loc 1 72 59 is_stmt 0 view .LVU146
- 682 0028 019A     		ldr	r2, [sp, #4]
-  72:Core/Src/posture_controller.c ****     current_accelerometer_vector[1] = accelerometer_vector.y_mps2;
- 683              		.loc 1 72 37 view .LVU147
- 684 002a 4D4B     		ldr	r3, .L82
- 685 002c 1A60     		str	r2, [r3]
-  73:Core/Src/posture_controller.c ****     current_accelerometer_vector[2] = accelerometer_vector.z_mps2;
- 686              		.loc 1 73 5 is_stmt 1 view .LVU148
-  73:Core/Src/posture_controller.c ****     current_accelerometer_vector[2] = accelerometer_vector.z_mps2;
- 687              		.loc 1 73 59 is_stmt 0 view .LVU149
- 688 002e 029A     		ldr	r2, [sp, #8]
-  73:Core/Src/posture_controller.c ****     current_accelerometer_vector[2] = accelerometer_vector.z_mps2;
- 689              		.loc 1 73 37 view .LVU150
- 690 0030 5A60     		str	r2, [r3, #4]
-  74:Core/Src/posture_controller.c **** 
- 691              		.loc 1 74 5 is_stmt 1 view .LVU151
-  74:Core/Src/posture_controller.c **** 
- 692              		.loc 1 74 59 is_stmt 0 view .LVU152
- 693 0032 039A     		ldr	r2, [sp, #12]
-  74:Core/Src/posture_controller.c **** 
- 694              		.loc 1 74 37 view .LVU153
- 695 0034 9A60     		str	r2, [r3, #8]
-  76:Core/Src/posture_controller.c ****         // Check if the user has remained still for 10 seconds
- 696              		.loc 1 76 5 is_stmt 1 view .LVU154
-  76:Core/Src/posture_controller.c ****         // Check if the user has remained still for 10 seconds
- 697              		.loc 1 76 9 is_stmt 0 view .LVU155
- 698 0036 4B4B     		ldr	r3, .L82+4
- 699 0038 1B78     		ldrb	r3, [r3]
-  76:Core/Src/posture_controller.c ****         // Check if the user has remained still for 10 seconds
- 700              		.loc 1 76 8 view .LVU156
- 701 003a 002B     		cmp	r3, #0
- 702 003c 03D1     		bne	.L51
-  76:Core/Src/posture_controller.c ****         // Check if the user has remained still for 10 seconds
- 703              		.loc 1 76 66 discriminator 1 view .LVU157
- 704 003e 4A4B     		ldr	r3, .L82+8
- 705 0040 1B68     		ldr	r3, [r3]
-  76:Core/Src/posture_controller.c ****         // Check if the user has remained still for 10 seconds
- 706              		.loc 1 76 36 discriminator 1 view .LVU158
- 707 0042 002B     		cmp	r3, #0
- 708 0044 4AD0     		beq	.L75
- 709              	.L51:
-  99:Core/Src/posture_controller.c **** 
- 710              		.loc 1 99 5 is_stmt 1 view .LVU159
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 19
+ 657              		@ args = 0, pretend = 0, frame = 0
+ 658              		@ frame_needed = 0, uses_anonymous_args = 0
+ 659 0000 10B5     		push	{r4, lr}
+ 660              	.LCFI10:
+ 661              		.cfi_def_cfa_offset 8
+ 662              		.cfi_offset 4, -8
+ 663              		.cfi_offset 14, -4
+ 292:Core/Src/posture_controller.c ****     led_execute_sequence(LED_SEQ_THREE_BLINKS);
+ 664              		.loc 1 292 5 view .LVU132
+ 665 0002 0120     		movs	r0, #1
+ 666 0004 FFF7FEFF 		bl	led_execute_sequence
+ 667              	.LVL43:
+ 293:Core/Src/posture_controller.c **** }
+ 668              		.loc 1 293 1 is_stmt 0 view .LVU133
+ 669              		@ sp needed
+ 670 0008 10BD     		pop	{r4, pc}
+ 671              		.cfi_endproc
+ 672              	.LFE50:
+ 674              		.section	.text.react_to_device_on,"ax",%progbits
+ 675              		.align	1
+ 676              		.global	react_to_device_on
+ 677              		.syntax unified
+ 678              		.code	16
+ 679              		.thumb_func
+ 681              	react_to_device_on:
+ 682              	.LFB51:
+ 294:Core/Src/posture_controller.c **** 
+ 295:Core/Src/posture_controller.c **** void react_to_device_on(void) {
+ 683              		.loc 1 295 31 is_stmt 1 view -0
+ 684              		.cfi_startproc
+ 685              		@ args = 0, pretend = 0, frame = 0
+ 686              		@ frame_needed = 0, uses_anonymous_args = 0
+ 687 0000 10B5     		push	{r4, lr}
+ 688              	.LCFI11:
+ 689              		.cfi_def_cfa_offset 8
+ 690              		.cfi_offset 4, -8
+ 691              		.cfi_offset 14, -4
+ 296:Core/Src/posture_controller.c ****     led_execute_sequence(LED_SEQ_THREE_BLINKS);
+ 692              		.loc 1 296 5 view .LVU135
+ 693 0002 0120     		movs	r0, #1
+ 694 0004 FFF7FEFF 		bl	led_execute_sequence
+ 695              	.LVL44:
+ 297:Core/Src/posture_controller.c **** }
+ 696              		.loc 1 297 1 is_stmt 0 view .LVU136
+ 697              		@ sp needed
+ 698 0008 10BD     		pop	{r4, pc}
+ 699              		.cfi_endproc
+ 700              	.LFE51:
+ 702              		.section	.text.react_to_calibration,"ax",%progbits
+ 703              		.align	1
+ 704              		.global	react_to_calibration
+ 705              		.syntax unified
+ 706              		.code	16
+ 707              		.thumb_func
+ 709              	react_to_calibration:
+ 710              	.LFB52:
+ 298:Core/Src/posture_controller.c **** 
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s 			page 19
 
 
-  99:Core/Src/posture_controller.c **** 
- 711              		.loc 1 99 25 is_stmt 0 view .LVU160
- 712 0046 4949     		ldr	r1, .L82+12
- 713 0048 4548     		ldr	r0, .L82
- 714 004a FFF7FEFF 		bl	get_angle_between_vectors
- 715              	.LVL50:
- 716 004e 041C     		adds	r4, r0, #0
- 717              	.LVL51:
- 102:Core/Src/posture_controller.c ****     {
- 718              		.loc 1 102 5 is_stmt 1 view .LVU161
- 102:Core/Src/posture_controller.c ****     {
- 719              		.loc 1 102 8 is_stmt 0 view .LVU162
- 720 0050 4749     		ldr	r1, .L82+16
- 721 0052 FFF7FEFF 		bl	__aeabi_fcmpgt
- 722              	.LVL52:
- 102:Core/Src/posture_controller.c ****     {
- 723              		.loc 1 102 8 view .LVU163
- 724 0056 0028     		cmp	r0, #0
- 725 0058 61D1     		bne	.L76
- 108:Core/Src/posture_controller.c **** 
- 726              		.loc 1 108 5 is_stmt 1 view .LVU164
- 727 005a FFF7FEFF 		bl	led_off
- 728              	.LVL53:
- 112:Core/Src/posture_controller.c ****     {
- 729              		.loc 1 112 5 view .LVU165
- 112:Core/Src/posture_controller.c ****     {
- 730              		.loc 1 112 21 is_stmt 0 view .LVU166
- 731 005e 454B     		ldr	r3, .L82+20
- 732 0060 1868     		ldr	r0, [r3]
- 112:Core/Src/posture_controller.c ****     {
- 733              		.loc 1 112 8 view .LVU167
- 734 0062 211C     		adds	r1, r4, #0
- 735 0064 FFF7FEFF 		bl	__aeabi_fcmpgt
- 736              	.LVL54:
- 737 0068 0028     		cmp	r0, #0
- 738 006a 5CD0     		beq	.L71
- 114:Core/Src/posture_controller.c ****     }
- 739              		.loc 1 114 9 is_stmt 1 view .LVU168
- 114:Core/Src/posture_controller.c ****     }
- 740              		.loc 1 114 32 is_stmt 0 view .LVU169
- 741 006c 424B     		ldr	r3, .L82+24
- 742 006e 1D60     		str	r5, [r3]
- 743              	.L59:
- 124:Core/Src/posture_controller.c ****         (last_good_posture_time - last_bad_posture_time) > GOOD_POSTURE_TRANSITION_TIME_MS &&
- 744              		.loc 1 124 5 is_stmt 1 view .LVU170
- 124:Core/Src/posture_controller.c ****         (last_good_posture_time - last_bad_posture_time) > GOOD_POSTURE_TRANSITION_TIME_MS &&
- 745              		.loc 1 124 32 is_stmt 0 view .LVU171
- 746 0070 414B     		ldr	r3, .L82+24
- 747 0072 1B68     		ldr	r3, [r3]
- 748 0074 414A     		ldr	r2, .L82+28
- 749 0076 1268     		ldr	r2, [r2]
- 124:Core/Src/posture_controller.c ****         (last_good_posture_time - last_bad_posture_time) > GOOD_POSTURE_TRANSITION_TIME_MS &&
- 750              		.loc 1 124 8 view .LVU172
- 751 0078 9342     		cmp	r3, r2
- 752 007a 08D9     		bls	.L60
- 125:Core/Src/posture_controller.c ****         !is_posture_correct)
- 753              		.loc 1 125 33 view .LVU173
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 20
+ 299:Core/Src/posture_controller.c **** void react_to_calibration(void) {
+ 711              		.loc 1 299 33 is_stmt 1 view -0
+ 712              		.cfi_startproc
+ 713              		@ args = 0, pretend = 0, frame = 0
+ 714              		@ frame_needed = 0, uses_anonymous_args = 0
+ 715 0000 10B5     		push	{r4, lr}
+ 716              	.LCFI12:
+ 717              		.cfi_def_cfa_offset 8
+ 718              		.cfi_offset 4, -8
+ 719              		.cfi_offset 14, -4
+ 300:Core/Src/posture_controller.c ****     led_execute_sequence(LED_SEQ_THREE_BLINKS);
+ 720              		.loc 1 300 5 view .LVU138
+ 721 0002 0120     		movs	r0, #1
+ 722 0004 FFF7FEFF 		bl	led_execute_sequence
+ 723              	.LVL45:
+ 301:Core/Src/posture_controller.c **** }...
+ 724              		.loc 1 301 1 is_stmt 0 view .LVU139
+ 725              		@ sp needed
+ 726 0008 10BD     		pop	{r4, pc}
+ 727              		.cfi_endproc
+ 728              	.LFE52:
+ 730              		.section	.text.posture_controller_update,"ax",%progbits
+ 731              		.align	1
+ 732              		.global	posture_controller_update
+ 733              		.syntax unified
+ 734              		.code	16
+ 735              		.thumb_func
+ 737              	posture_controller_update:
+ 738              	.LFB40:
+  48:Core/Src/posture_controller.c **** {
+ 739              		.loc 1 48 1 is_stmt 1 view -0
+ 740              		.cfi_startproc
+ 741              		@ args = 0, pretend = 0, frame = 16
+ 742              		@ frame_needed = 0, uses_anonymous_args = 0
+ 743 0000 30B5     		push	{r4, r5, lr}
+ 744              	.LCFI13:
+ 745              		.cfi_def_cfa_offset 12
+ 746              		.cfi_offset 4, -12
+ 747              		.cfi_offset 5, -8
+ 748              		.cfi_offset 14, -4
+ 749 0002 85B0     		sub	sp, sp, #20
+ 750              	.LCFI14:
+ 751              		.cfi_def_cfa_offset 32
+  49:Core/Src/posture_controller.c ****     uint32_t now = HAL_GetTick();
+ 752              		.loc 1 49 5 view .LVU141
+  49:Core/Src/posture_controller.c ****     uint32_t now = HAL_GetTick();
+ 753              		.loc 1 49 20 is_stmt 0 view .LVU142
+ 754 0004 FFF7FEFF 		bl	HAL_GetTick
+ 755              	.LVL46:
+ 756 0008 0500     		movs	r5, r0
+ 757              	.LVL47:
+  51:Core/Src/posture_controller.c ****     accelerometer_mode_t accelerometer_mode = accelerometer_controller_get_mode();
+ 758              		.loc 1 51 5 is_stmt 1 view .LVU143
+  51:Core/Src/posture_controller.c ****     accelerometer_mode_t accelerometer_mode = accelerometer_controller_get_mode();
+ 759              		.loc 1 51 47 is_stmt 0 view .LVU144
+ 760 000a FFF7FEFF 		bl	accelerometer_controller_get_mode
+ 761              	.LVL48:
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s 			page 20
 
 
- 754 007c 991A     		subs	r1, r3, r2
- 124:Core/Src/posture_controller.c ****         (last_good_posture_time - last_bad_posture_time) > GOOD_POSTURE_TRANSITION_TIME_MS &&
- 755              		.loc 1 124 56 discriminator 1 view .LVU174
- 756 007e FA20     		movs	r0, #250
- 757 0080 8000     		lsls	r0, r0, #2
- 758 0082 8142     		cmp	r1, r0
- 759 0084 03D9     		bls	.L60
- 126:Core/Src/posture_controller.c ****     {
- 760              		.loc 1 126 9 view .LVU175
- 761 0086 3E49     		ldr	r1, .L82+32
- 762 0088 0978     		ldrb	r1, [r1]
- 125:Core/Src/posture_controller.c ****         !is_posture_correct)
- 763              		.loc 1 125 92 view .LVU176
- 764 008a 0029     		cmp	r1, #0
- 765 008c 4ED0     		beq	.L77
- 766              	.L60:
- 137:Core/Src/posture_controller.c ****         (last_bad_posture_time - last_good_posture_time) > BAD_POSTURE_TRANSITION_TIME_MS &&
- 767              		.loc 1 137 5 is_stmt 1 view .LVU177
- 137:Core/Src/posture_controller.c ****         (last_bad_posture_time - last_good_posture_time) > BAD_POSTURE_TRANSITION_TIME_MS &&
- 768              		.loc 1 137 8 is_stmt 0 view .LVU178
- 769 008e 9342     		cmp	r3, r2
- 770 0090 07D2     		bcs	.L61
- 138:Core/Src/posture_controller.c ****         is_posture_correct)
- 771              		.loc 1 138 32 view .LVU179
- 772 0092 D31A     		subs	r3, r2, r3
- 137:Core/Src/posture_controller.c ****         (last_bad_posture_time - last_good_posture_time) > BAD_POSTURE_TRANSITION_TIME_MS &&
- 773              		.loc 1 137 56 discriminator 1 view .LVU180
- 774 0094 3B49     		ldr	r1, .L82+36
- 775 0096 8B42     		cmp	r3, r1
- 776 0098 03D9     		bls	.L61
- 138:Core/Src/posture_controller.c ****         is_posture_correct)
- 777              		.loc 1 138 91 view .LVU181
- 778 009a 394B     		ldr	r3, .L82+32
- 779 009c 1B78     		ldrb	r3, [r3]
- 780 009e 002B     		cmp	r3, #0
- 781 00a0 4DD1     		bne	.L78
- 782              	.L61:
- 152:Core/Src/posture_controller.c ****         !did_calibrate)
- 783              		.loc 1 152 5 is_stmt 1 view .LVU182
- 152:Core/Src/posture_controller.c ****         !did_calibrate)
- 784              		.loc 1 152 9 is_stmt 0 view .LVU183
- 785 00a2 374B     		ldr	r3, .L82+32
- 786 00a4 1B78     		ldrb	r3, [r3]
- 152:Core/Src/posture_controller.c ****         !did_calibrate)
- 787              		.loc 1 152 8 view .LVU184
- 788 00a6 002B     		cmp	r3, #0
- 789 00a8 03D0     		beq	.L63
- 153:Core/Src/posture_controller.c ****     {
- 790              		.loc 1 153 9 view .LVU185
- 791 00aa 374A     		ldr	r2, .L82+40
- 792 00ac 1278     		ldrb	r2, [r2]
- 152:Core/Src/posture_controller.c ****         !did_calibrate)
- 793              		.loc 1 152 28 discriminator 1 view .LVU186
- 794 00ae 002A     		cmp	r2, #0
- 795 00b0 4FD0     		beq	.L79
- 796              	.L63:
- 159:Core/Src/posture_controller.c ****     {
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 21
+  51:Core/Src/posture_controller.c ****     accelerometer_mode_t accelerometer_mode = accelerometer_controller_get_mode();
+ 762              		.loc 1 51 47 view .LVU145
+ 763 000e 0400     		movs	r4, r0
+ 764              	.LVL49:
+  53:Core/Src/posture_controller.c ****     button_event_t button_event = button_controller_get_event();
+ 765              		.loc 1 53 5 is_stmt 1 view .LVU146
+  53:Core/Src/posture_controller.c ****     button_event_t button_event = button_controller_get_event();
+ 766              		.loc 1 53 35 is_stmt 0 view .LVU147
+ 767 0010 FFF7FEFF 		bl	button_controller_get_event
+ 768              	.LVL50:
+  55:Core/Src/posture_controller.c ****     if (button_event == BUTTON_EVENT_SINGLE_PRESS) {
+ 769              		.loc 1 55 5 is_stmt 1 view .LVU148
+  55:Core/Src/posture_controller.c ****     if (button_event == BUTTON_EVENT_SINGLE_PRESS) {
+ 770              		.loc 1 55 8 is_stmt 0 view .LVU149
+ 771 0014 0128     		cmp	r0, #1
+ 772 0016 65D0     		beq	.L76
+  62:Core/Src/posture_controller.c ****     if (button_event == BUTTON_EVENT_LONG_PRESS) {
+ 773              		.loc 1 62 5 is_stmt 1 view .LVU150
+  62:Core/Src/posture_controller.c ****     if (button_event == BUTTON_EVENT_LONG_PRESS) {
+ 774              		.loc 1 62 8 is_stmt 0 view .LVU151
+ 775 0018 0428     		cmp	r0, #4
+ 776 001a 6BD0     		beq	.L77
+  67:Core/Src/posture_controller.c ****     } else if (button_event != BUTTON_EVENT_NONE && device_is_off) {
+ 777              		.loc 1 67 12 is_stmt 1 view .LVU152
+  67:Core/Src/posture_controller.c ****     } else if (button_event != BUTTON_EVENT_NONE && device_is_off) {
+ 778              		.loc 1 67 15 is_stmt 0 view .LVU153
+ 779 001c 0028     		cmp	r0, #0
+ 780 001e 03D0     		beq	.L54
+  67:Core/Src/posture_controller.c ****     } else if (button_event != BUTTON_EVENT_NONE && device_is_off) {
+ 781              		.loc 1 67 50 discriminator 1 view .LVU154
+ 782 0020 6C4B     		ldr	r3, .L86
+ 783 0022 1B78     		ldrb	r3, [r3]
+ 784 0024 002B     		cmp	r3, #0
+ 785 0026 73D1     		bne	.L78
+ 786              	.LVL51:
+ 787              	.L54:
+  73:Core/Src/posture_controller.c ****     if (device_is_shutting_down && !led_is_sequence_running()) {
+ 788              		.loc 1 73 5 is_stmt 1 view .LVU155
+  73:Core/Src/posture_controller.c ****     if (device_is_shutting_down && !led_is_sequence_running()) {
+ 789              		.loc 1 73 9 is_stmt 0 view .LVU156
+ 790 0028 6B4B     		ldr	r3, .L86+4
+ 791 002a 1B78     		ldrb	r3, [r3]
+  73:Core/Src/posture_controller.c ****     if (device_is_shutting_down && !led_is_sequence_running()) {
+ 792              		.loc 1 73 8 view .LVU157
+ 793 002c 002B     		cmp	r3, #0
+ 794 002e 75D1     		bne	.L79
+ 795              	.L55:
+  78:Core/Src/posture_controller.c ****     if (accelerometer_mode == SUPER_STILL || device_is_off) {
+ 796              		.loc 1 78 5 is_stmt 1 view .LVU158
+  78:Core/Src/posture_controller.c ****     if (accelerometer_mode == SUPER_STILL || device_is_off) {
+ 797              		.loc 1 78 8 is_stmt 0 view .LVU159
+ 798 0030 002C     		cmp	r4, #0
+ 799 0032 7ED0     		beq	.L56
+  78:Core/Src/posture_controller.c ****     if (accelerometer_mode == SUPER_STILL || device_is_off) {
+ 800              		.loc 1 78 43 discriminator 1 view .LVU160
+ 801 0034 674B     		ldr	r3, .L86
+ 802 0036 1B78     		ldrb	r3, [r3]
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s 			page 21
 
 
- 797              		.loc 1 159 5 is_stmt 1 view .LVU187
- 159:Core/Src/posture_controller.c ****     {
- 798              		.loc 1 159 8 is_stmt 0 view .LVU188
- 799 00b2 002B     		cmp	r3, #0
- 800 00b4 50D0     		beq	.L80
- 801              	.LVL55:
- 802              	.L46:
- 164:Core/Src/posture_controller.c **** 
- 803              		.loc 1 164 1 view .LVU189
- 804 00b6 05B0     		add	sp, sp, #20
- 805              		@ sp needed
- 806 00b8 30BD     		pop	{r4, r5, pc}
- 807              	.LVL56:
- 808              	.L72:
-  54:Core/Src/posture_controller.c ****         notify_posture_correct(); // Provide feedback that recalibration occurred
- 809              		.loc 1 54 9 is_stmt 1 view .LVU190
- 810 00ba FFF7FEFF 		bl	reset_good_posture_vector
- 811              	.LVL57:
-  55:Core/Src/posture_controller.c ****         did_calibrate = true;
- 812              		.loc 1 55 9 view .LVU191
- 813 00be FFF7FEFF 		bl	notify_posture_correct
- 814              	.LVL58:
-  56:Core/Src/posture_controller.c ****         return;
- 815              		.loc 1 56 9 view .LVU192
-  56:Core/Src/posture_controller.c ****         return;
- 816              		.loc 1 56 23 is_stmt 0 view .LVU193
- 817 00c2 314B     		ldr	r3, .L82+40
- 818 00c4 0122     		movs	r2, #1
- 819 00c6 1A70     		strb	r2, [r3]
-  57:Core/Src/posture_controller.c ****     }
- 820              		.loc 1 57 9 is_stmt 1 view .LVU194
- 821 00c8 F5E7     		b	.L46
- 822              	.LVL59:
- 823              	.L73:
-  61:Core/Src/posture_controller.c ****         sleep_controller_activate_sleep_mode();
- 824              		.loc 1 61 9 view .LVU195
- 825 00ca FFF7FEFF 		bl	reset_good_posture_history
- 826              	.LVL60:
-  62:Core/Src/posture_controller.c ****     }
- 827              		.loc 1 62 9 view .LVU196
- 828 00ce FFF7FEFF 		bl	sleep_controller_activate_sleep_mode
- 829              	.LVL61:
- 830 00d2 A3E7     		b	.L49
- 831              	.L74:
-  66:Core/Src/posture_controller.c ****         return;
- 832              		.loc 1 66 9 view .LVU197
- 833 00d4 6420     		movs	r0, #100
- 834 00d6 FFF7FEFF 		bl	led_on
- 835              	.LVL62:
-  67:Core/Src/posture_controller.c ****     }
- 836              		.loc 1 67 9 view .LVU198
- 837 00da ECE7     		b	.L46
- 838              	.LVL63:
- 839              	.L75:
-  78:Core/Src/posture_controller.c ****             uint32_t current_time = HAL_GetTick();
- 840              		.loc 1 78 9 view .LVU199
-  78:Core/Src/posture_controller.c ****             uint32_t current_time = HAL_GetTick();
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 22
+ 803 0038 002B     		cmp	r3, #0
+ 804 003a 7AD1     		bne	.L56
+  94:Core/Src/posture_controller.c ****     if (accelerometer_mode == ACTIVITY) {
+ 805              		.loc 1 94 5 is_stmt 1 view .LVU161
+  94:Core/Src/posture_controller.c ****     if (accelerometer_mode == ACTIVITY) {
+ 806              		.loc 1 94 8 is_stmt 0 view .LVU162
+ 807 003c 022C     		cmp	r4, #2
+ 808 003e 00D1     		bne	.LCB654
+ 809 0040 81E0     		b	.L50	@long jump
+ 810              	.LCB654:
+  99:Core/Src/posture_controller.c ****     accel_data_t accelerometer_vector = accelerometer_controller_get_latest_data();
+ 811              		.loc 1 99 5 is_stmt 1 view .LVU163
+  99:Core/Src/posture_controller.c ****     accel_data_t accelerometer_vector = accelerometer_controller_get_latest_data();
+ 812              		.loc 1 99 41 is_stmt 0 view .LVU164
+ 813 0042 01AC     		add	r4, sp, #4
+ 814              	.LVL52:
+  99:Core/Src/posture_controller.c ****     accel_data_t accelerometer_vector = accelerometer_controller_get_latest_data();
+ 815              		.loc 1 99 41 view .LVU165
+ 816 0044 2000     		movs	r0, r4
+ 817 0046 FFF7FEFF 		bl	accelerometer_controller_get_latest_data
+ 818              	.LVL53:
+ 100:Core/Src/posture_controller.c ****     current_accelerometer_vector[0] = accelerometer_vector.x_mps2;
+ 819              		.loc 1 100 5 is_stmt 1 view .LVU166
+ 100:Core/Src/posture_controller.c ****     current_accelerometer_vector[0] = accelerometer_vector.x_mps2;
+ 820              		.loc 1 100 59 is_stmt 0 view .LVU167
+ 821 004a 019A     		ldr	r2, [sp, #4]
+ 100:Core/Src/posture_controller.c ****     current_accelerometer_vector[0] = accelerometer_vector.x_mps2;
+ 822              		.loc 1 100 37 view .LVU168
+ 823 004c 634B     		ldr	r3, .L86+8
+ 824 004e 1A60     		str	r2, [r3]
+ 101:Core/Src/posture_controller.c ****     current_accelerometer_vector[1] = accelerometer_vector.y_mps2;
+ 825              		.loc 1 101 5 is_stmt 1 view .LVU169
+ 101:Core/Src/posture_controller.c ****     current_accelerometer_vector[1] = accelerometer_vector.y_mps2;
+ 826              		.loc 1 101 59 is_stmt 0 view .LVU170
+ 827 0050 029A     		ldr	r2, [sp, #8]
+ 101:Core/Src/posture_controller.c ****     current_accelerometer_vector[1] = accelerometer_vector.y_mps2;
+ 828              		.loc 1 101 37 view .LVU171
+ 829 0052 5A60     		str	r2, [r3, #4]
+ 102:Core/Src/posture_controller.c ****     current_accelerometer_vector[2] = accelerometer_vector.z_mps2;
+ 830              		.loc 1 102 5 is_stmt 1 view .LVU172
+ 102:Core/Src/posture_controller.c ****     current_accelerometer_vector[2] = accelerometer_vector.z_mps2;
+ 831              		.loc 1 102 59 is_stmt 0 view .LVU173
+ 832 0054 039A     		ldr	r2, [sp, #12]
+ 102:Core/Src/posture_controller.c ****     current_accelerometer_vector[2] = accelerometer_vector.z_mps2;
+ 833              		.loc 1 102 37 view .LVU174
+ 834 0056 9A60     		str	r2, [r3, #8]
+ 104:Core/Src/posture_controller.c ****     if (!good_posture_history_full && good_posture_history_index == 0) {
+ 835              		.loc 1 104 5 is_stmt 1 view .LVU175
+ 104:Core/Src/posture_controller.c ****     if (!good_posture_history_full && good_posture_history_index == 0) {
+ 836              		.loc 1 104 9 is_stmt 0 view .LVU176
+ 837 0058 614B     		ldr	r3, .L86+12
+ 838 005a 1B78     		ldrb	r3, [r3]
+ 104:Core/Src/posture_controller.c ****     if (!good_posture_history_full && good_posture_history_index == 0) {
+ 839              		.loc 1 104 8 view .LVU177
+ 840 005c 002B     		cmp	r3, #0
+ 841 005e 04D1     		bne	.L59
+ 104:Core/Src/posture_controller.c ****     if (!good_posture_history_full && good_posture_history_index == 0) {
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s 			page 22
 
 
- 841              		.loc 1 78 13 is_stmt 0 view .LVU200
- 842 00dc FFF7FEFF 		bl	accelerometer_controller_get_last_measurements_history_max_angle_from_mean
- 843              	.LVL64:
-  78:Core/Src/posture_controller.c ****             uint32_t current_time = HAL_GetTick();
- 844              		.loc 1 78 12 discriminator 1 view .LVU201
- 845 00e0 2A49     		ldr	r1, .L82+44
- 846 00e2 FFF7FEFF 		bl	__aeabi_fcmplt
- 847              	.LVL65:
- 848 00e6 0028     		cmp	r0, #0
- 849 00e8 03D1     		bne	.L81
-  94:Core/Src/posture_controller.c ****         }
- 850              		.loc 1 94 13 is_stmt 1 view .LVU202
-  94:Core/Src/posture_controller.c ****         }
- 851              		.loc 1 94 38 is_stmt 0 view .LVU203
- 852 00ea 294B     		ldr	r3, .L82+48
- 853 00ec 0022     		movs	r2, #0
- 854 00ee 1A60     		str	r2, [r3]
- 855 00f0 A9E7     		b	.L51
- 856              	.L81:
- 857              	.LBB11:
-  79:Core/Src/posture_controller.c ****             
- 858              		.loc 1 79 13 is_stmt 1 view .LVU204
-  79:Core/Src/posture_controller.c ****             
- 859              		.loc 1 79 37 is_stmt 0 view .LVU205
- 860 00f2 FFF7FEFF 		bl	HAL_GetTick
- 861              	.LVL66:
-  82:Core/Src/posture_controller.c ****                 still_posture_start_time = current_time;
- 862              		.loc 1 82 13 is_stmt 1 view .LVU206
-  82:Core/Src/posture_controller.c ****                 still_posture_start_time = current_time;
- 863              		.loc 1 82 42 is_stmt 0 view .LVU207
- 864 00f6 264B     		ldr	r3, .L82+48
- 865 00f8 1B68     		ldr	r3, [r3]
-  82:Core/Src/posture_controller.c ****                 still_posture_start_time = current_time;
- 866              		.loc 1 82 16 view .LVU208
- 867 00fa 002B     		cmp	r3, #0
- 868 00fc 02D1     		bne	.L54
-  83:Core/Src/posture_controller.c ****             }
- 869              		.loc 1 83 17 is_stmt 1 view .LVU209
-  83:Core/Src/posture_controller.c ****             }
- 870              		.loc 1 83 42 is_stmt 0 view .LVU210
- 871 00fe 244B     		ldr	r3, .L82+48
- 872 0100 1860     		str	r0, [r3]
- 873 0102 A0E7     		b	.L51
- 874              	.L54:
-  86:Core/Src/posture_controller.c ****                 // Condition fulfilled for the required time, update good posture history and vecto
- 875              		.loc 1 86 18 is_stmt 1 view .LVU211
-  86:Core/Src/posture_controller.c ****                 // Condition fulfilled for the required time, update good posture history and vecto
- 876              		.loc 1 86 36 is_stmt 0 view .LVU212
- 877 0104 C01A     		subs	r0, r0, r3
- 878              	.LVL67:
-  86:Core/Src/posture_controller.c ****                 // Condition fulfilled for the required time, update good posture history and vecto
- 879              		.loc 1 86 21 view .LVU213
- 880 0106 234B     		ldr	r3, .L82+52
- 881 0108 9842     		cmp	r0, r3
- 882 010a 9CD9     		bls	.L51
-  88:Core/Src/posture_controller.c ****                 update_good_posture_vector();
- 883              		.loc 1 88 17 is_stmt 1 view .LVU214
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 23
+ 842              		.loc 1 104 66 discriminator 1 view .LVU178
+ 843 0060 604B     		ldr	r3, .L86+16
+ 844 0062 1B68     		ldr	r3, [r3]
+ 104:Core/Src/posture_controller.c ****     if (!good_posture_history_full && good_posture_history_index == 0) {
+ 845              		.loc 1 104 36 discriminator 1 view .LVU179
+ 846 0064 002B     		cmp	r3, #0
+ 847 0066 00D1     		bne	.LCB678
+ 848 0068 78E0     		b	.L80	@long jump
+ 849              	.LCB678:
+ 850              	.L59:
+ 127:Core/Src/posture_controller.c ****     float error_angle = get_angle_between_vectors(current_accelerometer_vector, good_posture_vector
+ 851              		.loc 1 127 5 is_stmt 1 view .LVU180
+ 127:Core/Src/posture_controller.c ****     float error_angle = get_angle_between_vectors(current_accelerometer_vector, good_posture_vector
+ 852              		.loc 1 127 25 is_stmt 0 view .LVU181
+ 853 006a 5F49     		ldr	r1, .L86+20
+ 854 006c 5B48     		ldr	r0, .L86+8
+ 855 006e FFF7FEFF 		bl	get_angle_between_vectors
+ 856              	.LVL54:
+ 857 0072 041C     		adds	r4, r0, #0
+ 858              	.LVL55:
+ 130:Core/Src/posture_controller.c ****     if (error_angle > UNREALISTIC_POSTURE_THRESHOLD_RADIANS)
+ 859              		.loc 1 130 5 is_stmt 1 view .LVU182
+ 130:Core/Src/posture_controller.c ****     if (error_angle > UNREALISTIC_POSTURE_THRESHOLD_RADIANS)
+ 860              		.loc 1 130 8 is_stmt 0 view .LVU183
+ 861 0074 5D49     		ldr	r1, .L86+24
+ 862 0076 FFF7FEFF 		bl	__aeabi_fcmpgt
+ 863              	.LVL56:
+ 130:Core/Src/posture_controller.c ****     if (error_angle > UNREALISTIC_POSTURE_THRESHOLD_RADIANS)
+ 864              		.loc 1 130 8 view .LVU184
+ 865 007a 0028     		cmp	r0, #0
+ 866 007c 63D1     		bne	.L50
+ 137:Core/Src/posture_controller.c ****     if (error_angle < threshold_angle)
+ 867              		.loc 1 137 5 is_stmt 1 view .LVU185
+ 137:Core/Src/posture_controller.c ****     if (error_angle < threshold_angle)
+ 868              		.loc 1 137 21 is_stmt 0 view .LVU186
+ 869 007e 5C4B     		ldr	r3, .L86+28
+ 870 0080 1868     		ldr	r0, [r3]
+ 137:Core/Src/posture_controller.c ****     if (error_angle < threshold_angle)
+ 871              		.loc 1 137 8 view .LVU187
+ 872 0082 211C     		adds	r1, r4, #0
+ 873 0084 FFF7FEFF 		bl	__aeabi_fcmpgt
+ 874              	.LVL57:
+ 875 0088 0028     		cmp	r0, #0
+ 876 008a 00D1     		bne	.LCB700
+ 877 008c 88E0     		b	.L75	@long jump
+ 878              	.LCB700:
+ 139:Core/Src/posture_controller.c ****         last_good_posture_time = now;
+ 879              		.loc 1 139 9 is_stmt 1 view .LVU188
+ 139:Core/Src/posture_controller.c ****         last_good_posture_time = now;
+ 880              		.loc 1 139 32 is_stmt 0 view .LVU189
+ 881 008e 594B     		ldr	r3, .L86+32
+ 882 0090 1D60     		str	r5, [r3]
+ 883              	.L65:
+ 149:Core/Src/posture_controller.c ****     if (last_good_posture_time > last_bad_posture_time &&
+ 884              		.loc 1 149 5 is_stmt 1 view .LVU190
+ 149:Core/Src/posture_controller.c ****     if (last_good_posture_time > last_bad_posture_time &&
+ 885              		.loc 1 149 32 is_stmt 0 view .LVU191
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s 			page 23
 
 
- 884 010c 1448     		ldr	r0, .L82
- 885 010e FFF7FEFF 		bl	update_good_posture_history
- 886              	.LVL68:
-  89:Core/Src/posture_controller.c ****                 still_posture_start_time = 0; // Reset the timer after updating
- 887              		.loc 1 89 17 view .LVU215
- 888 0112 FFF7FEFF 		bl	update_good_posture_vector
- 889              	.LVL69:
-  90:Core/Src/posture_controller.c ****             }
- 890              		.loc 1 90 17 view .LVU216
-  90:Core/Src/posture_controller.c ****             }
- 891              		.loc 1 90 42 is_stmt 0 view .LVU217
- 892 0116 1E4B     		ldr	r3, .L82+48
- 893 0118 0022     		movs	r2, #0
- 894 011a 1A60     		str	r2, [r3]
- 895 011c 93E7     		b	.L51
- 896              	.LVL70:
- 897              	.L76:
-  90:Core/Src/posture_controller.c ****             }
- 898              		.loc 1 90 42 view .LVU218
- 899              	.LBE11:
- 104:Core/Src/posture_controller.c ****         return;
- 900              		.loc 1 104 9 is_stmt 1 view .LVU219
- 901 011e 6420     		movs	r0, #100
- 902 0120 FFF7FEFF 		bl	led_on
- 903              	.LVL71:
- 105:Core/Src/posture_controller.c ****     }
- 904              		.loc 1 105 9 view .LVU220
- 905 0124 C7E7     		b	.L46
- 906              	.L71:
- 118:Core/Src/posture_controller.c ****     }
- 907              		.loc 1 118 9 view .LVU221
- 118:Core/Src/posture_controller.c ****     }
- 908              		.loc 1 118 31 is_stmt 0 view .LVU222
- 909 0126 154B     		ldr	r3, .L82+28
- 910 0128 1D60     		str	r5, [r3]
- 911 012a A1E7     		b	.L59
- 912              	.L77:
- 128:Core/Src/posture_controller.c ****         did_calibrate = false;
- 913              		.loc 1 128 9 is_stmt 1 view .LVU223
- 128:Core/Src/posture_controller.c ****         did_calibrate = false;
- 914              		.loc 1 128 28 is_stmt 0 view .LVU224
- 915 012c 144B     		ldr	r3, .L82+32
- 916 012e 0122     		movs	r2, #1
- 917 0130 1A70     		strb	r2, [r3]
- 129:Core/Src/posture_controller.c ****         notify_posture_correct();
- 918              		.loc 1 129 9 is_stmt 1 view .LVU225
- 129:Core/Src/posture_controller.c ****         notify_posture_correct();
- 919              		.loc 1 129 23 is_stmt 0 view .LVU226
- 920 0132 154B     		ldr	r3, .L82+40
- 921 0134 0022     		movs	r2, #0
- 922 0136 1A70     		strb	r2, [r3]
- 130:Core/Src/posture_controller.c ****         return;
- 923              		.loc 1 130 9 is_stmt 1 view .LVU227
- 924 0138 FFF7FEFF 		bl	notify_posture_correct
- 925              	.LVL72:
- 131:Core/Src/posture_controller.c ****     }
- 926              		.loc 1 131 9 view .LVU228
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 24
+ 886 0092 584B     		ldr	r3, .L86+32
+ 887 0094 1B68     		ldr	r3, [r3]
+ 888 0096 584A     		ldr	r2, .L86+36
+ 889 0098 1268     		ldr	r2, [r2]
+ 149:Core/Src/posture_controller.c ****     if (last_good_posture_time > last_bad_posture_time &&
+ 890              		.loc 1 149 8 view .LVU192
+ 891 009a 9342     		cmp	r3, r2
+ 892 009c 09D9     		bls	.L66
+ 150:Core/Src/posture_controller.c ****         (last_good_posture_time - last_bad_posture_time) > GOOD_POSTURE_TRANSITION_TIME_MS &&
+ 893              		.loc 1 150 33 view .LVU193
+ 894 009e 991A     		subs	r1, r3, r2
+ 149:Core/Src/posture_controller.c ****     if (last_good_posture_time > last_bad_posture_time &&
+ 895              		.loc 1 149 56 discriminator 1 view .LVU194
+ 896 00a0 FA20     		movs	r0, #250
+ 897 00a2 8000     		lsls	r0, r0, #2
+ 898 00a4 8142     		cmp	r1, r0
+ 899 00a6 04D9     		bls	.L66
+ 151:Core/Src/posture_controller.c ****         !is_posture_correct)
+ 900              		.loc 1 151 9 view .LVU195
+ 901 00a8 5449     		ldr	r1, .L86+40
+ 902 00aa 0978     		ldrb	r1, [r1]
+ 150:Core/Src/posture_controller.c ****         (last_good_posture_time - last_bad_posture_time) > GOOD_POSTURE_TRANSITION_TIME_MS &&
+ 903              		.loc 1 150 92 view .LVU196
+ 904 00ac 0029     		cmp	r1, #0
+ 905 00ae 00D1     		bne	.LCB722
+ 906 00b0 79E0     		b	.L81	@long jump
+ 907              	.LCB722:
+ 908              	.L66:
+ 162:Core/Src/posture_controller.c ****     if (last_bad_posture_time > last_good_posture_time &&
+ 909              		.loc 1 162 5 is_stmt 1 view .LVU197
+ 162:Core/Src/posture_controller.c ****     if (last_bad_posture_time > last_good_posture_time &&
+ 910              		.loc 1 162 8 is_stmt 0 view .LVU198
+ 911 00b2 9342     		cmp	r3, r2
+ 912 00b4 08D2     		bcs	.L67
+ 163:Core/Src/posture_controller.c ****         (last_bad_posture_time - last_good_posture_time) > BAD_POSTURE_TRANSITION_TIME_MS &&
+ 913              		.loc 1 163 32 view .LVU199
+ 914 00b6 D31A     		subs	r3, r2, r3
+ 162:Core/Src/posture_controller.c ****     if (last_bad_posture_time > last_good_posture_time &&
+ 915              		.loc 1 162 56 discriminator 1 view .LVU200
+ 916 00b8 5149     		ldr	r1, .L86+44
+ 917 00ba 8B42     		cmp	r3, r1
+ 918 00bc 04D9     		bls	.L67
+ 163:Core/Src/posture_controller.c ****         (last_bad_posture_time - last_good_posture_time) > BAD_POSTURE_TRANSITION_TIME_MS &&
+ 919              		.loc 1 163 91 view .LVU201
+ 920 00be 4F4B     		ldr	r3, .L86+40
+ 921 00c0 1B78     		ldrb	r3, [r3]
+ 922 00c2 002B     		cmp	r3, #0
+ 923 00c4 00D0     		beq	.LCB734
+ 924 00c6 77E0     		b	.L82	@long jump
+ 925              	.LCB734:
+ 926              	.L67:
+ 177:Core/Src/posture_controller.c ****     if (is_posture_correct &&
+ 927              		.loc 1 177 5 is_stmt 1 view .LVU202
+ 177:Core/Src/posture_controller.c ****     if (is_posture_correct &&
+ 928              		.loc 1 177 9 is_stmt 0 view .LVU203
+ 929 00c8 4C4B     		ldr	r3, .L86+40
+ 930 00ca 1B78     		ldrb	r3, [r3]
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s 			page 24
 
 
- 927 013c BBE7     		b	.L46
- 928              	.L78:
- 141:Core/Src/posture_controller.c ****         
- 929              		.loc 1 141 9 view .LVU229
- 141:Core/Src/posture_controller.c ****         
- 930              		.loc 1 141 28 is_stmt 0 view .LVU230
- 931 013e 104B     		ldr	r3, .L82+32
- 932 0140 0021     		movs	r1, #0
- 933 0142 1970     		strb	r1, [r3]
- 144:Core/Src/posture_controller.c ****             reset_good_posture_history(); // Reset history if bad posture for 3 minutes
- 934              		.loc 1 144 9 is_stmt 1 view .LVU231
- 144:Core/Src/posture_controller.c ****             reset_good_posture_history(); // Reset history if bad posture for 3 minutes
- 935              		.loc 1 144 18 is_stmt 0 view .LVU232
- 936 0144 AD1A     		subs	r5, r5, r2
- 937              	.LVL73:
- 144:Core/Src/posture_controller.c ****             reset_good_posture_history(); // Reset history if bad posture for 3 minutes
- 938              		.loc 1 144 12 view .LVU233
- 939 0146 144B     		ldr	r3, .L82+56
- 940 0148 9D42     		cmp	r5, r3
- 941 014a B4D9     		bls	.L46
- 145:Core/Src/posture_controller.c ****         }
- 942              		.loc 1 145 13 is_stmt 1 view .LVU234
- 943 014c FFF7FEFF 		bl	reset_good_posture_history
- 944              	.LVL74:
- 147:Core/Src/posture_controller.c ****     }
- 945              		.loc 1 147 9 view .LVU235
- 946 0150 B1E7     		b	.L46
- 947              	.LVL75:
- 948              	.L79:
- 155:Core/Src/posture_controller.c ****         return;
- 949              		.loc 1 155 9 view .LVU236
- 950 0152 FFF7FEFF 		bl	start_calibration_procedure
- 951              	.LVL76:
- 156:Core/Src/posture_controller.c ****     }
- 952              		.loc 1 156 9 view .LVU237
- 953 0156 AEE7     		b	.L46
- 954              	.L80:
- 161:Core/Src/posture_controller.c ****         return;
- 955              		.loc 1 161 9 view .LVU238
- 956 0158 FFF7FEFF 		bl	handle_bad_posture
- 957              	.LVL77:
- 162:Core/Src/posture_controller.c ****     }
- 958              		.loc 1 162 9 view .LVU239
- 959 015c ABE7     		b	.L46
- 960              	.L83:
- 961 015e C046     		.align	2
- 962              	.L82:
- 963 0160 00000000 		.word	current_accelerometer_vector
- 964 0164 00000000 		.word	good_posture_history_full
- 965 0168 00000000 		.word	good_posture_history_index
- 966 016c 00000000 		.word	good_posture_vector
- 967 0170 A6619C3F 		.word	1067213222
- 968 0174 00000000 		.word	threshold_angle
- 969 0178 00000000 		.word	last_good_posture_time
- 970 017c 00000000 		.word	last_bad_posture_time
- 971 0180 00000000 		.word	is_posture_correct
- 972 0184 B80B0000 		.word	3000
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 25
+ 177:Core/Src/posture_controller.c ****     if (is_posture_correct &&
+ 931              		.loc 1 177 8 view .LVU204
+ 932 00cc 002B     		cmp	r3, #0
+ 933 00ce 04D0     		beq	.L69
+ 178:Core/Src/posture_controller.c ****         !did_calibrate)
+ 934              		.loc 1 178 9 view .LVU205
+ 935 00d0 4C4A     		ldr	r2, .L86+48
+ 936 00d2 1278     		ldrb	r2, [r2]
+ 177:Core/Src/posture_controller.c ****     if (is_posture_correct &&
+ 937              		.loc 1 177 28 discriminator 1 view .LVU206
+ 938 00d4 002A     		cmp	r2, #0
+ 939 00d6 00D1     		bne	.LCB744
+ 940 00d8 78E0     		b	.L83	@long jump
+ 941              	.LCB744:
+ 942              	.L69:
+ 184:Core/Src/posture_controller.c ****     if (!is_posture_correct)
+ 943              		.loc 1 184 5 is_stmt 1 view .LVU207
+ 184:Core/Src/posture_controller.c ****     if (!is_posture_correct)
+ 944              		.loc 1 184 8 is_stmt 0 view .LVU208
+ 945 00da 002B     		cmp	r3, #0
+ 946 00dc 33D1     		bne	.L50
+ 186:Core/Src/posture_controller.c ****         react_to_bad_posture();
+ 947              		.loc 1 186 9 is_stmt 1 view .LVU209
+ 948 00de FFF7FEFF 		bl	react_to_bad_posture
+ 949              	.LVL58:
+ 187:Core/Src/posture_controller.c ****         return;
+ 950              		.loc 1 187 9 view .LVU210
+ 951 00e2 30E0     		b	.L50
+ 952              	.LVL59:
+ 953              	.L76:
+  56:Core/Src/posture_controller.c ****         reset_good_posture_vector();
+ 954              		.loc 1 56 9 view .LVU211
+ 955 00e4 FFF7FEFF 		bl	reset_good_posture_vector
+ 956              	.LVL60:
+  57:Core/Src/posture_controller.c ****         did_calibrate = true;
+ 957              		.loc 1 57 9 view .LVU212
+  57:Core/Src/posture_controller.c ****         did_calibrate = true;
+ 958              		.loc 1 57 23 is_stmt 0 view .LVU213
+ 959 00e8 464B     		ldr	r3, .L86+48
+ 960 00ea 0122     		movs	r2, #1
+ 961 00ec 1A70     		strb	r2, [r3]
+  58:Core/Src/posture_controller.c ****         react_to_calibration();
+ 962              		.loc 1 58 9 is_stmt 1 view .LVU214
+ 963 00ee FFF7FEFF 		bl	react_to_calibration
+ 964              	.LVL61:
+  59:Core/Src/posture_controller.c ****         return;
+ 965              		.loc 1 59 9 view .LVU215
+ 966 00f2 28E0     		b	.L50
+ 967              	.LVL62:
+ 968              	.L77:
+  63:Core/Src/posture_controller.c ****         if (!device_is_off && !device_is_shutting_down) {
+ 969              		.loc 1 63 9 view .LVU216
+  63:Core/Src/posture_controller.c ****         if (!device_is_off && !device_is_shutting_down) {
+ 970              		.loc 1 63 13 is_stmt 0 view .LVU217
+ 971 00f4 374B     		ldr	r3, .L86
+ 972 00f6 1B78     		ldrb	r3, [r3]
+  63:Core/Src/posture_controller.c ****         if (!device_is_off && !device_is_shutting_down) {
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s 			page 25
 
 
- 973 0188 00000000 		.word	did_calibrate
- 974 018c CDCCCC3D 		.word	1036831949
- 975 0190 00000000 		.word	still_posture_start_time
- 976 0194 0F270000 		.word	9999
- 977 0198 20BF0200 		.word	180000
- 978              		.cfi_endproc
- 979              	.LFE40:
- 981              		.section	.text.posture_controller_init,"ax",%progbits
- 982              		.align	1
- 983              		.global	posture_controller_init
- 984              		.syntax unified
- 985              		.code	16
- 986              		.thumb_func
- 988              	posture_controller_init:
- 989              	.LFB49:
- 261:Core/Src/posture_controller.c **** 
- 262:Core/Src/posture_controller.c **** void posture_controller_init(void) {
- 990              		.loc 1 262 36 view -0
- 991              		.cfi_startproc
- 992              		@ args = 0, pretend = 0, frame = 0
- 993              		@ frame_needed = 0, uses_anonymous_args = 0
- 994 0000 10B5     		push	{r4, lr}
- 995              	.LCFI11:
- 996              		.cfi_def_cfa_offset 8
- 997              		.cfi_offset 4, -8
- 998              		.cfi_offset 14, -4
- 263:Core/Src/posture_controller.c ****     reset_good_posture_history();
- 999              		.loc 1 263 5 view .LVU241
- 1000 0002 FFF7FEFF 		bl	reset_good_posture_history
- 1001              	.LVL78:
- 264:Core/Src/posture_controller.c **** }...
- 1002              		.loc 1 264 1 is_stmt 0 view .LVU242
- 1003              		@ sp needed
- 1004 0006 10BD     		pop	{r4, pc}
- 1005              		.cfi_endproc
- 1006              	.LFE49:
- 1008              		.section	.bss.still_posture_start_time,"aw",%nobits
- 1009              		.align	2
- 1012              	still_posture_start_time:
- 1013 0000 00000000 		.space	4
- 1014              		.global	did_handle_initial_still_bad_posture
- 1015              		.section	.bss.did_handle_initial_still_bad_posture,"aw",%nobits
- 1018              	did_handle_initial_still_bad_posture:
- 1019 0000 00       		.space	1
- 1020              		.global	good_posture_history_full
- 1021              		.section	.bss.good_posture_history_full,"aw",%nobits
- 1024              	good_posture_history_full:
- 1025 0000 00       		.space	1
- 1026              		.global	good_posture_history_index
- 1027              		.section	.bss.good_posture_history_index,"aw",%nobits
- 1028              		.align	2
- 1031              	good_posture_history_index:
- 1032 0000 00000000 		.space	4
- 1033              		.global	good_posture_history
- 1034              		.section	.bss.good_posture_history,"aw",%nobits
- 1035              		.align	2
- 1038              	good_posture_history:
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 26
+ 973              		.loc 1 63 12 view .LVU218
+ 974 00f8 002B     		cmp	r3, #0
+ 975 00fa 95D1     		bne	.L54
+  63:Core/Src/posture_controller.c ****         if (!device_is_off && !device_is_shutting_down) {
+ 976              		.loc 1 63 31 discriminator 1 view .LVU219
+ 977 00fc 364B     		ldr	r3, .L86+4
+ 978 00fe 1B78     		ldrb	r3, [r3]
+  63:Core/Src/posture_controller.c ****         if (!device_is_off && !device_is_shutting_down) {
+ 979              		.loc 1 63 28 discriminator 1 view .LVU220
+ 980 0100 002B     		cmp	r3, #0
+ 981 0102 91D1     		bne	.L54
+  64:Core/Src/posture_controller.c ****             device_is_shutting_down = true;  // Start shutdown process
+ 982              		.loc 1 64 13 is_stmt 1 view .LVU221
+  64:Core/Src/posture_controller.c ****             device_is_shutting_down = true;  // Start shutdown process
+ 983              		.loc 1 64 37 is_stmt 0 view .LVU222
+ 984 0104 344B     		ldr	r3, .L86+4
+ 985 0106 0122     		movs	r2, #1
+ 986 0108 1A70     		strb	r2, [r3]
+  65:Core/Src/posture_controller.c ****             react_to_device_off();           // Run LED sequence
+ 987              		.loc 1 65 13 is_stmt 1 view .LVU223
+ 988 010a FFF7FEFF 		bl	react_to_device_off
+ 989              	.LVL63:
+  65:Core/Src/posture_controller.c ****             react_to_device_off();           // Run LED sequence
+ 990              		.loc 1 65 13 is_stmt 0 view .LVU224
+ 991 010e 8BE7     		b	.L54
+ 992              	.LVL64:
+ 993              	.L78:
+  68:Core/Src/posture_controller.c ****         device_is_off = false;
+ 994              		.loc 1 68 9 is_stmt 1 view .LVU225
+  68:Core/Src/posture_controller.c ****         device_is_off = false;
+ 995              		.loc 1 68 23 is_stmt 0 view .LVU226
+ 996 0110 304B     		ldr	r3, .L86
+ 997 0112 0022     		movs	r2, #0
+ 998 0114 1A70     		strb	r2, [r3]
+  69:Core/Src/posture_controller.c ****         react_to_device_on();
+ 999              		.loc 1 69 9 is_stmt 1 view .LVU227
+ 1000 0116 FFF7FEFF 		bl	react_to_device_on
+ 1001              	.LVL65:
+  69:Core/Src/posture_controller.c ****         react_to_device_on();
+ 1002              		.loc 1 69 9 is_stmt 0 view .LVU228
+ 1003 011a 85E7     		b	.L54
+ 1004              	.L79:
+  73:Core/Src/posture_controller.c ****     if (device_is_shutting_down && !led_is_sequence_running()) {
+ 1005              		.loc 1 73 37 discriminator 1 view .LVU229
+ 1006 011c FFF7FEFF 		bl	led_is_sequence_running
+ 1007              	.LVL66:
+  73:Core/Src/posture_controller.c ****     if (device_is_shutting_down && !led_is_sequence_running()) {
+ 1008              		.loc 1 73 33 discriminator 1 view .LVU230
+ 1009 0120 0028     		cmp	r0, #0
+ 1010 0122 85D1     		bne	.L55
+  74:Core/Src/posture_controller.c ****         device_is_shutting_down = false;  // Shutdown sequence complete
+ 1011              		.loc 1 74 9 is_stmt 1 view .LVU231
+  74:Core/Src/posture_controller.c ****         device_is_shutting_down = false;  // Shutdown sequence complete
+ 1012              		.loc 1 74 33 is_stmt 0 view .LVU232
+ 1013 0124 2C4B     		ldr	r3, .L86+4
+ 1014 0126 0022     		movs	r2, #0
+ 1015 0128 1A70     		strb	r2, [r3]
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s 			page 26
 
 
- 1039 0000 00000000 		.space	120
- 1039      00000000 
- 1039      00000000 
- 1039      00000000 
- 1039      00000000 
- 1040              		.global	update_alpha
- 1041              		.section	.data.update_alpha,"aw"
- 1042              		.align	2
- 1045              	update_alpha:
- 1046 0000 CDCC4C3E 		.word	1045220557
- 1047              		.global	did_calibrate
- 1048              		.section	.bss.did_calibrate,"aw",%nobits
- 1051              	did_calibrate:
- 1052 0000 00       		.space	1
- 1053              		.global	last_haptic_feedback_time
- 1054              		.section	.bss.last_haptic_feedback_time,"aw",%nobits
- 1055              		.align	2
- 1058              	last_haptic_feedback_time:
- 1059 0000 00000000 		.space	4
- 1060              		.global	last_good_posture_time
- 1061              		.section	.bss.last_good_posture_time,"aw",%nobits
- 1062              		.align	2
- 1065              	last_good_posture_time:
- 1066 0000 00000000 		.space	4
- 1067              		.global	last_bad_posture_time
- 1068              		.section	.bss.last_bad_posture_time,"aw",%nobits
- 1069              		.align	2
- 1072              	last_bad_posture_time:
- 1073 0000 00000000 		.space	4
- 1074              		.global	is_posture_correct
- 1075              		.section	.data.is_posture_correct,"aw"
- 1078              	is_posture_correct:
- 1079 0000 01       		.byte	1
- 1080              		.global	threshold_angle
- 1081              		.section	.data.threshold_angle,"aw"
- 1082              		.align	2
- 1085              	threshold_angle:
- 1086 0000 C7B8323E 		.word	1043511495
- 1087              		.global	good_posture_vector
- 1088              		.section	.bss.good_posture_vector,"aw",%nobits
- 1089              		.align	2
- 1092              	good_posture_vector:
- 1093 0000 00000000 		.space	12
- 1093      00000000 
- 1093      00000000 
- 1094              		.global	current_accelerometer_vector
- 1095              		.section	.bss.current_accelerometer_vector,"aw",%nobits
- 1096              		.align	2
- 1099              	current_accelerometer_vector:
- 1100 0000 00000000 		.space	12
- 1100      00000000 
- 1100      00000000 
- 1101              		.text
- 1102              	.Letext0:
- 1103              		.file 2 "/Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/arm-none-eabi/include/machine/_defa
- 1104              		.file 3 "/Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/arm-none-eabi/include/sys/_stdint.h
- 1105              		.file 4 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_def.h"
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 27
+  75:Core/Src/posture_controller.c ****         device_is_off = true;             // Now officially off
+ 1016              		.loc 1 75 9 is_stmt 1 view .LVU233
+  75:Core/Src/posture_controller.c ****         device_is_off = true;             // Now officially off
+ 1017              		.loc 1 75 23 is_stmt 0 view .LVU234
+ 1018 012a 2A4B     		ldr	r3, .L86
+ 1019 012c 0132     		adds	r2, r2, #1
+ 1020 012e 1A70     		strb	r2, [r3]
+ 1021 0130 7EE7     		b	.L55
+ 1022              	.L56:
+  79:Core/Src/posture_controller.c ****         reset_good_posture_history();
+ 1023              		.loc 1 79 9 is_stmt 1 view .LVU235
+ 1024 0132 FFF7FEFF 		bl	reset_good_posture_history
+ 1025              	.LVL67:
+  80:Core/Src/posture_controller.c ****         led_off();
+ 1026              		.loc 1 80 9 view .LVU236
+ 1027 0136 FFF7FEFF 		bl	led_off
+ 1028              	.LVL68:
+  81:Core/Src/posture_controller.c ****         sleep_controller_activate_sleep_mode();
+ 1029              		.loc 1 81 9 view .LVU237
+ 1030 013a FFF7FEFF 		bl	sleep_controller_activate_sleep_mode
+ 1031              	.LVL69:
+  84:Core/Src/posture_controller.c ****         if (sleep_controller_was_woken_by_button()) {
+ 1032              		.loc 1 84 9 view .LVU238
+  84:Core/Src/posture_controller.c ****         if (sleep_controller_was_woken_by_button()) {
+ 1033              		.loc 1 84 13 is_stmt 0 view .LVU239
+ 1034 013e FFF7FEFF 		bl	sleep_controller_was_woken_by_button
+ 1035              	.LVL70:
+  84:Core/Src/posture_controller.c ****         if (sleep_controller_was_woken_by_button()) {
+ 1036              		.loc 1 84 12 discriminator 1 view .LVU240
+ 1037 0142 0028     		cmp	r0, #0
+ 1038 0144 01D1     		bne	.L84
+ 1039              	.LVL71:
+ 1040              	.L50:
+ 189:Core/Src/posture_controller.c **** }
+ 1041              		.loc 1 189 1 view .LVU241
+ 1042 0146 05B0     		add	sp, sp, #20
+ 1043              		@ sp needed
+ 1044 0148 30BD     		pop	{r4, r5, pc}
+ 1045              	.LVL72:
+ 1046              	.L84:
+  86:Core/Src/posture_controller.c ****             led_on(100);
+ 1047              		.loc 1 86 13 is_stmt 1 view .LVU242
+ 1048 014a 6420     		movs	r0, #100
+ 1049 014c FFF7FEFF 		bl	led_on
+ 1050              	.LVL73:
+  87:Core/Src/posture_controller.c ****             device_is_off = false;
+ 1051              		.loc 1 87 13 view .LVU243
+  87:Core/Src/posture_controller.c ****             device_is_off = false;
+ 1052              		.loc 1 87 27 is_stmt 0 view .LVU244
+ 1053 0150 204B     		ldr	r3, .L86
+ 1054 0152 0022     		movs	r2, #0
+ 1055 0154 1A70     		strb	r2, [r3]
+  88:Core/Src/posture_controller.c ****             react_to_device_on();
+ 1056              		.loc 1 88 13 is_stmt 1 view .LVU245
+ 1057 0156 FFF7FEFF 		bl	react_to_device_on
+ 1058              	.LVL74:
+  91:Core/Src/posture_controller.c ****         return;
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s 			page 27
 
 
- 1106              		.file 5 "Core/Inc/led_controller.h"
- 1107              		.file 6 "Core/Inc/accelerometer_controller.h"
- 1108              		.file 7 "Core/Inc/button_controller.h"
- 1109              		.file 8 "Core/Inc/haptic_feedback_controller.h"
- 1110              		.file 9 "Core/Inc/sleep_controller.h"
- 1111              		.file 10 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h"
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 28
+ 1059              		.loc 1 91 9 view .LVU246
+ 1060 015a F4E7     		b	.L50
+ 1061              	.LVL75:
+ 1062              	.L80:
+ 106:Core/Src/posture_controller.c ****         if (accelerometer_controller_get_last_measurements_history_max_angle_from_mean() < INITIAL_
+ 1063              		.loc 1 106 9 view .LVU247
+ 106:Core/Src/posture_controller.c ****         if (accelerometer_controller_get_last_measurements_history_max_angle_from_mean() < INITIAL_
+ 1064              		.loc 1 106 13 is_stmt 0 view .LVU248
+ 1065 015c FFF7FEFF 		bl	accelerometer_controller_get_last_measurements_history_max_angle_from_mean
+ 1066              	.LVL76:
+ 106:Core/Src/posture_controller.c ****         if (accelerometer_controller_get_last_measurements_history_max_angle_from_mean() < INITIAL_
+ 1067              		.loc 1 106 12 discriminator 1 view .LVU249
+ 1068 0160 2949     		ldr	r1, .L86+52
+ 1069 0162 FFF7FEFF 		bl	__aeabi_fcmplt
+ 1070              	.LVL77:
+ 1071 0166 0028     		cmp	r0, #0
+ 1072 0168 03D1     		bne	.L85
+ 122:Core/Src/posture_controller.c ****             still_posture_start_time = 0;
+ 1073              		.loc 1 122 13 is_stmt 1 view .LVU250
+ 122:Core/Src/posture_controller.c ****             still_posture_start_time = 0;
+ 1074              		.loc 1 122 38 is_stmt 0 view .LVU251
+ 1075 016a 284B     		ldr	r3, .L86+56
+ 1076 016c 0022     		movs	r2, #0
+ 1077 016e 1A60     		str	r2, [r3]
+ 1078 0170 7BE7     		b	.L59
+ 1079              	.L85:
+ 1080              	.LBB11:
+ 107:Core/Src/posture_controller.c ****             uint32_t current_time = HAL_GetTick();
+ 1081              		.loc 1 107 13 is_stmt 1 view .LVU252
+ 107:Core/Src/posture_controller.c ****             uint32_t current_time = HAL_GetTick();
+ 1082              		.loc 1 107 37 is_stmt 0 view .LVU253
+ 1083 0172 FFF7FEFF 		bl	HAL_GetTick
+ 1084              	.LVL78:
+ 110:Core/Src/posture_controller.c ****             if (still_posture_start_time == 0) {
+ 1085              		.loc 1 110 13 is_stmt 1 view .LVU254
+ 110:Core/Src/posture_controller.c ****             if (still_posture_start_time == 0) {
+ 1086              		.loc 1 110 42 is_stmt 0 view .LVU255
+ 1087 0176 254B     		ldr	r3, .L86+56
+ 1088 0178 1B68     		ldr	r3, [r3]
+ 110:Core/Src/posture_controller.c ****             if (still_posture_start_time == 0) {
+ 1089              		.loc 1 110 16 view .LVU256
+ 1090 017a 002B     		cmp	r3, #0
+ 1091 017c 02D1     		bne	.L62
+ 111:Core/Src/posture_controller.c ****                 still_posture_start_time = current_time;
+ 1092              		.loc 1 111 17 is_stmt 1 view .LVU257
+ 111:Core/Src/posture_controller.c ****                 still_posture_start_time = current_time;
+ 1093              		.loc 1 111 42 is_stmt 0 view .LVU258
+ 1094 017e 234B     		ldr	r3, .L86+56
+ 1095 0180 1860     		str	r0, [r3]
+ 1096 0182 72E7     		b	.L59
+ 1097              	.L62:
+ 114:Core/Src/posture_controller.c ****             else if ((current_time - still_posture_start_time) >= INITIAL_BAD_POSTURE_TIME_MS) {
+ 1098              		.loc 1 114 18 is_stmt 1 view .LVU259
+ 114:Core/Src/posture_controller.c ****             else if ((current_time - still_posture_start_time) >= INITIAL_BAD_POSTURE_TIME_MS) {
+ 1099              		.loc 1 114 36 is_stmt 0 view .LVU260
+ 1100 0184 C01A     		subs	r0, r0, r3
+ 1101              	.LVL79:
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s 			page 28
+
+
+ 114:Core/Src/posture_controller.c ****             else if ((current_time - still_posture_start_time) >= INITIAL_BAD_POSTURE_TIME_MS) {
+ 1102              		.loc 1 114 21 view .LVU261
+ 1103 0186 224B     		ldr	r3, .L86+60
+ 1104 0188 9842     		cmp	r0, r3
+ 1105 018a 00D8     		bhi	.LCB900
+ 1106 018c 6DE7     		b	.L59	@long jump
+ 1107              	.LCB900:
+ 116:Core/Src/posture_controller.c ****                 update_good_posture_history(current_accelerometer_vector);
+ 1108              		.loc 1 116 17 is_stmt 1 view .LVU262
+ 1109 018e 1348     		ldr	r0, .L86+8
+ 1110 0190 FFF7FEFF 		bl	update_good_posture_history
+ 1111              	.LVL80:
+ 117:Core/Src/posture_controller.c ****                 update_good_posture_vector();
+ 1112              		.loc 1 117 17 view .LVU263
+ 1113 0194 FFF7FEFF 		bl	update_good_posture_vector
+ 1114              	.LVL81:
+ 118:Core/Src/posture_controller.c ****                 still_posture_start_time = 0; // Reset the timer after updating
+ 1115              		.loc 1 118 17 view .LVU264
+ 118:Core/Src/posture_controller.c ****                 still_posture_start_time = 0; // Reset the timer after updating
+ 1116              		.loc 1 118 42 is_stmt 0 view .LVU265
+ 1117 0198 1C4B     		ldr	r3, .L86+56
+ 1118 019a 0022     		movs	r2, #0
+ 1119 019c 1A60     		str	r2, [r3]
+ 1120 019e 64E7     		b	.L59
+ 1121              	.LVL82:
+ 1122              	.L75:
+ 118:Core/Src/posture_controller.c ****                 still_posture_start_time = 0; // Reset the timer after updating
+ 1123              		.loc 1 118 42 view .LVU266
+ 1124              	.LBE11:
+ 143:Core/Src/posture_controller.c ****         last_bad_posture_time = now;
+ 1125              		.loc 1 143 9 is_stmt 1 view .LVU267
+ 143:Core/Src/posture_controller.c ****         last_bad_posture_time = now;
+ 1126              		.loc 1 143 31 is_stmt 0 view .LVU268
+ 1127 01a0 154B     		ldr	r3, .L86+36
+ 1128 01a2 1D60     		str	r5, [r3]
+ 1129 01a4 75E7     		b	.L65
+ 1130              	.L81:
+ 153:Core/Src/posture_controller.c ****         is_posture_correct = true;
+ 1131              		.loc 1 153 9 is_stmt 1 view .LVU269
+ 153:Core/Src/posture_controller.c ****         is_posture_correct = true;
+ 1132              		.loc 1 153 28 is_stmt 0 view .LVU270
+ 1133 01a6 154B     		ldr	r3, .L86+40
+ 1134 01a8 0122     		movs	r2, #1
+ 1135 01aa 1A70     		strb	r2, [r3]
+ 154:Core/Src/posture_controller.c ****         did_calibrate = false;
+ 1136              		.loc 1 154 9 is_stmt 1 view .LVU271
+ 154:Core/Src/posture_controller.c ****         did_calibrate = false;
+ 1137              		.loc 1 154 23 is_stmt 0 view .LVU272
+ 1138 01ac 154B     		ldr	r3, .L86+48
+ 1139 01ae 0022     		movs	r2, #0
+ 1140 01b0 1A70     		strb	r2, [r3]
+ 155:Core/Src/posture_controller.c ****         react_to_posture_correct();
+ 1141              		.loc 1 155 9 is_stmt 1 view .LVU273
+ 1142 01b2 FFF7FEFF 		bl	react_to_posture_correct
+ 1143              	.LVL83:
+ 156:Core/Src/posture_controller.c ****         return;
+ 1144              		.loc 1 156 9 view .LVU274
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s 			page 29
+
+
+ 1145 01b6 C6E7     		b	.L50
+ 1146              	.L82:
+ 166:Core/Src/posture_controller.c ****         is_posture_correct = false;
+ 1147              		.loc 1 166 9 view .LVU275
+ 166:Core/Src/posture_controller.c ****         is_posture_correct = false;
+ 1148              		.loc 1 166 28 is_stmt 0 view .LVU276
+ 1149 01b8 104B     		ldr	r3, .L86+40
+ 1150 01ba 0021     		movs	r1, #0
+ 1151 01bc 1970     		strb	r1, [r3]
+ 169:Core/Src/posture_controller.c ****         if ((now - last_bad_posture_time) > BAD_POSTURE_RESET_TIME_MS) {
+ 1152              		.loc 1 169 9 is_stmt 1 view .LVU277
+ 169:Core/Src/posture_controller.c ****         if ((now - last_bad_posture_time) > BAD_POSTURE_RESET_TIME_MS) {
+ 1153              		.loc 1 169 18 is_stmt 0 view .LVU278
+ 1154 01be AD1A     		subs	r5, r5, r2
+ 1155              	.LVL84:
+ 169:Core/Src/posture_controller.c ****         if ((now - last_bad_posture_time) > BAD_POSTURE_RESET_TIME_MS) {
+ 1156              		.loc 1 169 12 view .LVU279
+ 1157 01c0 144B     		ldr	r3, .L86+64
+ 1158 01c2 9D42     		cmp	r5, r3
+ 1159 01c4 BFD9     		bls	.L50
+ 170:Core/Src/posture_controller.c ****             reset_good_posture_history(); // Reset history if bad posture for 3 minutes
+ 1160              		.loc 1 170 13 is_stmt 1 view .LVU280
+ 1161 01c6 FFF7FEFF 		bl	reset_good_posture_history
+ 1162              	.LVL85:
+ 172:Core/Src/posture_controller.c ****         return;
+ 1163              		.loc 1 172 9 view .LVU281
+ 1164 01ca BCE7     		b	.L50
+ 1165              	.LVL86:
+ 1166              	.L83:
+ 180:Core/Src/posture_controller.c ****         start_calibration_procedure();
+ 1167              		.loc 1 180 9 view .LVU282
+ 1168 01cc FFF7FEFF 		bl	start_calibration_procedure
+ 1169              	.LVL87:
+ 181:Core/Src/posture_controller.c ****         return;
+ 1170              		.loc 1 181 9 view .LVU283
+ 1171 01d0 B9E7     		b	.L50
+ 1172              	.L87:
+ 1173 01d2 C046     		.align	2
+ 1174              	.L86:
+ 1175 01d4 00000000 		.word	device_is_off
+ 1176 01d8 00000000 		.word	device_is_shutting_down
+ 1177 01dc 00000000 		.word	current_accelerometer_vector
+ 1178 01e0 00000000 		.word	good_posture_history_full
+ 1179 01e4 00000000 		.word	good_posture_history_index
+ 1180 01e8 00000000 		.word	good_posture_vector
+ 1181 01ec A6619C3F 		.word	1067213222
+ 1182 01f0 00000000 		.word	threshold_angle
+ 1183 01f4 00000000 		.word	last_good_posture_time
+ 1184 01f8 00000000 		.word	last_bad_posture_time
+ 1185 01fc 00000000 		.word	is_posture_correct
+ 1186 0200 B80B0000 		.word	3000
+ 1187 0204 00000000 		.word	did_calibrate
+ 1188 0208 CDCCCC3D 		.word	1036831949
+ 1189 020c 00000000 		.word	still_posture_start_time
+ 1190 0210 0F270000 		.word	9999
+ 1191 0214 20BF0200 		.word	180000
+ 1192              		.cfi_endproc
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s 			page 30
+
+
+ 1193              	.LFE40:
+ 1195              		.global	device_is_shutting_down
+ 1196              		.section	.bss.device_is_shutting_down,"aw",%nobits
+ 1199              	device_is_shutting_down:
+ 1200 0000 00       		.space	1
+ 1201              		.global	device_is_off
+ 1202              		.section	.bss.device_is_off,"aw",%nobits
+ 1205              	device_is_off:
+ 1206 0000 00       		.space	1
+ 1207              		.section	.bss.still_posture_start_time,"aw",%nobits
+ 1208              		.align	2
+ 1211              	still_posture_start_time:
+ 1212 0000 00000000 		.space	4
+ 1213              		.global	did_handle_initial_still_bad_posture
+ 1214              		.section	.bss.did_handle_initial_still_bad_posture,"aw",%nobits
+ 1217              	did_handle_initial_still_bad_posture:
+ 1218 0000 00       		.space	1
+ 1219              		.global	good_posture_history_full
+ 1220              		.section	.bss.good_posture_history_full,"aw",%nobits
+ 1223              	good_posture_history_full:
+ 1224 0000 00       		.space	1
+ 1225              		.global	good_posture_history_index
+ 1226              		.section	.bss.good_posture_history_index,"aw",%nobits
+ 1227              		.align	2
+ 1230              	good_posture_history_index:
+ 1231 0000 00000000 		.space	4
+ 1232              		.global	good_posture_history
+ 1233              		.section	.bss.good_posture_history,"aw",%nobits
+ 1234              		.align	2
+ 1237              	good_posture_history:
+ 1238 0000 00000000 		.space	120
+ 1238      00000000 
+ 1238      00000000 
+ 1238      00000000 
+ 1238      00000000 
+ 1239              		.global	update_alpha
+ 1240              		.section	.data.update_alpha,"aw"
+ 1241              		.align	2
+ 1244              	update_alpha:
+ 1245 0000 CDCC4C3E 		.word	1045220557
+ 1246              		.global	did_calibrate
+ 1247              		.section	.bss.did_calibrate,"aw",%nobits
+ 1250              	did_calibrate:
+ 1251 0000 00       		.space	1
+ 1252              		.global	last_haptic_feedback_time
+ 1253              		.section	.bss.last_haptic_feedback_time,"aw",%nobits
+ 1254              		.align	2
+ 1257              	last_haptic_feedback_time:
+ 1258 0000 00000000 		.space	4
+ 1259              		.global	last_good_posture_time
+ 1260              		.section	.bss.last_good_posture_time,"aw",%nobits
+ 1261              		.align	2
+ 1264              	last_good_posture_time:
+ 1265 0000 00000000 		.space	4
+ 1266              		.global	last_bad_posture_time
+ 1267              		.section	.bss.last_bad_posture_time,"aw",%nobits
+ 1268              		.align	2
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s 			page 31
+
+
+ 1271              	last_bad_posture_time:
+ 1272 0000 00000000 		.space	4
+ 1273              		.global	is_posture_correct
+ 1274              		.section	.data.is_posture_correct,"aw"
+ 1277              	is_posture_correct:
+ 1278 0000 01       		.byte	1
+ 1279              		.global	threshold_angle
+ 1280              		.section	.data.threshold_angle,"aw"
+ 1281              		.align	2
+ 1284              	threshold_angle:
+ 1285 0000 C7B8323E 		.word	1043511495
+ 1286              		.global	good_posture_vector
+ 1287              		.section	.bss.good_posture_vector,"aw",%nobits
+ 1288              		.align	2
+ 1291              	good_posture_vector:
+ 1292 0000 00000000 		.space	12
+ 1292      00000000 
+ 1292      00000000 
+ 1293              		.global	current_accelerometer_vector
+ 1294              		.section	.bss.current_accelerometer_vector,"aw",%nobits
+ 1295              		.align	2
+ 1298              	current_accelerometer_vector:
+ 1299 0000 00000000 		.space	12
+ 1299      00000000 
+ 1299      00000000 
+ 1300              		.text
+ 1301              	.Letext0:
+ 1302              		.file 2 "/Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/arm-none-eabi/include/machine/_defa
+ 1303              		.file 3 "/Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/arm-none-eabi/include/sys/_stdint.h
+ 1304              		.file 4 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_def.h"
+ 1305              		.file 5 "Core/Inc/led_controller.h"
+ 1306              		.file 6 "Core/Inc/accelerometer_controller.h"
+ 1307              		.file 7 "Core/Inc/button_controller.h"
+ 1308              		.file 8 "Core/Inc/haptic_feedback_controller.h"
+ 1309              		.file 9 "Core/Inc/sleep_controller.h"
+ 1310              		.file 10 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h"
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s 			page 32
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 posture_controller.c
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:19     .text.handle_bad_posture:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:25     .text.handle_bad_posture:00000000 handle_bad_posture
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:71     .text.handle_bad_posture:00000020 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:1058   .bss.last_haptic_feedback_time:00000000 last_haptic_feedback_time
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:77     .text.handle_initial_still_bad_posture:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:83     .text.handle_initial_still_bad_posture:00000000 handle_initial_still_bad_posture
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:129    .text.handle_initial_still_bad_posture:00000020 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:135    .text.notify_posture_correct:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:141    .text.notify_posture_correct:00000000 notify_posture_correct
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:167    .text.reset_good_posture_vector:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:173    .text.reset_good_posture_vector:00000000 reset_good_posture_vector
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:203    .text.reset_good_posture_vector:00000014 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:1099   .bss.current_accelerometer_vector:00000000 current_accelerometer_vector
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:1092   .bss.good_posture_vector:00000000 good_posture_vector
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:209    .text.update_good_posture_vector:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:215    .text.update_good_posture_vector:00000000 update_good_posture_vector
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:354    .text.update_good_posture_vector:0000007c $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:1024   .bss.good_posture_history_full:00000000 good_posture_history_full
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:1031   .bss.good_posture_history_index:00000000 good_posture_history_index
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:1038   .bss.good_posture_history:00000000 good_posture_history
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:362    .text.update_good_posture_history:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:368    .text.update_good_posture_history:00000000 update_good_posture_history
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:444    .text.update_good_posture_history:0000003c $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:451    .text.start_calibration_procedure:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:457    .text.start_calibration_procedure:00000000 start_calibration_procedure
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:524    .text.start_calibration_procedure:00000044 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:1072   .bss.last_bad_posture_time:00000000 last_bad_posture_time
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:1051   .bss.did_calibrate:00000000 did_calibrate
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:534    .text.reset_good_posture_history:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:540    .text.reset_good_posture_history:00000000 reset_good_posture_history
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:612    .text.reset_good_posture_history:00000034 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:1012   .bss.still_posture_start_time:00000000 still_posture_start_time
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:620    .text.posture_controller_update:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:626    .text.posture_controller_update:00000000 posture_controller_update
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:963    .text.posture_controller_update:00000160 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:1085   .data.threshold_angle:00000000 threshold_angle
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:1065   .bss.last_good_posture_time:00000000 last_good_posture_time
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:1078   .data.is_posture_correct:00000000 is_posture_correct
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:982    .text.posture_controller_init:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:988    .text.posture_controller_init:00000000 posture_controller_init
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:1009   .bss.still_posture_start_time:00000000 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:1018   .bss.did_handle_initial_still_bad_posture:00000000 did_handle_initial_still_bad_posture
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:1019   .bss.did_handle_initial_still_bad_posture:00000000 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:1025   .bss.good_posture_history_full:00000000 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:1028   .bss.good_posture_history_index:00000000 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:1035   .bss.good_posture_history:00000000 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:1045   .data.update_alpha:00000000 update_alpha
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:1042   .data.update_alpha:00000000 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:1052   .bss.did_calibrate:00000000 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:1055   .bss.last_haptic_feedback_time:00000000 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:1062   .bss.last_good_posture_time:00000000 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:1069   .bss.last_bad_posture_time:00000000 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:1082   .data.threshold_angle:00000000 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:1089   .bss.good_posture_vector:00000000 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s:1096   .bss.current_accelerometer_vector:00000000 $d
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc7fQxnT.s 			page 29
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:19     .text.react_to_bad_posture:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:25     .text.react_to_bad_posture:00000000 react_to_bad_posture
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:71     .text.react_to_bad_posture:00000020 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:1257   .bss.last_haptic_feedback_time:00000000 last_haptic_feedback_time
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:77     .text.react_to_initial_still_bad_posture:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:83     .text.react_to_initial_still_bad_posture:00000000 react_to_initial_still_bad_posture
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:129    .text.react_to_initial_still_bad_posture:00000020 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:135    .text.react_to_posture_correct:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:141    .text.react_to_posture_correct:00000000 react_to_posture_correct
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:167    .text.reset_good_posture_vector:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:173    .text.reset_good_posture_vector:00000000 reset_good_posture_vector
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:203    .text.reset_good_posture_vector:00000014 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:1298   .bss.current_accelerometer_vector:00000000 current_accelerometer_vector
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:1291   .bss.good_posture_vector:00000000 good_posture_vector
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:209    .text.update_good_posture_vector:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:215    .text.update_good_posture_vector:00000000 update_good_posture_vector
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:354    .text.update_good_posture_vector:0000007c $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:1223   .bss.good_posture_history_full:00000000 good_posture_history_full
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:1230   .bss.good_posture_history_index:00000000 good_posture_history_index
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:1237   .bss.good_posture_history:00000000 good_posture_history
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:362    .text.update_good_posture_history:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:368    .text.update_good_posture_history:00000000 update_good_posture_history
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:444    .text.update_good_posture_history:0000003c $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:451    .text.start_calibration_procedure:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:457    .text.start_calibration_procedure:00000000 start_calibration_procedure
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:524    .text.start_calibration_procedure:00000044 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:1271   .bss.last_bad_posture_time:00000000 last_bad_posture_time
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:1250   .bss.did_calibrate:00000000 did_calibrate
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:534    .text.reset_good_posture_history:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:540    .text.reset_good_posture_history:00000000 reset_good_posture_history
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:612    .text.reset_good_posture_history:00000034 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:1211   .bss.still_posture_start_time:00000000 still_posture_start_time
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:620    .text.posture_controller_initialize:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:626    .text.posture_controller_initialize:00000000 posture_controller_initialize
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:647    .text.react_to_device_off:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:653    .text.react_to_device_off:00000000 react_to_device_off
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:675    .text.react_to_device_on:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:681    .text.react_to_device_on:00000000 react_to_device_on
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:703    .text.react_to_calibration:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:709    .text.react_to_calibration:00000000 react_to_calibration
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:731    .text.posture_controller_update:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:737    .text.posture_controller_update:00000000 posture_controller_update
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:1175   .text.posture_controller_update:000001d4 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:1205   .bss.device_is_off:00000000 device_is_off
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:1199   .bss.device_is_shutting_down:00000000 device_is_shutting_down
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:1284   .data.threshold_angle:00000000 threshold_angle
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:1264   .bss.last_good_posture_time:00000000 last_good_posture_time
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:1277   .data.is_posture_correct:00000000 is_posture_correct
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:1200   .bss.device_is_shutting_down:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:1206   .bss.device_is_off:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:1208   .bss.still_posture_start_time:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:1217   .bss.did_handle_initial_still_bad_posture:00000000 did_handle_initial_still_bad_posture
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:1218   .bss.did_handle_initial_still_bad_posture:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:1224   .bss.good_posture_history_full:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:1227   .bss.good_posture_history_index:00000000 $d
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s 			page 33
 
 
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:1234   .bss.good_posture_history:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:1244   .data.update_alpha:00000000 update_alpha
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:1241   .data.update_alpha:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:1251   .bss.did_calibrate:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:1254   .bss.last_haptic_feedback_time:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:1261   .bss.last_good_posture_time:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:1268   .bss.last_bad_posture_time:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:1281   .data.threshold_angle:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:1288   .bss.good_posture_vector:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//ccEokeyD.s:1295   .bss.current_accelerometer_vector:00000000 $d
 
 UNDEFINED SYMBOLS
 HAL_GetTick
@@ -1648,7 +1928,9 @@ button_controller_get_event
 accelerometer_controller_get_latest_data
 get_angle_between_vectors
 __aeabi_fcmpgt
+led_is_sequence_running
 led_off
 sleep_controller_activate_sleep_mode
+sleep_controller_was_woken_by_button
 led_on
 __aeabi_fcmplt

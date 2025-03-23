@@ -4,7 +4,12 @@
 #include "stm32f0xx_hal.h"
 
 /* Optional flag to track sleep state */
-static volatile uint8_t sleep_mode_active = 0;
+static volatile bool sleep_mode_active = false;
+/* Track wake-up source */
+static volatile bool wakeup_by_button = false;
+
+// Add external reference to device_is_off flag
+extern bool device_is_off;
 
 void sleep_controller_activate_sleep_mode(void)
 {
@@ -16,10 +21,13 @@ void sleep_controller_activate_sleep_mode(void)
         return;
     }
 
+    // Reset wake-up flag before sleeping
+    wakeup_by_button = false;
+
     haptic_feedback_disable();
 
     /* Mark that we are about to sleep */
-    sleep_mode_active = 1;
+    sleep_mode_active = true;
 
     /* Optional: Perform any pre-sleep tasks here, like disabling nonessential peripherals */
 
@@ -41,9 +49,13 @@ void sleep_controller_activate_sleep_mode(void)
     haptic_feedback_enable();
     haptic_feedback_controller_initialize();
 
-
     /* Mark that sleep is no longer active */
-    sleep_mode_active = 0;
+    sleep_mode_active = false;
+    
+    /* Reset device_is_off flag when waking from sleep by button press */
+    if (wakeup_by_button) {
+        device_is_off = false;
+    }
 }
 
 void sleep_controller_wake_device(void)
@@ -55,5 +67,15 @@ void sleep_controller_wake_device(void)
        such as reinitializing clocks, peripherals, or clearing flags.
     */
 
-    /* Example: if additional reinitialization is needed, add it here. */
+    /* Set flag indicating wake-up was triggered by button */
+    wakeup_by_button = true;
+}
+
+/* Returns true if wake-up was caused by button, false otherwise */
+bool sleep_controller_was_woken_by_button(void)
+{
+    bool result = wakeup_by_button;
+    // Reset flag after reading
+    wakeup_by_button = false;
+    return result;
 }

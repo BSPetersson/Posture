@@ -1,4 +1,4 @@
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cclconf2.s 			page 1
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 1
 
 
    1              		.cpu cortex-m0
@@ -58,7 +58,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cclconf2.s 			page 1
   30              		@ frame_needed = 0, uses_anonymous_args = 0
   31              		.loc 1 26 1 is_stmt 0 view .LVU1
   32 0000 10B5     		push	{r4, lr}
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cclconf2.s 			page 2
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 2
 
 
   33              	.LCFI0:
@@ -118,7 +118,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cclconf2.s 			page 1
   35:Core/Src/led_controller.c **** void led_controller_initialize(void)
   36:Core/Src/led_controller.c **** {
   81              		.loc 1 36 1 is_stmt 1 view -0
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cclconf2.s 			page 3
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 3
 
 
   82              		.cfi_startproc
@@ -178,7 +178,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cclconf2.s 			page 1
  124              	.L7:
  125 0020 00000000 		.word	htim16
  126 0024 00000000 		.word	led_state
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cclconf2.s 			page 4
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 4
 
 
  127              		.cfi_endproc
@@ -238,7 +238,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cclconf2.s 			page 1
  173              	.LCFI3:
  174              		.cfi_def_cfa_offset 8
  175              		.cfi_offset 4, -8
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cclconf2.s 			page 5
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 5
 
 
  176              		.cfi_offset 14, -4
@@ -298,7 +298,7 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cclconf2.s 			page 1
  219              		.loc 1 73 5 is_stmt 1 view .LVU43
  220              		.loc 1 73 24 is_stmt 0 view .LVU44
  221 000e 5A72     		strb	r2, [r3, #9]
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cclconf2.s 			page 6
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 6
 
 
   74:Core/Src/led_controller.c ****     // For fade sequence, initialize brightness and direction.
@@ -344,534 +344,569 @@ ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cclconf2.s 			page 1
  250 0028 00000000 		.word	led_state
  251              		.cfi_endproc
  252              	.LFE44:
- 254              		.section	.text.led_controller_update,"ax",%progbits
+ 254              		.section	.text.led_is_sequence_running,"ax",%progbits
  255              		.align	1
- 256              		.global	led_controller_update
+ 256              		.global	led_is_sequence_running
  257              		.syntax unified
  258              		.code	16
  259              		.thumb_func
- 261              	led_controller_update:
+ 261              	led_is_sequence_running:
  262              	.LFB45:
   82:Core/Src/led_controller.c **** 
-  83:Core/Src/led_controller.c **** void led_controller_update(void)
+  83:Core/Src/led_controller.c **** bool led_is_sequence_running(void)
   84:Core/Src/led_controller.c **** {
  263              		.loc 1 84 1 is_stmt 1 view -0
  264              		.cfi_startproc
  265              		@ args = 0, pretend = 0, frame = 0
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cclconf2.s 			page 7
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 7
 
 
  266              		@ frame_needed = 0, uses_anonymous_args = 0
- 267 0000 70B5     		push	{r4, r5, r6, lr}
- 268              	.LCFI5:
- 269              		.cfi_def_cfa_offset 16
- 270              		.cfi_offset 4, -16
- 271              		.cfi_offset 5, -12
- 272              		.cfi_offset 6, -8
- 273              		.cfi_offset 14, -4
-  85:Core/Src/led_controller.c ****     if (!led_state.active || led_state.sequence == LED_SEQ_NONE)
- 274              		.loc 1 85 5 view .LVU56
- 275              		.loc 1 85 19 is_stmt 0 view .LVU57
- 276 0002 434B     		ldr	r3, .L24
- 277 0004 5B78     		ldrb	r3, [r3, #1]
- 278              		.loc 1 85 8 view .LVU58
- 279 0006 002B     		cmp	r3, #0
- 280 0008 03D0     		beq	.L16
- 281              		.loc 1 85 39 discriminator 1 view .LVU59
- 282 000a 414B     		ldr	r3, .L24
- 283 000c 1B78     		ldrb	r3, [r3]
- 284              		.loc 1 85 27 discriminator 1 view .LVU60
- 285 000e 002B     		cmp	r3, #0
- 286 0010 00D1     		bne	.L23
- 287              	.L16:
-  86:Core/Src/led_controller.c ****     {
-  87:Core/Src/led_controller.c ****         return;
-  88:Core/Src/led_controller.c ****     }
-  89:Core/Src/led_controller.c **** 
-  90:Core/Src/led_controller.c ****     uint32_t now = HAL_GetTick();
-  91:Core/Src/led_controller.c **** 
-  92:Core/Src/led_controller.c ****     switch (led_state.sequence)
-  93:Core/Src/led_controller.c ****     {
-  94:Core/Src/led_controller.c ****         case LED_SEQ_THREE_BLINKS:
-  95:Core/Src/led_controller.c ****             if (now >= led_state.next_update)
-  96:Core/Src/led_controller.c ****             {
-  97:Core/Src/led_controller.c ****                 if (led_state.substate == 0)
-  98:Core/Src/led_controller.c ****                 {
-  99:Core/Src/led_controller.c ****                     update_pwm(LED_THREE_BLINKS_BRIGHTNESS);
- 100:Core/Src/led_controller.c ****                     led_state.next_update = now + LED_THREE_BLINKS_ON_TIME_MS;
- 101:Core/Src/led_controller.c ****                     led_state.substate = 1;
- 102:Core/Src/led_controller.c ****                 }
- 103:Core/Src/led_controller.c ****                 else // substate == 1
- 104:Core/Src/led_controller.c ****                 {
- 105:Core/Src/led_controller.c ****                     update_pwm(0);
- 106:Core/Src/led_controller.c ****                     led_state.next_update = now + LED_THREE_BLINKS_OFF_TIME_MS;
- 107:Core/Src/led_controller.c ****                     led_state.substate = 0;
- 108:Core/Src/led_controller.c ****                     led_state.current_blink++;
- 109:Core/Src/led_controller.c ****                     if (led_state.current_blink >= LED_THREE_BLINKS_COUNT)
- 110:Core/Src/led_controller.c ****                     {
- 111:Core/Src/led_controller.c ****                         led_state.sequence = LED_SEQ_NONE;
- 112:Core/Src/led_controller.c ****                         led_state.active = false;
- 113:Core/Src/led_controller.c ****                     }
- 114:Core/Src/led_controller.c ****                 }
- 115:Core/Src/led_controller.c ****             }
- 116:Core/Src/led_controller.c ****             break;
- 117:Core/Src/led_controller.c **** 
- 118:Core/Src/led_controller.c ****         case LED_SEQ_DOUBLE_BLINK:
- 119:Core/Src/led_controller.c ****             if (now >= led_state.next_update)
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cclconf2.s 			page 8
+ 267              		@ link register save eliminated.
+  85:Core/Src/led_controller.c ****     return led_state.active;
+ 268              		.loc 1 85 5 view .LVU56
+ 269              		.loc 1 85 21 is_stmt 0 view .LVU57
+ 270 0000 014B     		ldr	r3, .L17
+ 271              		.loc 1 85 21 discriminator 1 view .LVU58
+ 272 0002 5878     		ldrb	r0, [r3, #1]
+  86:Core/Src/led_controller.c **** }
+ 273              		.loc 1 86 1 view .LVU59
+ 274              		@ sp needed
+ 275 0004 7047     		bx	lr
+ 276              	.L18:
+ 277 0006 C046     		.align	2
+ 278              	.L17:
+ 279 0008 00000000 		.word	led_state
+ 280              		.cfi_endproc
+ 281              	.LFE45:
+ 283              		.section	.text.led_controller_update,"ax",%progbits
+ 284              		.align	1
+ 285              		.global	led_controller_update
+ 286              		.syntax unified
+ 287              		.code	16
+ 288              		.thumb_func
+ 290              	led_controller_update:
+ 291              	.LFB46:
+  87:Core/Src/led_controller.c **** 
+  88:Core/Src/led_controller.c **** void led_controller_update(void)
+  89:Core/Src/led_controller.c **** {
+ 292              		.loc 1 89 1 is_stmt 1 view -0
+ 293              		.cfi_startproc
+ 294              		@ args = 0, pretend = 0, frame = 0
+ 295              		@ frame_needed = 0, uses_anonymous_args = 0
+ 296 0000 70B5     		push	{r4, r5, r6, lr}
+ 297              	.LCFI5:
+ 298              		.cfi_def_cfa_offset 16
+ 299              		.cfi_offset 4, -16
+ 300              		.cfi_offset 5, -12
+ 301              		.cfi_offset 6, -8
+ 302              		.cfi_offset 14, -4
+  90:Core/Src/led_controller.c ****     if (!led_state.active || led_state.sequence == LED_SEQ_NONE)
+ 303              		.loc 1 90 5 view .LVU61
+ 304              		.loc 1 90 19 is_stmt 0 view .LVU62
+ 305 0002 434B     		ldr	r3, .L27
+ 306 0004 5B78     		ldrb	r3, [r3, #1]
+ 307              		.loc 1 90 8 view .LVU63
+ 308 0006 002B     		cmp	r3, #0
+ 309 0008 03D0     		beq	.L19
+ 310              		.loc 1 90 39 discriminator 1 view .LVU64
+ 311 000a 414B     		ldr	r3, .L27
+ 312 000c 1B78     		ldrb	r3, [r3]
+ 313              		.loc 1 90 27 discriminator 1 view .LVU65
+ 314 000e 002B     		cmp	r3, #0
+ 315 0010 00D1     		bne	.L26
+ 316              	.L19:
+  91:Core/Src/led_controller.c ****     {
+  92:Core/Src/led_controller.c ****         return;
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 8
 
 
- 120:Core/Src/led_controller.c ****             {
- 121:Core/Src/led_controller.c ****                 if (led_state.substate == 0)
- 122:Core/Src/led_controller.c ****                 {
- 123:Core/Src/led_controller.c ****                     update_pwm(LED_DOUBLE_BLINK_BRIGHTNESS);
- 124:Core/Src/led_controller.c ****                     led_state.next_update = now + LED_DOUBLE_BLINK_ON_TIME_MS;
- 125:Core/Src/led_controller.c ****                     led_state.substate = 1;
- 126:Core/Src/led_controller.c ****                 }
- 127:Core/Src/led_controller.c ****                 else // substate == 1
- 128:Core/Src/led_controller.c ****                 {
- 129:Core/Src/led_controller.c ****                     update_pwm(0);
- 130:Core/Src/led_controller.c ****                     led_state.next_update = now + LED_DOUBLE_BLINK_OFF_TIME_MS;
- 131:Core/Src/led_controller.c ****                     led_state.substate = 0;
- 132:Core/Src/led_controller.c ****                     led_state.current_blink++;
- 133:Core/Src/led_controller.c ****                     if (led_state.current_blink >= LED_DOUBLE_BLINK_COUNT)
- 134:Core/Src/led_controller.c ****                     {
- 135:Core/Src/led_controller.c ****                         led_state.sequence = LED_SEQ_NONE;
- 136:Core/Src/led_controller.c ****                         led_state.active = false;
- 137:Core/Src/led_controller.c ****                     }
- 138:Core/Src/led_controller.c ****                 }
- 139:Core/Src/led_controller.c ****             }
- 140:Core/Src/led_controller.c ****             break;
- 141:Core/Src/led_controller.c **** 
- 142:Core/Src/led_controller.c ****         case LED_SEQ_FADE_IN_OUT:
- 143:Core/Src/led_controller.c ****             if (now >= led_state.next_update)
- 144:Core/Src/led_controller.c ****             {
- 145:Core/Src/led_controller.c ****                 update_pwm(led_state.brightness);
- 146:Core/Src/led_controller.c ****                 led_state.next_update = now + LED_FADE_UPDATE_TIME_MS;
- 147:Core/Src/led_controller.c ****                 led_state.brightness += led_state.fade_direction;
- 148:Core/Src/led_controller.c ****                 if (led_state.brightness >= LED_FADE_MAX_BRIGHTNESS && led_state.fade_direction > 0
- 149:Core/Src/led_controller.c ****                 {
- 150:Core/Src/led_controller.c ****                     led_state.brightness = LED_FADE_MAX_BRIGHTNESS;
- 151:Core/Src/led_controller.c ****                     led_state.fade_direction = -1;
- 152:Core/Src/led_controller.c ****                 }
- 153:Core/Src/led_controller.c ****                 else if (led_state.brightness == 0 && led_state.fade_direction < 0)
+  93:Core/Src/led_controller.c ****     }
+  94:Core/Src/led_controller.c **** 
+  95:Core/Src/led_controller.c ****     uint32_t now = HAL_GetTick();
+  96:Core/Src/led_controller.c **** 
+  97:Core/Src/led_controller.c ****     switch (led_state.sequence)
+  98:Core/Src/led_controller.c ****     {
+  99:Core/Src/led_controller.c ****         case LED_SEQ_THREE_BLINKS:
+ 100:Core/Src/led_controller.c ****             if (now >= led_state.next_update)
+ 101:Core/Src/led_controller.c ****             {
+ 102:Core/Src/led_controller.c ****                 if (led_state.substate == 0)
+ 103:Core/Src/led_controller.c ****                 {
+ 104:Core/Src/led_controller.c ****                     update_pwm(LED_THREE_BLINKS_BRIGHTNESS);
+ 105:Core/Src/led_controller.c ****                     led_state.next_update = now + LED_THREE_BLINKS_ON_TIME_MS;
+ 106:Core/Src/led_controller.c ****                     led_state.substate = 1;
+ 107:Core/Src/led_controller.c ****                 }
+ 108:Core/Src/led_controller.c ****                 else // substate == 1
+ 109:Core/Src/led_controller.c ****                 {
+ 110:Core/Src/led_controller.c ****                     update_pwm(0);
+ 111:Core/Src/led_controller.c ****                     led_state.next_update = now + LED_THREE_BLINKS_OFF_TIME_MS;
+ 112:Core/Src/led_controller.c ****                     led_state.substate = 0;
+ 113:Core/Src/led_controller.c ****                     led_state.current_blink++;
+ 114:Core/Src/led_controller.c ****                     if (led_state.current_blink >= LED_THREE_BLINKS_COUNT)
+ 115:Core/Src/led_controller.c ****                     {
+ 116:Core/Src/led_controller.c ****                         led_state.sequence = LED_SEQ_NONE;
+ 117:Core/Src/led_controller.c ****                         led_state.active = false;
+ 118:Core/Src/led_controller.c ****                     }
+ 119:Core/Src/led_controller.c ****                 }
+ 120:Core/Src/led_controller.c ****             }
+ 121:Core/Src/led_controller.c ****             break;
+ 122:Core/Src/led_controller.c **** 
+ 123:Core/Src/led_controller.c ****         case LED_SEQ_DOUBLE_BLINK:
+ 124:Core/Src/led_controller.c ****             if (now >= led_state.next_update)
+ 125:Core/Src/led_controller.c ****             {
+ 126:Core/Src/led_controller.c ****                 if (led_state.substate == 0)
+ 127:Core/Src/led_controller.c ****                 {
+ 128:Core/Src/led_controller.c ****                     update_pwm(LED_DOUBLE_BLINK_BRIGHTNESS);
+ 129:Core/Src/led_controller.c ****                     led_state.next_update = now + LED_DOUBLE_BLINK_ON_TIME_MS;
+ 130:Core/Src/led_controller.c ****                     led_state.substate = 1;
+ 131:Core/Src/led_controller.c ****                 }
+ 132:Core/Src/led_controller.c ****                 else // substate == 1
+ 133:Core/Src/led_controller.c ****                 {
+ 134:Core/Src/led_controller.c ****                     update_pwm(0);
+ 135:Core/Src/led_controller.c ****                     led_state.next_update = now + LED_DOUBLE_BLINK_OFF_TIME_MS;
+ 136:Core/Src/led_controller.c ****                     led_state.substate = 0;
+ 137:Core/Src/led_controller.c ****                     led_state.current_blink++;
+ 138:Core/Src/led_controller.c ****                     if (led_state.current_blink >= LED_DOUBLE_BLINK_COUNT)
+ 139:Core/Src/led_controller.c ****                     {
+ 140:Core/Src/led_controller.c ****                         led_state.sequence = LED_SEQ_NONE;
+ 141:Core/Src/led_controller.c ****                         led_state.active = false;
+ 142:Core/Src/led_controller.c ****                     }
+ 143:Core/Src/led_controller.c ****                 }
+ 144:Core/Src/led_controller.c ****             }
+ 145:Core/Src/led_controller.c ****             break;
+ 146:Core/Src/led_controller.c **** 
+ 147:Core/Src/led_controller.c ****         case LED_SEQ_FADE_IN_OUT:
+ 148:Core/Src/led_controller.c ****             if (now >= led_state.next_update)
+ 149:Core/Src/led_controller.c ****             {
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 9
+
+
+ 150:Core/Src/led_controller.c ****                 update_pwm(led_state.brightness);
+ 151:Core/Src/led_controller.c ****                 led_state.next_update = now + LED_FADE_UPDATE_TIME_MS;
+ 152:Core/Src/led_controller.c ****                 led_state.brightness += led_state.fade_direction;
+ 153:Core/Src/led_controller.c ****                 if (led_state.brightness >= LED_FADE_MAX_BRIGHTNESS && led_state.fade_direction > 0
  154:Core/Src/led_controller.c ****                 {
- 155:Core/Src/led_controller.c ****                     update_pwm(0);
- 156:Core/Src/led_controller.c ****                     led_state.sequence = LED_SEQ_NONE;
- 157:Core/Src/led_controller.c ****                     led_state.active = false;
- 158:Core/Src/led_controller.c ****                 }
- 159:Core/Src/led_controller.c ****             }
- 160:Core/Src/led_controller.c ****             break;
- 161:Core/Src/led_controller.c **** 
- 162:Core/Src/led_controller.c ****         default:
- 163:Core/Src/led_controller.c ****             // Unknown sequence; do nothing.
- 164:Core/Src/led_controller.c ****             break;
- 165:Core/Src/led_controller.c ****     }
- 166:Core/Src/led_controller.c **** }...
- 288              		.loc 1 166 1 view .LVU61
- 289              		@ sp needed
- 290 0012 70BD     		pop	{r4, r5, r6, pc}
- 291              	.L23:
-  90:Core/Src/led_controller.c ****     uint32_t now = HAL_GetTick();
- 292              		.loc 1 90 5 is_stmt 1 view .LVU62
-  90:Core/Src/led_controller.c ****     uint32_t now = HAL_GetTick();
- 293              		.loc 1 90 20 is_stmt 0 view .LVU63
- 294 0014 FFF7FEFF 		bl	HAL_GetTick
- 295              	.LVL12:
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cclconf2.s 			page 9
+ 155:Core/Src/led_controller.c ****                     led_state.brightness = LED_FADE_MAX_BRIGHTNESS;
+ 156:Core/Src/led_controller.c ****                     led_state.fade_direction = -1;
+ 157:Core/Src/led_controller.c ****                 }
+ 158:Core/Src/led_controller.c ****                 else if (led_state.brightness == 0 && led_state.fade_direction < 0)
+ 159:Core/Src/led_controller.c ****                 {
+ 160:Core/Src/led_controller.c ****                     update_pwm(0);
+ 161:Core/Src/led_controller.c ****                     led_state.sequence = LED_SEQ_NONE;
+ 162:Core/Src/led_controller.c ****                     led_state.active = false;
+ 163:Core/Src/led_controller.c ****                 }
+ 164:Core/Src/led_controller.c ****             }
+ 165:Core/Src/led_controller.c ****             break;
+ 166:Core/Src/led_controller.c **** 
+ 167:Core/Src/led_controller.c ****         default:
+ 168:Core/Src/led_controller.c ****             // Unknown sequence; do nothing.
+ 169:Core/Src/led_controller.c ****             break;
+ 170:Core/Src/led_controller.c ****     }
+ 171:Core/Src/led_controller.c **** }...
+ 317              		.loc 1 171 1 view .LVU66
+ 318              		@ sp needed
+ 319 0012 70BD     		pop	{r4, r5, r6, pc}
+ 320              	.L26:
+  95:Core/Src/led_controller.c ****     uint32_t now = HAL_GetTick();
+ 321              		.loc 1 95 5 is_stmt 1 view .LVU67
+  95:Core/Src/led_controller.c ****     uint32_t now = HAL_GetTick();
+ 322              		.loc 1 95 20 is_stmt 0 view .LVU68
+ 323 0014 FFF7FEFF 		bl	HAL_GetTick
+ 324              	.LVL12:
+ 325 0018 0400     		movs	r4, r0
+ 326              	.LVL13:
+  97:Core/Src/led_controller.c ****     switch (led_state.sequence)
+ 327              		.loc 1 97 5 is_stmt 1 view .LVU69
+  97:Core/Src/led_controller.c ****     switch (led_state.sequence)
+ 328              		.loc 1 97 22 is_stmt 0 view .LVU70
+ 329 001a 3D4B     		ldr	r3, .L27
+ 330 001c 1B78     		ldrb	r3, [r3]
+  97:Core/Src/led_controller.c ****     switch (led_state.sequence)
+ 331              		.loc 1 97 5 view .LVU71
+ 332 001e 022B     		cmp	r3, #2
+ 333 0020 27D0     		beq	.L21
+ 334 0022 032B     		cmp	r3, #3
+ 335 0024 4BD0     		beq	.L22
+ 336 0026 012B     		cmp	r3, #1
+ 337 0028 F3D1     		bne	.L19
+ 100:Core/Src/led_controller.c ****             if (now >= led_state.next_update)
+ 338              		.loc 1 100 13 is_stmt 1 view .LVU72
+ 100:Core/Src/led_controller.c ****             if (now >= led_state.next_update)
+ 339              		.loc 1 100 33 is_stmt 0 view .LVU73
+ 340 002a 394B     		ldr	r3, .L27
+ 341 002c 5B68     		ldr	r3, [r3, #4]
+ 100:Core/Src/led_controller.c ****             if (now >= led_state.next_update)
+ 342              		.loc 1 100 16 view .LVU74
+ 343 002e 8342     		cmp	r3, r0
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 10
 
 
- 296 0018 0400     		movs	r4, r0
- 297              	.LVL13:
-  92:Core/Src/led_controller.c ****     switch (led_state.sequence)
- 298              		.loc 1 92 5 is_stmt 1 view .LVU64
-  92:Core/Src/led_controller.c ****     switch (led_state.sequence)
- 299              		.loc 1 92 22 is_stmt 0 view .LVU65
- 300 001a 3D4B     		ldr	r3, .L24
- 301 001c 1B78     		ldrb	r3, [r3]
-  92:Core/Src/led_controller.c ****     switch (led_state.sequence)
- 302              		.loc 1 92 5 view .LVU66
- 303 001e 022B     		cmp	r3, #2
- 304 0020 27D0     		beq	.L18
- 305 0022 032B     		cmp	r3, #3
- 306 0024 4BD0     		beq	.L19
- 307 0026 012B     		cmp	r3, #1
- 308 0028 F3D1     		bne	.L16
-  95:Core/Src/led_controller.c ****             if (now >= led_state.next_update)
- 309              		.loc 1 95 13 is_stmt 1 view .LVU67
-  95:Core/Src/led_controller.c ****             if (now >= led_state.next_update)
- 310              		.loc 1 95 33 is_stmt 0 view .LVU68
- 311 002a 394B     		ldr	r3, .L24
- 312 002c 5B68     		ldr	r3, [r3, #4]
-  95:Core/Src/led_controller.c ****             if (now >= led_state.next_update)
- 313              		.loc 1 95 16 view .LVU69
- 314 002e 8342     		cmp	r3, r0
- 315 0030 EFD8     		bhi	.L16
-  97:Core/Src/led_controller.c ****                 if (led_state.substate == 0)
- 316              		.loc 1 97 17 is_stmt 1 view .LVU70
-  97:Core/Src/led_controller.c ****                 if (led_state.substate == 0)
- 317              		.loc 1 97 30 is_stmt 0 view .LVU71
- 318 0032 374B     		ldr	r3, .L24
- 319 0034 5B7A     		ldrb	r3, [r3, #9]
-  97:Core/Src/led_controller.c ****                 if (led_state.substate == 0)
- 320              		.loc 1 97 20 view .LVU72
- 321 0036 002B     		cmp	r3, #0
- 322 0038 08D1     		bne	.L20
-  99:Core/Src/led_controller.c ****                     update_pwm(LED_THREE_BLINKS_BRIGHTNESS);
- 323              		.loc 1 99 21 is_stmt 1 view .LVU73
- 324 003a 3220     		movs	r0, #50
- 325              	.LVL14:
-  99:Core/Src/led_controller.c ****                     update_pwm(LED_THREE_BLINKS_BRIGHTNESS);
- 326              		.loc 1 99 21 is_stmt 0 view .LVU74
- 327 003c FFF7FEFF 		bl	update_pwm
- 328              	.LVL15:
- 100:Core/Src/led_controller.c ****                     led_state.next_update = now + LED_THREE_BLINKS_ON_TIME_MS;
- 329              		.loc 1 100 21 is_stmt 1 view .LVU75
- 100:Core/Src/led_controller.c ****                     led_state.next_update = now + LED_THREE_BLINKS_ON_TIME_MS;
- 330              		.loc 1 100 49 is_stmt 0 view .LVU76
- 331 0040 C834     		adds	r4, r4, #200
- 332              	.LVL16:
- 100:Core/Src/led_controller.c ****                     led_state.next_update = now + LED_THREE_BLINKS_ON_TIME_MS;
- 333              		.loc 1 100 43 view .LVU77
- 334 0042 334B     		ldr	r3, .L24
- 335 0044 5C60     		str	r4, [r3, #4]
- 101:Core/Src/led_controller.c ****                     led_state.substate = 1;
- 336              		.loc 1 101 21 is_stmt 1 view .LVU78
- 101:Core/Src/led_controller.c ****                     led_state.substate = 1;
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cclconf2.s 			page 10
+ 344 0030 EFD8     		bhi	.L19
+ 102:Core/Src/led_controller.c ****                 if (led_state.substate == 0)
+ 345              		.loc 1 102 17 is_stmt 1 view .LVU75
+ 102:Core/Src/led_controller.c ****                 if (led_state.substate == 0)
+ 346              		.loc 1 102 30 is_stmt 0 view .LVU76
+ 347 0032 374B     		ldr	r3, .L27
+ 348 0034 5B7A     		ldrb	r3, [r3, #9]
+ 102:Core/Src/led_controller.c ****                 if (led_state.substate == 0)
+ 349              		.loc 1 102 20 view .LVU77
+ 350 0036 002B     		cmp	r3, #0
+ 351 0038 08D1     		bne	.L23
+ 104:Core/Src/led_controller.c ****                     update_pwm(LED_THREE_BLINKS_BRIGHTNESS);
+ 352              		.loc 1 104 21 is_stmt 1 view .LVU78
+ 353 003a 3220     		movs	r0, #50
+ 354              	.LVL14:
+ 104:Core/Src/led_controller.c ****                     update_pwm(LED_THREE_BLINKS_BRIGHTNESS);
+ 355              		.loc 1 104 21 is_stmt 0 view .LVU79
+ 356 003c FFF7FEFF 		bl	update_pwm
+ 357              	.LVL15:
+ 105:Core/Src/led_controller.c ****                     led_state.next_update = now + LED_THREE_BLINKS_ON_TIME_MS;
+ 358              		.loc 1 105 21 is_stmt 1 view .LVU80
+ 105:Core/Src/led_controller.c ****                     led_state.next_update = now + LED_THREE_BLINKS_ON_TIME_MS;
+ 359              		.loc 1 105 49 is_stmt 0 view .LVU81
+ 360 0040 C834     		adds	r4, r4, #200
+ 361              	.LVL16:
+ 105:Core/Src/led_controller.c ****                     led_state.next_update = now + LED_THREE_BLINKS_ON_TIME_MS;
+ 362              		.loc 1 105 43 view .LVU82
+ 363 0042 334B     		ldr	r3, .L27
+ 364 0044 5C60     		str	r4, [r3, #4]
+ 106:Core/Src/led_controller.c ****                     led_state.substate = 1;
+ 365              		.loc 1 106 21 is_stmt 1 view .LVU83
+ 106:Core/Src/led_controller.c ****                     led_state.substate = 1;
+ 366              		.loc 1 106 40 is_stmt 0 view .LVU84
+ 367 0046 0122     		movs	r2, #1
+ 368 0048 5A72     		strb	r2, [r3, #9]
+ 369 004a E2E7     		b	.L19
+ 370              	.LVL17:
+ 371              	.L23:
+ 110:Core/Src/led_controller.c ****                     update_pwm(0);
+ 372              		.loc 1 110 21 is_stmt 1 view .LVU85
+ 373 004c 0020     		movs	r0, #0
+ 374              	.LVL18:
+ 110:Core/Src/led_controller.c ****                     update_pwm(0);
+ 375              		.loc 1 110 21 is_stmt 0 view .LVU86
+ 376 004e FFF7FEFF 		bl	update_pwm
+ 377              	.LVL19:
+ 111:Core/Src/led_controller.c ****                     led_state.next_update = now + LED_THREE_BLINKS_OFF_TIME_MS;
+ 378              		.loc 1 111 21 is_stmt 1 view .LVU87
+ 111:Core/Src/led_controller.c ****                     led_state.next_update = now + LED_THREE_BLINKS_OFF_TIME_MS;
+ 379              		.loc 1 111 49 is_stmt 0 view .LVU88
+ 380 0052 C834     		adds	r4, r4, #200
+ 381              	.LVL20:
+ 111:Core/Src/led_controller.c ****                     led_state.next_update = now + LED_THREE_BLINKS_OFF_TIME_MS;
+ 382              		.loc 1 111 43 view .LVU89
+ 383 0054 2E4A     		ldr	r2, .L27
+ 384 0056 5460     		str	r4, [r2, #4]
+ 112:Core/Src/led_controller.c ****                     led_state.substate = 0;
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 11
 
 
- 337              		.loc 1 101 40 is_stmt 0 view .LVU79
- 338 0046 0122     		movs	r2, #1
- 339 0048 5A72     		strb	r2, [r3, #9]
- 340 004a E2E7     		b	.L16
- 341              	.LVL17:
- 342              	.L20:
- 105:Core/Src/led_controller.c ****                     update_pwm(0);
- 343              		.loc 1 105 21 is_stmt 1 view .LVU80
- 344 004c 0020     		movs	r0, #0
- 345              	.LVL18:
- 105:Core/Src/led_controller.c ****                     update_pwm(0);
- 346              		.loc 1 105 21 is_stmt 0 view .LVU81
- 347 004e FFF7FEFF 		bl	update_pwm
- 348              	.LVL19:
- 106:Core/Src/led_controller.c ****                     led_state.next_update = now + LED_THREE_BLINKS_OFF_TIME_MS;
- 349              		.loc 1 106 21 is_stmt 1 view .LVU82
- 106:Core/Src/led_controller.c ****                     led_state.next_update = now + LED_THREE_BLINKS_OFF_TIME_MS;
- 350              		.loc 1 106 49 is_stmt 0 view .LVU83
- 351 0052 C834     		adds	r4, r4, #200
- 352              	.LVL20:
- 106:Core/Src/led_controller.c ****                     led_state.next_update = now + LED_THREE_BLINKS_OFF_TIME_MS;
- 353              		.loc 1 106 43 view .LVU84
- 354 0054 2E4A     		ldr	r2, .L24
- 355 0056 5460     		str	r4, [r2, #4]
- 107:Core/Src/led_controller.c ****                     led_state.substate = 0;
- 356              		.loc 1 107 21 is_stmt 1 view .LVU85
- 107:Core/Src/led_controller.c ****                     led_state.substate = 0;
- 357              		.loc 1 107 40 is_stmt 0 view .LVU86
- 358 0058 0023     		movs	r3, #0
- 359 005a 5372     		strb	r3, [r2, #9]
- 108:Core/Src/led_controller.c ****                     led_state.current_blink++;
- 360              		.loc 1 108 21 is_stmt 1 view .LVU87
- 108:Core/Src/led_controller.c ****                     led_state.current_blink++;
- 361              		.loc 1 108 30 is_stmt 0 view .LVU88
- 362 005c 137A     		ldrb	r3, [r2, #8]
- 108:Core/Src/led_controller.c ****                     led_state.current_blink++;
- 363              		.loc 1 108 44 view .LVU89
- 364 005e 0133     		adds	r3, r3, #1
- 365 0060 DBB2     		uxtb	r3, r3
- 366 0062 1372     		strb	r3, [r2, #8]
- 109:Core/Src/led_controller.c ****                     if (led_state.current_blink >= LED_THREE_BLINKS_COUNT)
- 367              		.loc 1 109 21 is_stmt 1 view .LVU90
- 109:Core/Src/led_controller.c ****                     if (led_state.current_blink >= LED_THREE_BLINKS_COUNT)
- 368              		.loc 1 109 24 is_stmt 0 view .LVU91
- 369 0064 022B     		cmp	r3, #2
- 370 0066 D4D9     		bls	.L16
- 111:Core/Src/led_controller.c ****                         led_state.sequence = LED_SEQ_NONE;
- 371              		.loc 1 111 25 is_stmt 1 view .LVU92
- 111:Core/Src/led_controller.c ****                         led_state.sequence = LED_SEQ_NONE;
- 372              		.loc 1 111 44 is_stmt 0 view .LVU93
- 373 0068 1300     		movs	r3, r2
- 374 006a 0022     		movs	r2, #0
- 375 006c 1A70     		strb	r2, [r3]
- 112:Core/Src/led_controller.c ****                         led_state.active = false;
- 376              		.loc 1 112 25 is_stmt 1 view .LVU94
- 112:Core/Src/led_controller.c ****                         led_state.active = false;
- 377              		.loc 1 112 42 is_stmt 0 view .LVU95
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cclconf2.s 			page 11
+ 385              		.loc 1 112 21 is_stmt 1 view .LVU90
+ 112:Core/Src/led_controller.c ****                     led_state.substate = 0;
+ 386              		.loc 1 112 40 is_stmt 0 view .LVU91
+ 387 0058 0023     		movs	r3, #0
+ 388 005a 5372     		strb	r3, [r2, #9]
+ 113:Core/Src/led_controller.c ****                     led_state.current_blink++;
+ 389              		.loc 1 113 21 is_stmt 1 view .LVU92
+ 113:Core/Src/led_controller.c ****                     led_state.current_blink++;
+ 390              		.loc 1 113 30 is_stmt 0 view .LVU93
+ 391 005c 137A     		ldrb	r3, [r2, #8]
+ 113:Core/Src/led_controller.c ****                     led_state.current_blink++;
+ 392              		.loc 1 113 44 view .LVU94
+ 393 005e 0133     		adds	r3, r3, #1
+ 394 0060 DBB2     		uxtb	r3, r3
+ 395 0062 1372     		strb	r3, [r2, #8]
+ 114:Core/Src/led_controller.c ****                     if (led_state.current_blink >= LED_THREE_BLINKS_COUNT)
+ 396              		.loc 1 114 21 is_stmt 1 view .LVU95
+ 114:Core/Src/led_controller.c ****                     if (led_state.current_blink >= LED_THREE_BLINKS_COUNT)
+ 397              		.loc 1 114 24 is_stmt 0 view .LVU96
+ 398 0064 022B     		cmp	r3, #2
+ 399 0066 D4D9     		bls	.L19
+ 116:Core/Src/led_controller.c ****                         led_state.sequence = LED_SEQ_NONE;
+ 400              		.loc 1 116 25 is_stmt 1 view .LVU97
+ 116:Core/Src/led_controller.c ****                         led_state.sequence = LED_SEQ_NONE;
+ 401              		.loc 1 116 44 is_stmt 0 view .LVU98
+ 402 0068 1300     		movs	r3, r2
+ 403 006a 0022     		movs	r2, #0
+ 404 006c 1A70     		strb	r2, [r3]
+ 117:Core/Src/led_controller.c ****                         led_state.active = false;
+ 405              		.loc 1 117 25 is_stmt 1 view .LVU99
+ 117:Core/Src/led_controller.c ****                         led_state.active = false;
+ 406              		.loc 1 117 42 is_stmt 0 view .LVU100
+ 407 006e 5A70     		strb	r2, [r3, #1]
+ 408 0070 CFE7     		b	.L19
+ 409              	.LVL21:
+ 410              	.L21:
+ 124:Core/Src/led_controller.c ****             if (now >= led_state.next_update)
+ 411              		.loc 1 124 13 is_stmt 1 view .LVU101
+ 124:Core/Src/led_controller.c ****             if (now >= led_state.next_update)
+ 412              		.loc 1 124 33 is_stmt 0 view .LVU102
+ 413 0072 274B     		ldr	r3, .L27
+ 414 0074 5B68     		ldr	r3, [r3, #4]
+ 124:Core/Src/led_controller.c ****             if (now >= led_state.next_update)
+ 415              		.loc 1 124 16 view .LVU103
+ 416 0076 8342     		cmp	r3, r0
+ 417 0078 CBD8     		bhi	.L19
+ 126:Core/Src/led_controller.c ****                 if (led_state.substate == 0)
+ 418              		.loc 1 126 17 is_stmt 1 view .LVU104
+ 126:Core/Src/led_controller.c ****                 if (led_state.substate == 0)
+ 419              		.loc 1 126 30 is_stmt 0 view .LVU105
+ 420 007a 254B     		ldr	r3, .L27
+ 421 007c 5B7A     		ldrb	r3, [r3, #9]
+ 126:Core/Src/led_controller.c ****                 if (led_state.substate == 0)
+ 422              		.loc 1 126 20 view .LVU106
+ 423 007e 002B     		cmp	r3, #0
+ 424 0080 09D1     		bne	.L24
+ 128:Core/Src/led_controller.c ****                     update_pwm(LED_DOUBLE_BLINK_BRIGHTNESS);
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 12
 
 
- 378 006e 5A70     		strb	r2, [r3, #1]
- 379 0070 CFE7     		b	.L16
- 380              	.LVL21:
- 381              	.L18:
- 119:Core/Src/led_controller.c ****             if (now >= led_state.next_update)
- 382              		.loc 1 119 13 is_stmt 1 view .LVU96
- 119:Core/Src/led_controller.c ****             if (now >= led_state.next_update)
- 383              		.loc 1 119 33 is_stmt 0 view .LVU97
- 384 0072 274B     		ldr	r3, .L24
- 385 0074 5B68     		ldr	r3, [r3, #4]
- 119:Core/Src/led_controller.c ****             if (now >= led_state.next_update)
- 386              		.loc 1 119 16 view .LVU98
- 387 0076 8342     		cmp	r3, r0
- 388 0078 CBD8     		bhi	.L16
- 121:Core/Src/led_controller.c ****                 if (led_state.substate == 0)
- 389              		.loc 1 121 17 is_stmt 1 view .LVU99
- 121:Core/Src/led_controller.c ****                 if (led_state.substate == 0)
- 390              		.loc 1 121 30 is_stmt 0 view .LVU100
- 391 007a 254B     		ldr	r3, .L24
- 392 007c 5B7A     		ldrb	r3, [r3, #9]
- 121:Core/Src/led_controller.c ****                 if (led_state.substate == 0)
- 393              		.loc 1 121 20 view .LVU101
- 394 007e 002B     		cmp	r3, #0
- 395 0080 09D1     		bne	.L21
- 123:Core/Src/led_controller.c ****                     update_pwm(LED_DOUBLE_BLINK_BRIGHTNESS);
- 396              		.loc 1 123 21 is_stmt 1 view .LVU102
- 397 0082 5020     		movs	r0, #80
- 398              	.LVL22:
- 123:Core/Src/led_controller.c ****                     update_pwm(LED_DOUBLE_BLINK_BRIGHTNESS);
- 399              		.loc 1 123 21 is_stmt 0 view .LVU103
- 400 0084 FFF7FEFF 		bl	update_pwm
- 401              	.LVL23:
- 124:Core/Src/led_controller.c ****                     led_state.next_update = now + LED_DOUBLE_BLINK_ON_TIME_MS;
- 402              		.loc 1 124 21 is_stmt 1 view .LVU104
- 124:Core/Src/led_controller.c ****                     led_state.next_update = now + LED_DOUBLE_BLINK_ON_TIME_MS;
- 403              		.loc 1 124 49 is_stmt 0 view .LVU105
- 404 0088 9134     		adds	r4, r4, #145
- 405              	.LVL24:
- 124:Core/Src/led_controller.c ****                     led_state.next_update = now + LED_DOUBLE_BLINK_ON_TIME_MS;
- 406              		.loc 1 124 49 view .LVU106
- 407 008a FF34     		adds	r4, r4, #255
- 408              	.LVL25:
- 124:Core/Src/led_controller.c ****                     led_state.next_update = now + LED_DOUBLE_BLINK_ON_TIME_MS;
- 409              		.loc 1 124 43 view .LVU107
- 410 008c 204B     		ldr	r3, .L24
- 411 008e 5C60     		str	r4, [r3, #4]
- 125:Core/Src/led_controller.c ****                     led_state.substate = 1;
- 412              		.loc 1 125 21 is_stmt 1 view .LVU108
- 125:Core/Src/led_controller.c ****                     led_state.substate = 1;
- 413              		.loc 1 125 40 is_stmt 0 view .LVU109
- 414 0090 0122     		movs	r2, #1
- 415 0092 5A72     		strb	r2, [r3, #9]
- 416 0094 BDE7     		b	.L16
- 417              	.LVL26:
- 418              	.L21:
- 129:Core/Src/led_controller.c ****                     update_pwm(0);
- 419              		.loc 1 129 21 is_stmt 1 view .LVU110
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cclconf2.s 			page 12
+ 425              		.loc 1 128 21 is_stmt 1 view .LVU107
+ 426 0082 5020     		movs	r0, #80
+ 427              	.LVL22:
+ 128:Core/Src/led_controller.c ****                     update_pwm(LED_DOUBLE_BLINK_BRIGHTNESS);
+ 428              		.loc 1 128 21 is_stmt 0 view .LVU108
+ 429 0084 FFF7FEFF 		bl	update_pwm
+ 430              	.LVL23:
+ 129:Core/Src/led_controller.c ****                     led_state.next_update = now + LED_DOUBLE_BLINK_ON_TIME_MS;
+ 431              		.loc 1 129 21 is_stmt 1 view .LVU109
+ 129:Core/Src/led_controller.c ****                     led_state.next_update = now + LED_DOUBLE_BLINK_ON_TIME_MS;
+ 432              		.loc 1 129 49 is_stmt 0 view .LVU110
+ 433 0088 9134     		adds	r4, r4, #145
+ 434              	.LVL24:
+ 129:Core/Src/led_controller.c ****                     led_state.next_update = now + LED_DOUBLE_BLINK_ON_TIME_MS;
+ 435              		.loc 1 129 49 view .LVU111
+ 436 008a FF34     		adds	r4, r4, #255
+ 437              	.LVL25:
+ 129:Core/Src/led_controller.c ****                     led_state.next_update = now + LED_DOUBLE_BLINK_ON_TIME_MS;
+ 438              		.loc 1 129 43 view .LVU112
+ 439 008c 204B     		ldr	r3, .L27
+ 440 008e 5C60     		str	r4, [r3, #4]
+ 130:Core/Src/led_controller.c ****                     led_state.substate = 1;
+ 441              		.loc 1 130 21 is_stmt 1 view .LVU113
+ 130:Core/Src/led_controller.c ****                     led_state.substate = 1;
+ 442              		.loc 1 130 40 is_stmt 0 view .LVU114
+ 443 0090 0122     		movs	r2, #1
+ 444 0092 5A72     		strb	r2, [r3, #9]
+ 445 0094 BDE7     		b	.L19
+ 446              	.LVL26:
+ 447              	.L24:
+ 134:Core/Src/led_controller.c ****                     update_pwm(0);
+ 448              		.loc 1 134 21 is_stmt 1 view .LVU115
+ 449 0096 0020     		movs	r0, #0
+ 450              	.LVL27:
+ 134:Core/Src/led_controller.c ****                     update_pwm(0);
+ 451              		.loc 1 134 21 is_stmt 0 view .LVU116
+ 452 0098 FFF7FEFF 		bl	update_pwm
+ 453              	.LVL28:
+ 135:Core/Src/led_controller.c ****                     led_state.next_update = now + LED_DOUBLE_BLINK_OFF_TIME_MS;
+ 454              		.loc 1 135 21 is_stmt 1 view .LVU117
+ 135:Core/Src/led_controller.c ****                     led_state.next_update = now + LED_DOUBLE_BLINK_OFF_TIME_MS;
+ 455              		.loc 1 135 49 is_stmt 0 view .LVU118
+ 456 009c 9134     		adds	r4, r4, #145
+ 457              	.LVL29:
+ 135:Core/Src/led_controller.c ****                     led_state.next_update = now + LED_DOUBLE_BLINK_OFF_TIME_MS;
+ 458              		.loc 1 135 49 view .LVU119
+ 459 009e FF34     		adds	r4, r4, #255
+ 460              	.LVL30:
+ 135:Core/Src/led_controller.c ****                     led_state.next_update = now + LED_DOUBLE_BLINK_OFF_TIME_MS;
+ 461              		.loc 1 135 43 view .LVU120
+ 462 00a0 1B4A     		ldr	r2, .L27
+ 463 00a2 5460     		str	r4, [r2, #4]
+ 136:Core/Src/led_controller.c ****                     led_state.substate = 0;
+ 464              		.loc 1 136 21 is_stmt 1 view .LVU121
+ 136:Core/Src/led_controller.c ****                     led_state.substate = 0;
+ 465              		.loc 1 136 40 is_stmt 0 view .LVU122
+ 466 00a4 0023     		movs	r3, #0
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 13
 
 
- 420 0096 0020     		movs	r0, #0
- 421              	.LVL27:
- 129:Core/Src/led_controller.c ****                     update_pwm(0);
- 422              		.loc 1 129 21 is_stmt 0 view .LVU111
- 423 0098 FFF7FEFF 		bl	update_pwm
- 424              	.LVL28:
- 130:Core/Src/led_controller.c ****                     led_state.next_update = now + LED_DOUBLE_BLINK_OFF_TIME_MS;
- 425              		.loc 1 130 21 is_stmt 1 view .LVU112
- 130:Core/Src/led_controller.c ****                     led_state.next_update = now + LED_DOUBLE_BLINK_OFF_TIME_MS;
- 426              		.loc 1 130 49 is_stmt 0 view .LVU113
- 427 009c 9134     		adds	r4, r4, #145
- 428              	.LVL29:
- 130:Core/Src/led_controller.c ****                     led_state.next_update = now + LED_DOUBLE_BLINK_OFF_TIME_MS;
- 429              		.loc 1 130 49 view .LVU114
- 430 009e FF34     		adds	r4, r4, #255
- 431              	.LVL30:
- 130:Core/Src/led_controller.c ****                     led_state.next_update = now + LED_DOUBLE_BLINK_OFF_TIME_MS;
- 432              		.loc 1 130 43 view .LVU115
- 433 00a0 1B4A     		ldr	r2, .L24
- 434 00a2 5460     		str	r4, [r2, #4]
- 131:Core/Src/led_controller.c ****                     led_state.substate = 0;
- 435              		.loc 1 131 21 is_stmt 1 view .LVU116
- 131:Core/Src/led_controller.c ****                     led_state.substate = 0;
- 436              		.loc 1 131 40 is_stmt 0 view .LVU117
- 437 00a4 0023     		movs	r3, #0
- 438 00a6 5372     		strb	r3, [r2, #9]
- 132:Core/Src/led_controller.c ****                     led_state.current_blink++;
- 439              		.loc 1 132 21 is_stmt 1 view .LVU118
- 132:Core/Src/led_controller.c ****                     led_state.current_blink++;
- 440              		.loc 1 132 30 is_stmt 0 view .LVU119
- 441 00a8 137A     		ldrb	r3, [r2, #8]
- 132:Core/Src/led_controller.c ****                     led_state.current_blink++;
- 442              		.loc 1 132 44 view .LVU120
- 443 00aa 0133     		adds	r3, r3, #1
- 444 00ac DBB2     		uxtb	r3, r3
- 445 00ae 1372     		strb	r3, [r2, #8]
- 133:Core/Src/led_controller.c ****                     if (led_state.current_blink >= LED_DOUBLE_BLINK_COUNT)
- 446              		.loc 1 133 21 is_stmt 1 view .LVU121
- 133:Core/Src/led_controller.c ****                     if (led_state.current_blink >= LED_DOUBLE_BLINK_COUNT)
- 447              		.loc 1 133 24 is_stmt 0 view .LVU122
- 448 00b0 012B     		cmp	r3, #1
- 449 00b2 AED9     		bls	.L16
- 135:Core/Src/led_controller.c ****                         led_state.sequence = LED_SEQ_NONE;
- 450              		.loc 1 135 25 is_stmt 1 view .LVU123
- 135:Core/Src/led_controller.c ****                         led_state.sequence = LED_SEQ_NONE;
- 451              		.loc 1 135 44 is_stmt 0 view .LVU124
- 452 00b4 1300     		movs	r3, r2
- 453 00b6 0022     		movs	r2, #0
- 454 00b8 1A70     		strb	r2, [r3]
- 136:Core/Src/led_controller.c ****                         led_state.active = false;
- 455              		.loc 1 136 25 is_stmt 1 view .LVU125
- 136:Core/Src/led_controller.c ****                         led_state.active = false;
- 456              		.loc 1 136 42 is_stmt 0 view .LVU126
- 457 00ba 5A70     		strb	r2, [r3, #1]
- 458 00bc A9E7     		b	.L16
- 459              	.LVL31:
- 460              	.L19:
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cclconf2.s 			page 13
+ 467 00a6 5372     		strb	r3, [r2, #9]
+ 137:Core/Src/led_controller.c ****                     led_state.current_blink++;
+ 468              		.loc 1 137 21 is_stmt 1 view .LVU123
+ 137:Core/Src/led_controller.c ****                     led_state.current_blink++;
+ 469              		.loc 1 137 30 is_stmt 0 view .LVU124
+ 470 00a8 137A     		ldrb	r3, [r2, #8]
+ 137:Core/Src/led_controller.c ****                     led_state.current_blink++;
+ 471              		.loc 1 137 44 view .LVU125
+ 472 00aa 0133     		adds	r3, r3, #1
+ 473 00ac DBB2     		uxtb	r3, r3
+ 474 00ae 1372     		strb	r3, [r2, #8]
+ 138:Core/Src/led_controller.c ****                     if (led_state.current_blink >= LED_DOUBLE_BLINK_COUNT)
+ 475              		.loc 1 138 21 is_stmt 1 view .LVU126
+ 138:Core/Src/led_controller.c ****                     if (led_state.current_blink >= LED_DOUBLE_BLINK_COUNT)
+ 476              		.loc 1 138 24 is_stmt 0 view .LVU127
+ 477 00b0 012B     		cmp	r3, #1
+ 478 00b2 AED9     		bls	.L19
+ 140:Core/Src/led_controller.c ****                         led_state.sequence = LED_SEQ_NONE;
+ 479              		.loc 1 140 25 is_stmt 1 view .LVU128
+ 140:Core/Src/led_controller.c ****                         led_state.sequence = LED_SEQ_NONE;
+ 480              		.loc 1 140 44 is_stmt 0 view .LVU129
+ 481 00b4 1300     		movs	r3, r2
+ 482 00b6 0022     		movs	r2, #0
+ 483 00b8 1A70     		strb	r2, [r3]
+ 141:Core/Src/led_controller.c ****                         led_state.active = false;
+ 484              		.loc 1 141 25 is_stmt 1 view .LVU130
+ 141:Core/Src/led_controller.c ****                         led_state.active = false;
+ 485              		.loc 1 141 42 is_stmt 0 view .LVU131
+ 486 00ba 5A70     		strb	r2, [r3, #1]
+ 487 00bc A9E7     		b	.L19
+ 488              	.LVL31:
+ 489              	.L22:
+ 148:Core/Src/led_controller.c ****             if (now >= led_state.next_update)
+ 490              		.loc 1 148 13 is_stmt 1 view .LVU132
+ 148:Core/Src/led_controller.c ****             if (now >= led_state.next_update)
+ 491              		.loc 1 148 33 is_stmt 0 view .LVU133
+ 492 00be 144B     		ldr	r3, .L27
+ 493 00c0 5B68     		ldr	r3, [r3, #4]
+ 148:Core/Src/led_controller.c ****             if (now >= led_state.next_update)
+ 494              		.loc 1 148 16 view .LVU134
+ 495 00c2 8342     		cmp	r3, r0
+ 496 00c4 A5D8     		bhi	.L19
+ 150:Core/Src/led_controller.c ****                 update_pwm(led_state.brightness);
+ 497              		.loc 1 150 17 is_stmt 1 view .LVU135
+ 498 00c6 124D     		ldr	r5, .L27
+ 499 00c8 A87A     		ldrb	r0, [r5, #10]
+ 500              	.LVL32:
+ 150:Core/Src/led_controller.c ****                 update_pwm(led_state.brightness);
+ 501              		.loc 1 150 17 is_stmt 0 view .LVU136
+ 502 00ca FFF7FEFF 		bl	update_pwm
+ 503              	.LVL33:
+ 151:Core/Src/led_controller.c ****                 led_state.next_update = now + LED_FADE_UPDATE_TIME_MS;
+ 504              		.loc 1 151 17 is_stmt 1 view .LVU137
+ 151:Core/Src/led_controller.c ****                 led_state.next_update = now + LED_FADE_UPDATE_TIME_MS;
+ 505              		.loc 1 151 45 is_stmt 0 view .LVU138
+ 506 00ce 0A34     		adds	r4, r4, #10
+ 507              	.LVL34:
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 14
 
 
- 143:Core/Src/led_controller.c ****             if (now >= led_state.next_update)
- 461              		.loc 1 143 13 is_stmt 1 view .LVU127
- 143:Core/Src/led_controller.c ****             if (now >= led_state.next_update)
- 462              		.loc 1 143 33 is_stmt 0 view .LVU128
- 463 00be 144B     		ldr	r3, .L24
- 464 00c0 5B68     		ldr	r3, [r3, #4]
- 143:Core/Src/led_controller.c ****             if (now >= led_state.next_update)
- 465              		.loc 1 143 16 view .LVU129
- 466 00c2 8342     		cmp	r3, r0
- 467 00c4 A5D8     		bhi	.L16
- 145:Core/Src/led_controller.c ****                 update_pwm(led_state.brightness);
- 468              		.loc 1 145 17 is_stmt 1 view .LVU130
- 469 00c6 124D     		ldr	r5, .L24
- 470 00c8 A87A     		ldrb	r0, [r5, #10]
- 471              	.LVL32:
- 145:Core/Src/led_controller.c ****                 update_pwm(led_state.brightness);
- 472              		.loc 1 145 17 is_stmt 0 view .LVU131
- 473 00ca FFF7FEFF 		bl	update_pwm
- 474              	.LVL33:
- 146:Core/Src/led_controller.c ****                 led_state.next_update = now + LED_FADE_UPDATE_TIME_MS;
- 475              		.loc 1 146 17 is_stmt 1 view .LVU132
- 146:Core/Src/led_controller.c ****                 led_state.next_update = now + LED_FADE_UPDATE_TIME_MS;
- 476              		.loc 1 146 45 is_stmt 0 view .LVU133
- 477 00ce 0A34     		adds	r4, r4, #10
- 478              	.LVL34:
- 146:Core/Src/led_controller.c ****                 led_state.next_update = now + LED_FADE_UPDATE_TIME_MS;
- 479              		.loc 1 146 39 view .LVU134
- 480 00d0 6C60     		str	r4, [r5, #4]
- 147:Core/Src/led_controller.c ****                 led_state.brightness += led_state.fade_direction;
- 481              		.loc 1 147 17 is_stmt 1 view .LVU135
- 147:Core/Src/led_controller.c ****                 led_state.brightness += led_state.fade_direction;
- 482              		.loc 1 147 26 is_stmt 0 view .LVU136
- 483 00d2 AB7A     		ldrb	r3, [r5, #10]
- 147:Core/Src/led_controller.c ****                 led_state.brightness += led_state.fade_direction;
- 484              		.loc 1 147 50 view .LVU137
- 485 00d4 0B21     		movs	r1, #11
- 486 00d6 6956     		ldrsb	r1, [r5, r1]
- 487 00d8 EA7A     		ldrb	r2, [r5, #11]
- 147:Core/Src/led_controller.c ****                 led_state.brightness += led_state.fade_direction;
- 488              		.loc 1 147 38 view .LVU138
- 489 00da 9B18     		adds	r3, r3, r2
- 490 00dc DBB2     		uxtb	r3, r3
- 491 00de AB72     		strb	r3, [r5, #10]
- 148:Core/Src/led_controller.c ****                 if (led_state.brightness >= LED_FADE_MAX_BRIGHTNESS && led_state.fade_direction > 0
- 492              		.loc 1 148 17 is_stmt 1 view .LVU139
- 148:Core/Src/led_controller.c ****                 if (led_state.brightness >= LED_FADE_MAX_BRIGHTNESS && led_state.fade_direction > 0
- 493              		.loc 1 148 20 is_stmt 0 view .LVU140
- 494 00e0 632B     		cmp	r3, #99
- 495 00e2 07D9     		bls	.L22
- 148:Core/Src/led_controller.c ****                 if (led_state.brightness >= LED_FADE_MAX_BRIGHTNESS && led_state.fade_direction > 0
- 496              		.loc 1 148 69 discriminator 1 view .LVU141
- 497 00e4 0029     		cmp	r1, #0
- 498 00e6 05DD     		ble	.L22
- 150:Core/Src/led_controller.c ****                     led_state.brightness = LED_FADE_MAX_BRIGHTNESS;
- 499              		.loc 1 150 21 is_stmt 1 view .LVU142
- 150:Core/Src/led_controller.c ****                     led_state.brightness = LED_FADE_MAX_BRIGHTNESS;
- 500              		.loc 1 150 42 is_stmt 0 view .LVU143
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cclconf2.s 			page 14
+ 151:Core/Src/led_controller.c ****                 led_state.next_update = now + LED_FADE_UPDATE_TIME_MS;
+ 508              		.loc 1 151 39 view .LVU139
+ 509 00d0 6C60     		str	r4, [r5, #4]
+ 152:Core/Src/led_controller.c ****                 led_state.brightness += led_state.fade_direction;
+ 510              		.loc 1 152 17 is_stmt 1 view .LVU140
+ 152:Core/Src/led_controller.c ****                 led_state.brightness += led_state.fade_direction;
+ 511              		.loc 1 152 26 is_stmt 0 view .LVU141
+ 512 00d2 AB7A     		ldrb	r3, [r5, #10]
+ 152:Core/Src/led_controller.c ****                 led_state.brightness += led_state.fade_direction;
+ 513              		.loc 1 152 50 view .LVU142
+ 514 00d4 0B21     		movs	r1, #11
+ 515 00d6 6956     		ldrsb	r1, [r5, r1]
+ 516 00d8 EA7A     		ldrb	r2, [r5, #11]
+ 152:Core/Src/led_controller.c ****                 led_state.brightness += led_state.fade_direction;
+ 517              		.loc 1 152 38 view .LVU143
+ 518 00da 9B18     		adds	r3, r3, r2
+ 519 00dc DBB2     		uxtb	r3, r3
+ 520 00de AB72     		strb	r3, [r5, #10]
+ 153:Core/Src/led_controller.c ****                 if (led_state.brightness >= LED_FADE_MAX_BRIGHTNESS && led_state.fade_direction > 0
+ 521              		.loc 1 153 17 is_stmt 1 view .LVU144
+ 153:Core/Src/led_controller.c ****                 if (led_state.brightness >= LED_FADE_MAX_BRIGHTNESS && led_state.fade_direction > 0
+ 522              		.loc 1 153 20 is_stmt 0 view .LVU145
+ 523 00e0 632B     		cmp	r3, #99
+ 524 00e2 07D9     		bls	.L25
+ 153:Core/Src/led_controller.c ****                 if (led_state.brightness >= LED_FADE_MAX_BRIGHTNESS && led_state.fade_direction > 0
+ 525              		.loc 1 153 69 discriminator 1 view .LVU146
+ 526 00e4 0029     		cmp	r1, #0
+ 527 00e6 05DD     		ble	.L25
+ 155:Core/Src/led_controller.c ****                     led_state.brightness = LED_FADE_MAX_BRIGHTNESS;
+ 528              		.loc 1 155 21 is_stmt 1 view .LVU147
+ 155:Core/Src/led_controller.c ****                     led_state.brightness = LED_FADE_MAX_BRIGHTNESS;
+ 529              		.loc 1 155 42 is_stmt 0 view .LVU148
+ 530 00e8 094B     		ldr	r3, .L27
+ 531 00ea 6422     		movs	r2, #100
+ 532 00ec 9A72     		strb	r2, [r3, #10]
+ 156:Core/Src/led_controller.c ****                     led_state.fade_direction = -1;
+ 533              		.loc 1 156 21 is_stmt 1 view .LVU149
+ 156:Core/Src/led_controller.c ****                     led_state.fade_direction = -1;
+ 534              		.loc 1 156 46 is_stmt 0 view .LVU150
+ 535 00ee 9B32     		adds	r2, r2, #155
+ 536 00f0 DA72     		strb	r2, [r3, #11]
+ 537 00f2 8EE7     		b	.L19
+ 538              	.L25:
+ 158:Core/Src/led_controller.c ****                 else if (led_state.brightness == 0 && led_state.fade_direction < 0)
+ 539              		.loc 1 158 22 is_stmt 1 view .LVU151
+ 158:Core/Src/led_controller.c ****                 else if (led_state.brightness == 0 && led_state.fade_direction < 0)
+ 540              		.loc 1 158 25 is_stmt 0 view .LVU152
+ 541 00f4 002B     		cmp	r3, #0
+ 542 00f6 00D0     		beq	.LCB396
+ 543 00f8 8BE7     		b	.L19	@long jump
+ 544              	.LCB396:
+ 158:Core/Src/led_controller.c ****                 else if (led_state.brightness == 0 && led_state.fade_direction < 0)
+ 545              		.loc 1 158 52 discriminator 1 view .LVU153
+ 546 00fa 0029     		cmp	r1, #0
+ 547 00fc 00DB     		blt	.LCB398
+ 548 00fe 88E7     		b	.L19	@long jump
+ 549              	.LCB398:
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 15
 
 
- 501 00e8 094B     		ldr	r3, .L24
- 502 00ea 6422     		movs	r2, #100
- 503 00ec 9A72     		strb	r2, [r3, #10]
- 151:Core/Src/led_controller.c ****                     led_state.fade_direction = -1;
- 504              		.loc 1 151 21 is_stmt 1 view .LVU144
- 151:Core/Src/led_controller.c ****                     led_state.fade_direction = -1;
- 505              		.loc 1 151 46 is_stmt 0 view .LVU145
- 506 00ee 9B32     		adds	r2, r2, #155
- 507 00f0 DA72     		strb	r2, [r3, #11]
- 508 00f2 8EE7     		b	.L16
- 509              	.L22:
- 153:Core/Src/led_controller.c ****                 else if (led_state.brightness == 0 && led_state.fade_direction < 0)
- 510              		.loc 1 153 22 is_stmt 1 view .LVU146
- 153:Core/Src/led_controller.c ****                 else if (led_state.brightness == 0 && led_state.fade_direction < 0)
- 511              		.loc 1 153 25 is_stmt 0 view .LVU147
- 512 00f4 002B     		cmp	r3, #0
- 513 00f6 00D0     		beq	.LCB375
- 514 00f8 8BE7     		b	.L16	@long jump
- 515              	.LCB375:
- 153:Core/Src/led_controller.c ****                 else if (led_state.brightness == 0 && led_state.fade_direction < 0)
- 516              		.loc 1 153 52 discriminator 1 view .LVU148
- 517 00fa 0029     		cmp	r1, #0
- 518 00fc 00DB     		blt	.LCB377
- 519 00fe 88E7     		b	.L16	@long jump
- 520              	.LCB377:
- 155:Core/Src/led_controller.c ****                     update_pwm(0);
- 521              		.loc 1 155 21 is_stmt 1 view .LVU149
- 522 0100 0020     		movs	r0, #0
- 523 0102 FFF7FEFF 		bl	update_pwm
- 524              	.LVL35:
- 156:Core/Src/led_controller.c ****                     led_state.sequence = LED_SEQ_NONE;
- 525              		.loc 1 156 21 view .LVU150
- 156:Core/Src/led_controller.c ****                     led_state.sequence = LED_SEQ_NONE;
- 526              		.loc 1 156 40 is_stmt 0 view .LVU151
- 527 0106 024B     		ldr	r3, .L24
- 528 0108 0022     		movs	r2, #0
- 529 010a 1A70     		strb	r2, [r3]
- 157:Core/Src/led_controller.c ****                     led_state.active = false;
- 530              		.loc 1 157 21 is_stmt 1 view .LVU152
- 157:Core/Src/led_controller.c ****                     led_state.active = false;
- 531              		.loc 1 157 38 is_stmt 0 view .LVU153
- 532 010c 5A70     		strb	r2, [r3, #1]
- 533 010e 80E7     		b	.L16
- 534              	.L25:
- 535              		.align	2
- 536              	.L24:
- 537 0110 00000000 		.word	led_state
- 538              		.cfi_endproc
- 539              	.LFE45:
- 541              		.section	.bss.led_state,"aw",%nobits
- 542              		.align	2
- 545              	led_state:
- 546 0000 00000000 		.space	12
- 546      00000000 
- 546      00000000 
- 547              		.text
- 548              	.Letext0:
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cclconf2.s 			page 15
-
-
- 549              		.file 2 "/Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/arm-none-eabi/include/machine/_defa
- 550              		.file 3 "/Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/arm-none-eabi/include/sys/_stdint.h
- 551              		.file 4 "Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f030x8.h"
- 552              		.file 5 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_def.h"
- 553              		.file 6 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_dma.h"
- 554              		.file 7 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_tim.h"
- 555              		.file 8 "Core/Inc/led_controller.h"
- 556              		.file 9 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h"
-ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cclconf2.s 			page 16
+ 160:Core/Src/led_controller.c ****                     update_pwm(0);
+ 550              		.loc 1 160 21 is_stmt 1 view .LVU154
+ 551 0100 0020     		movs	r0, #0
+ 552 0102 FFF7FEFF 		bl	update_pwm
+ 553              	.LVL35:
+ 161:Core/Src/led_controller.c ****                     led_state.sequence = LED_SEQ_NONE;
+ 554              		.loc 1 161 21 view .LVU155
+ 161:Core/Src/led_controller.c ****                     led_state.sequence = LED_SEQ_NONE;
+ 555              		.loc 1 161 40 is_stmt 0 view .LVU156
+ 556 0106 024B     		ldr	r3, .L27
+ 557 0108 0022     		movs	r2, #0
+ 558 010a 1A70     		strb	r2, [r3]
+ 162:Core/Src/led_controller.c ****                     led_state.active = false;
+ 559              		.loc 1 162 21 is_stmt 1 view .LVU157
+ 162:Core/Src/led_controller.c ****                     led_state.active = false;
+ 560              		.loc 1 162 38 is_stmt 0 view .LVU158
+ 561 010c 5A70     		strb	r2, [r3, #1]
+ 562 010e 80E7     		b	.L19
+ 563              	.L28:
+ 564              		.align	2
+ 565              	.L27:
+ 566 0110 00000000 		.word	led_state
+ 567              		.cfi_endproc
+ 568              	.LFE46:
+ 570              		.section	.bss.led_state,"aw",%nobits
+ 571              		.align	2
+ 574              	led_state:
+ 575 0000 00000000 		.space	12
+ 575      00000000 
+ 575      00000000 
+ 576              		.text
+ 577              	.Letext0:
+ 578              		.file 2 "/Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/arm-none-eabi/include/machine/_defa
+ 579              		.file 3 "/Applications/ArmGNUToolchain/14.2.rel1/arm-none-eabi/arm-none-eabi/include/sys/_stdint.h
+ 580              		.file 4 "Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f030x8.h"
+ 581              		.file 5 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_def.h"
+ 582              		.file 6 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_dma.h"
+ 583              		.file 7 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_tim.h"
+ 584              		.file 8 "Core/Inc/led_controller.h"
+ 585              		.file 9 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h"
+ARM GAS  /var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s 			page 16
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 led_controller.c
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cclconf2.s:19     .text.update_pwm:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cclconf2.s:24     .text.update_pwm:00000000 update_pwm
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cclconf2.s:68     .text.update_pwm:00000020 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cclconf2.s:73     .text.led_controller_initialize:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cclconf2.s:79     .text.led_controller_initialize:00000000 led_controller_initialize
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cclconf2.s:125    .text.led_controller_initialize:00000020 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cclconf2.s:545    .bss.led_state:00000000 led_state
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cclconf2.s:131    .text.led_on:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cclconf2.s:137    .text.led_on:00000000 led_on
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cclconf2.s:160    .text.led_off:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cclconf2.s:166    .text.led_off:00000000 led_off
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cclconf2.s:188    .text.led_execute_sequence:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cclconf2.s:194    .text.led_execute_sequence:00000000 led_execute_sequence
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cclconf2.s:250    .text.led_execute_sequence:00000028 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cclconf2.s:255    .text.led_controller_update:00000000 $t
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cclconf2.s:261    .text.led_controller_update:00000000 led_controller_update
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cclconf2.s:537    .text.led_controller_update:00000110 $d
-/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cclconf2.s:542    .bss.led_state:00000000 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s:19     .text.update_pwm:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s:24     .text.update_pwm:00000000 update_pwm
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s:68     .text.update_pwm:00000020 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s:73     .text.led_controller_initialize:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s:79     .text.led_controller_initialize:00000000 led_controller_initialize
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s:125    .text.led_controller_initialize:00000020 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s:574    .bss.led_state:00000000 led_state
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s:131    .text.led_on:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s:137    .text.led_on:00000000 led_on
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s:160    .text.led_off:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s:166    .text.led_off:00000000 led_off
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s:188    .text.led_execute_sequence:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s:194    .text.led_execute_sequence:00000000 led_execute_sequence
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s:250    .text.led_execute_sequence:00000028 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s:255    .text.led_is_sequence_running:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s:261    .text.led_is_sequence_running:00000000 led_is_sequence_running
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s:279    .text.led_is_sequence_running:00000008 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s:284    .text.led_controller_update:00000000 $t
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s:290    .text.led_controller_update:00000000 led_controller_update
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s:566    .text.led_controller_update:00000110 $d
+/var/folders/bp/ytvqs5756l50d7lg2fzmjpcr0000gn/T//cc2Sj5bV.s:571    .bss.led_state:00000000 $d
 
 UNDEFINED SYMBOLS
 __aeabi_uidiv

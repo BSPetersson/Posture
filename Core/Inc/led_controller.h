@@ -23,4 +23,6 @@ void led_off(void);
 
 void led_execute_sequence(led_sequence_t sequence);
 
+bool led_is_sequence_running(void);
+
 #endif // LED_CONTROLLER_H

@@ -1,6 +1,8 @@
 #ifndef SLEEP_CONTROLLER_H
 #define SLEEP_CONTROLLER_H
 
+#include <stdbool.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -25,6 +27,14 @@ void sleep_controller_activate_sleep_mode(void);
  * a placeholder for any additional tasks that must run after wake-up.
  */
 void sleep_controller_wake_device(void);
+
+/**
+ * @brief Checks if the device was woken up by a button press.
+ * 
+ * @return bool - true if device was woken by button press, false otherwise.
+ *                The flag is cleared after reading.
+ */
+bool sleep_controller_was_woken_by_button(void);
 
 #ifdef __cplusplus
 }

@@ -80,6 +80,11 @@ void led_execute_sequence(led_sequence_t sequence)
     led_state.next_update = HAL_GetTick();
 }
 
+bool led_is_sequence_running(void)
+{
+    return led_state.active;
+}
+
 void led_controller_update(void)
 {
     if (!led_state.active || led_state.sequence == LED_SEQ_NONE)

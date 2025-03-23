@@ -91,6 +91,7 @@ int main(void)
   haptic_feedback_controller_initialize();
   led_controller_initialize();
   button_controller_initialize();
+  posture_controller_initialize();
 
   led_execute_sequence(LED_SEQ_THREE_BLINKS);
   /* USER CODE END 2 */
@@ -372,11 +373,13 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-    // if (GPIO_Pin == GPIO_PIN_5)
-    // {
-    //     button_handle_exti();
-    // }
-    if (GPIO_Pin == GPIO_PIN_0)
+    // Button interrupt (PB5) - wake up from sleep mode
+    if (GPIO_Pin == GPIO_PIN_5)
+    {
+        // Call wake device function to set button wake-up flag
+        sleep_controller_wake_device();
+    }
+    else if (GPIO_Pin == GPIO_PIN_0)
     {
         accelerometer_handle_int2();
     }
