@@ -63,6 +63,7 @@ void posture_controller_update(void)
     }
 
     if (accelerometer_mode == ACTIVITY) {
+        led_on(100);
         return;
     }
 
@@ -100,8 +101,11 @@ void posture_controller_update(void)
     // If the angle is greater than the unrealistic posture threshold, do nothing
     if (error_angle > UNREALISTIC_POSTURE_THRESHOLD_RADIANS)
     {
+        led_on(100);
         return;
     }
+
+    led_off();
 
     // If the angle is less than the threshold, update the last good posture time
     // Otherwise, update the last bad posture time
@@ -165,7 +169,6 @@ void handle_bad_posture(void)
     if (now - last_haptic_feedback_time > BAD_POSTURE_HAPTIC_FEEDBACK_INTERVAL_MS)
     {
         last_haptic_feedback_time = now;
-        led_on(30);
         haptic_feedback_play_waveform(1);
     }
 }
@@ -176,7 +179,6 @@ void handle_initial_still_bad_posture(void)
     if (now - last_haptic_feedback_time > BAD_POSTURE_HAPTIC_FEEDBACK_INTERVAL_MS)
     {
         last_haptic_feedback_time = now;
-        led_on(30);
         haptic_feedback_play_waveform(3);
     }
 }
@@ -185,7 +187,6 @@ void notify_posture_correct(void)
 {
     led_execute_sequence(LED_SEQ_THREE_BLINKS);
     haptic_feedback_play_waveform(2); // Tune this
-    led_off();
 }
 
 void start_calibration_procedure(void)

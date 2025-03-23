@@ -1,5 +1,6 @@
 #include "haptic_feedback_controller.h"
 #include "peripherals.h"
+#include "main.h"
 
 /**
  * @brief Modifies specific bits in a given register via I2C.
@@ -422,6 +423,27 @@ HAL_StatusTypeDef haptic_feedback_start(void) {
 HAL_StatusTypeDef haptic_feedback_stop(void) {
     uint8_t data[2] = {DRV2605L_REG_GO, 0x00};
     return HAL_I2C_Master_Transmit(&hi2c1, DRV2605L_I2C_ADDR, data, 2, HAL_MAX_DELAY);
+}
+
+/**
+ * @brief Checks if the haptic driver is currently active (GO bit is set)
+ * 
+ * @return bool True if the driver is active, false otherwise
+ */
+bool haptic_feedback_is_active(void) {
+    uint8_t reg_address = DRV2605L_REG_GO;
+    uint8_t reg_value = 0;
+    HAL_StatusTypeDef status = HAL_I2C_Master_Transmit(&hi2c1, DRV2605L_I2C_ADDR, &reg_address, 1, HAL_MAX_DELAY);
+    if (status != HAL_OK) {
+        return false; // Assume not active if communication fails
+    }
+    
+    status = HAL_I2C_Master_Receive(&hi2c1, DRV2605L_I2C_ADDR, &reg_value, 1, HAL_MAX_DELAY);
+    if (status != HAL_OK) {
+        return false; // Assume not active if communication fails
+    }
+    
+    return (reg_value & 0x01) == 0x01; // Check if GO bit is set
 }
 
 /**

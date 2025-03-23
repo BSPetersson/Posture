@@ -1,4 +1,5 @@
 #include "accelerometer_controller.h"
+#include "haptic_feedback_controller.h"
 #include "peripherals.h"
 #include "led_controller.h"
 #include "posture_math.h"
@@ -170,6 +171,12 @@ HAL_StatusTypeDef accelerometer_controller_initialize(void)
 void accelerometer_controller_update(void)
 {
     uint32_t now = HAL_GetTick();
+    
+    // Skip accelerometer readings if haptic feedback is active
+    if (haptic_feedback_is_active()) {
+        return;
+    }
+    
     accel_data_t accelerometer_data;
     HAL_StatusTypeDef status = accelerometer_read_mps2(&accelerometer_data);
     if (status != HAL_OK)

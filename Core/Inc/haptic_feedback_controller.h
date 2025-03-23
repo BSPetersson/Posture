@@ -99,6 +99,7 @@ HAL_StatusTypeDef haptic_feedback_set_mode(uint8_t mode);
 HAL_StatusTypeDef haptic_feedback_set_library(uint8_t library);
 HAL_StatusTypeDef haptic_feedback_start(void);
 HAL_StatusTypeDef haptic_feedback_stop(void);
+bool haptic_feedback_is_active(void);
 HAL_StatusTypeDef haptic_feedback_rtp_mode(uint8_t amplitude);
 void haptic_feedback_reset(void);
 
