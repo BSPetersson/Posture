@@ -1,0 +1,82 @@
+# Build outputs
+/build/
+/Debug/
+/Release/
+/dist/
+*.o
+*.d
+*.elf
+*.hex
+*.bin
+*.list
+*.map
+*.su
+
+# IDE and editor files
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.swp
+*.swo
+*~
+.project
+.cproject
+.settings/
+.idea/
+*.iml
+
+# OS specific files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Backup files
+*.bak
+*.gho
+*.ori
+*.orig
+*.tmp
+
+# STM32CubeMX temporary files
+.mxproject
+
+# Keil MDK-ARM files
+*.uvguix.*
+*.uvoptx
+*.uvprojx
+JLinkLog.txt
+JLinkSettings.ini
+EventRecorderStub.scvd
+RTE/
+
+# IAR files
+*.ewd
+*.ewp
+*.eww
+*.dep
+.ewt/
+settings/
+**/EWARM/settings/
+**/EWARM/Debug/
+**/EWARM/Release/
+
+# GCC ARM output files
+*.a
+*.d
+*.o
+*.su
+*.lst
+
+# Compiled dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Other files to ignore
+*.log 
