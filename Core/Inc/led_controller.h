@@ -9,7 +9,9 @@ typedef enum {
     LED_SEQ_NONE = 0,
     LED_SEQ_THREE_BLINKS,  // Three blinks: on for 200ms, off for 200ms at 50% brightness.
     LED_SEQ_DOUBLE_BLINK,  // Two blinks: on for 400ms, off for 400ms at 80% brightness.
-    LED_SEQ_FADE_IN_OUT    // Fade in from 0% to 100% then fade out back to 0%.
+    LED_SEQ_FADE_IN_OUT,   // Fade in from 0% to 100% then fade out back to 0%.
+    LED_SEQ_FADE_IN,       // Fade in from 0% to 100% brightness.
+    LED_SEQ_FADE_OUT       // Fade out from 100% to 0% brightness.
     // Add more custom sequences here.
 } led_sequence_t;
 

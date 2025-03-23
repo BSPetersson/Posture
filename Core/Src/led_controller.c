@@ -75,6 +75,12 @@ void led_execute_sequence(led_sequence_t sequence)
     if (sequence == LED_SEQ_FADE_IN_OUT) {
         led_state.brightness = 0;
         led_state.fade_direction = 1;
+    } else if (sequence == LED_SEQ_FADE_IN) {
+        led_state.brightness = 0;
+        led_state.fade_direction = 1;
+    } else if (sequence == LED_SEQ_FADE_OUT) {
+        led_state.brightness = LED_FADE_MAX_BRIGHTNESS;
+        led_state.fade_direction = -1;
     }
     // Set next update time to start immediately.
     led_state.next_update = HAL_GetTick();
@@ -157,6 +163,67 @@ void led_controller_update(void)
                 }
                 else if (led_state.brightness == 0 && led_state.fade_direction < 0)
                 {
+                    update_pwm(0);
+                    led_state.sequence = LED_SEQ_NONE;
+                    led_state.active = false;
+                }
+            }
+            break;
+            
+        case LED_SEQ_FADE_IN:
+            if (now >= led_state.next_update)
+            {
+                update_pwm(led_state.brightness);
+                
+                // Calculate step size based on the total duration
+                // For a smooth fade over LED_FADE_DURATION_MS, we determine how many steps to take
+                uint8_t total_steps = LED_FADE_MAX_BRIGHTNESS; // 0 to 100
+                uint16_t time_per_step = LED_FADE_DURATION_MS / total_steps;
+                
+                // Ensure time_per_step is at least LED_FADE_UPDATE_TIME_MS
+                if (time_per_step < LED_FADE_UPDATE_TIME_MS) {
+                    time_per_step = LED_FADE_UPDATE_TIME_MS;
+                }
+                
+                led_state.next_update = now + time_per_step;
+                led_state.brightness += 1; // Increase by 1 each time
+                
+                if (led_state.brightness >= LED_FADE_MAX_BRIGHTNESS)
+                {
+                    // We've reached maximum brightness
+                    // Hold at max brightness briefly before turning off
+                    led_state.brightness = LED_FADE_MAX_BRIGHTNESS;
+                    update_pwm(led_state.brightness);
+                    
+                    // Turn off the LED
+                    led_off();
+                    led_state.sequence = LED_SEQ_NONE;
+                    led_state.active = false;
+                }
+            }
+            break;
+            
+        case LED_SEQ_FADE_OUT:
+            if (now >= led_state.next_update)
+            {
+                update_pwm(led_state.brightness);
+                
+                // Calculate step size based on the total duration
+                uint8_t total_steps = LED_FADE_MAX_BRIGHTNESS; // 100 to 0
+                uint16_t time_per_step = LED_FADE_DURATION_MS / total_steps;
+                
+                // Ensure time_per_step is at least LED_FADE_UPDATE_TIME_MS
+                if (time_per_step < LED_FADE_UPDATE_TIME_MS) {
+                    time_per_step = LED_FADE_UPDATE_TIME_MS;
+                }
+                
+                led_state.next_update = now + time_per_step;
+                led_state.brightness -= 1; // Decrease by 1 each time
+                
+                if (led_state.brightness == 0 || led_state.brightness > LED_FADE_MAX_BRIGHTNESS) // Check for underflow
+                {
+                    // We've reached minimum brightness, end the sequence
+                    led_state.brightness = 0;
                     update_pwm(0);
                     led_state.sequence = LED_SEQ_NONE;
                     led_state.active = false;

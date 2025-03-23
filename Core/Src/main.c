@@ -93,7 +93,7 @@ int main(void)
   button_controller_initialize();
   posture_controller_initialize();
 
-  led_execute_sequence(LED_SEQ_THREE_BLINKS);
+  led_execute_sequence(LED_SEQ_FADE_IN);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -377,6 +377,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     if (GPIO_Pin == GPIO_PIN_5)
     {
         // Call wake device function to set button wake-up flag
+        haptic_feedback_play_waveform(26);
         sleep_controller_wake_device();
     }
     else if (GPIO_Pin == GPIO_PIN_0)

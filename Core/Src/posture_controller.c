@@ -77,13 +77,11 @@ void posture_controller_update(void)
 
     if (accelerometer_mode == SUPER_STILL || device_is_off) {
         reset_good_posture_history();
-        led_off();
         sleep_controller_activate_sleep_mode();
         
         // Check if we were woken up by a button press
         if (sleep_controller_was_woken_by_button()) {
             // We were woken by button, so react as if we received a button event
-            led_on(100);
             device_is_off = false;
             react_to_device_on();
         }
@@ -188,16 +186,6 @@ void posture_controller_update(void)
     }
 }
 
-void react_to_bad_posture(void)
-{
-    uint32_t now = HAL_GetTick();
-    if (now - last_haptic_feedback_time > BAD_POSTURE_HAPTIC_FEEDBACK_INTERVAL_MS)
-    {
-        last_haptic_feedback_time = now;
-        haptic_feedback_play_waveform(1);
-    }
-}
-
 void react_to_initial_still_bad_posture(void)
 {
     uint32_t now = HAL_GetTick();
@@ -206,12 +194,6 @@ void react_to_initial_still_bad_posture(void)
         last_haptic_feedback_time = now;
         haptic_feedback_play_waveform(3);
     }
-}
-
-void react_to_posture_correct(void)
-{
-    led_execute_sequence(LED_SEQ_THREE_BLINKS);
-    haptic_feedback_play_waveform(2); // Tune this
 }
 
 void start_calibration_procedure(void)
@@ -288,12 +270,29 @@ void posture_controller_initialize(void) {
     reset_good_posture_history();
 }
 
+void react_to_bad_posture(void)
+{
+    uint32_t now = HAL_GetTick();
+    if (now - last_haptic_feedback_time > BAD_POSTURE_HAPTIC_FEEDBACK_INTERVAL_MS)
+    {
+        last_haptic_feedback_time = now;
+        haptic_feedback_play_waveform(75);
+    }
+}
+
+void react_to_posture_correct(void)
+{
+    haptic_feedback_play_waveform(12);
+}
+
 void react_to_device_off(void) {
-    led_execute_sequence(LED_SEQ_THREE_BLINKS);
+    led_execute_sequence(LED_SEQ_FADE_OUT);
+    haptic_feedback_play_waveform(10);
 }
 
 void react_to_device_on(void) {
-    led_execute_sequence(LED_SEQ_THREE_BLINKS);
+    led_execute_sequence(LED_SEQ_FADE_IN);
+    haptic_feedback_play_waveform(58);
 }
 
 void react_to_calibration(void) {

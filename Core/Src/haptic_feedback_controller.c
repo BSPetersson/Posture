@@ -140,6 +140,12 @@ HAL_StatusTypeDef haptic_feedback_init_for_wideband_LRA(void)
         return status;
     }
 
+    // 7) Set waveform library
+    status = haptic_feedback_set_library(6);
+    if (status != HAL_OK) {
+        return status;
+    }
+
     return status;
 }
 
