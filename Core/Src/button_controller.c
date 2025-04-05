@@ -1,9 +1,11 @@
 #include "button_controller.h"
 #include "parameters.h"
+#include "haptic_feedback_controller.h"
 
 // ------------------------------
 // Configuration Constants
 // ------------------------------
+#define BUTTON_RELEASE_MINIMUM_DELAY_MS 30  // Minimum delay before playing release waveform
 
 // ------------------------------
 // Internal State Variables
@@ -19,6 +21,12 @@ static bool     long_press_reported = false;       // Did we already report a lo
 
 // Store the latest button event
 static volatile button_event_t latest_event = BUTTON_EVENT_NONE;
+
+// Variables for handling button press/release waveforms
+static bool waveform_played_on_press = false;     // Track if press waveform was played
+static bool play_release_waveform_pending = false; // Track if release waveform is pending
+static uint32_t release_waveform_time = 0;        // Time when release waveform should be played
+static uint32_t button_release_time = 0;          // Time when button was last released
 
 // ------------------------------
 // Helper Functions
@@ -47,6 +55,12 @@ void button_controller_initialize(void)
     press_count       = 0;
     long_press_reported = false;
     latest_event      = BUTTON_EVENT_NONE;
+    
+    // Initialize waveform state variables
+    waveform_played_on_press = false;
+    play_release_waveform_pending = false;
+    release_waveform_time = 0;
+    button_release_time = 0;
 }
 
 /**
@@ -60,6 +74,7 @@ bool button_is_pressed(void)
 /**
  * @brief Should be called periodically (10–20 ms).
  *        Handles long-press detection and multi-press logic.
+ *        Also handles delayed release waveform playback.
  */
 void button_controller_update(void)
 {   
@@ -137,6 +152,17 @@ void button_controller_update(void)
             press_count = 0; // Reset
         }
     }
+    
+    // 3) Handle delayed release waveform playback
+    if (play_release_waveform_pending && now >= release_waveform_time)
+    {
+        // Only play the release waveform if the button is not pressed again
+        if (!button_pressed)
+        {
+            haptic_feedback_play_waveform(6);
+        }
+        play_release_waveform_pending = false;
+    }
 }
 
 /**
@@ -155,8 +181,61 @@ button_event_t button_controller_get_event(void)
 /**
  * @brief Called by HAL when an EXTI interrupt occurs on GPIO pin PB5.
  *        We use this for immediate detection of press/release edges.
+ *        Handles playing different waveforms for press and release with timing logic.
  */
-// void button_handle_exti()
-// {
+void button_handle_exti(uint16_t GPIO_Pin)
+{
+    if (GPIO_Pin != GPIO_PIN_5)
+    {
+        return; // Only handle PB5 button
+    }
     
-// }
+    uint32_t now = HAL_GetTick();
+    bool current_button_state = read_raw_button_state();
+    
+    // Button is pressed (pin is LOW)
+    if (current_button_state)
+    {
+        // Cancel any pending release waveform if button is pressed again
+        play_release_waveform_pending = false;
+        
+        // Only play the press waveform if enough time has passed since the last release
+        if (now - button_release_time >= BUTTON_RELEASE_MINIMUM_DELAY_MS)
+        {
+            haptic_feedback_play_waveform(26);
+            waveform_played_on_press = true;
+        }
+        else
+        {
+            // If pressed too quickly after release, don't play any waveform
+            waveform_played_on_press = false;
+        }
+        
+        press_start_time = now;
+    }
+    // Button is released (pin is HIGH)
+    else
+    {
+        // Record the release time
+        button_release_time = now;
+        
+        if (waveform_played_on_press)
+        {
+            // Calculate when to play the release waveform
+            release_waveform_time = press_start_time + BUTTON_RELEASE_MINIMUM_DELAY_MS;
+            
+            // If enough time has already passed, play it immediately
+            if (now >= release_waveform_time)
+            {
+                haptic_feedback_play_waveform(6);
+            }
+            else
+            {
+                // Otherwise, set the pending flag for later playback
+                play_release_waveform_pending = true;
+            }
+            
+            waveform_played_on_press = false;
+        }
+    }
+}

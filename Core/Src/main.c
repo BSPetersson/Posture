@@ -94,6 +94,15 @@ int main(void)
   posture_controller_initialize();
 
   led_execute_sequence(LED_SEQ_FADE_IN);
+
+  // Play only the specific waveforms
+  uint8_t waveforms[] = {6, 24, 25, 26};
+  uint8_t num_waveforms = sizeof(waveforms) / sizeof(waveforms[0]);
+  
+  for (uint8_t i = 0; i < num_waveforms; i++) {
+      haptic_feedback_play_waveform(waveforms[i]);
+      HAL_Delay(2000); // Wait 2000ms between waveforms
+  }
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -373,12 +382,14 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-    // Button interrupt (PB5) - wake up from sleep mode
+    // Button interrupt (PB5) - wake up from sleep mode and handle haptic feedback
     if (GPIO_Pin == GPIO_PIN_5)
     {
         // Call wake device function to set button wake-up flag
-        haptic_feedback_play_waveform(26);
         sleep_controller_wake_device();
+        
+        // Handle button press/release haptic feedback
+        button_handle_exti(GPIO_Pin);
     }
     else if (GPIO_Pin == GPIO_PIN_0)
     {

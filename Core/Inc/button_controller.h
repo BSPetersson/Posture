@@ -45,6 +45,11 @@ void button_controller_update(void);
  */
 button_event_t button_controller_get_event(void);
 
-// void button_handle_exti();
+/**
+ * @brief Called from the EXTI interrupt handler when button state changes.
+ *        Handles playing appropriate haptic feedback for button press/release.
+ * @param GPIO_Pin The pin that triggered the interrupt
+ */
+void button_handle_exti(uint16_t GPIO_Pin);
 
 #endif // BUTTON_CONTROLLER_H
