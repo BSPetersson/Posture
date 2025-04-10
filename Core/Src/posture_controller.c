@@ -26,6 +26,7 @@ void react_to_initial_still_bad_posture(void);
 #define BAD_POSTURE_RESET_TIME_MS 180000
 #define INITIAL_BAD_POSTURE_THRESHOLD_RADIANS 0.1f
 #define INITIAL_BAD_POSTURE_TIME_MS 10000
+#define POSTURE_RESET_DELAY_MS 1000  // New constant for the delay before resetting posture
 
 float current_accelerometer_vector[3];
 float good_posture_vector[3];
@@ -43,6 +44,8 @@ bool did_handle_initial_still_bad_posture = false;
 static uint32_t still_posture_start_time = 0;
 bool device_is_off = false;
 bool device_is_shutting_down = false;  // New state to track shutdown process
+bool is_resetting_posture = false;     // New flag to track if we're in the process of resetting posture
+uint32_t posture_reset_start_time = 0; // New variable to track when the reset started
 
 void posture_controller_update(void)
 {
@@ -53,7 +56,9 @@ void posture_controller_update(void)
     button_event_t button_event = button_controller_get_event();
 
     if (button_event == BUTTON_EVENT_SINGLE_PRESS) {
-        reset_good_posture_vector();
+        // Instead of resetting immediately, set the flag and start the timer
+        is_resetting_posture = true;
+        posture_reset_start_time = now;
         did_calibrate = true;
         react_to_calibration();
         return;
@@ -91,6 +96,21 @@ void posture_controller_update(void)
 
     if (accelerometer_mode == ACTIVITY) {
         return;
+    }
+
+    // Check if we're in the process of resetting posture
+    if (is_resetting_posture) {
+        // If the delay has passed, perform the reset
+        if ((now - posture_reset_start_time) >= POSTURE_RESET_DELAY_MS) {
+            reset_good_posture_vector();
+            is_posture_correct = false;  // Set posture to incorrect after reset
+            is_resetting_posture = false;  // Reset the flag
+            react_to_posture_correct();  // Play the correct posture waveform
+            return;
+        } else {
+            // During the delay, ignore bad posture detection
+            return;
+        }
     }
 
     // Get the latest accelerometer vector
