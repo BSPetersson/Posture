@@ -94,15 +94,6 @@ int main(void)
   posture_controller_initialize();
 
   led_execute_sequence(LED_SEQ_FADE_IN);
-
-  // Play only the specific waveforms
-  uint8_t waveforms[] = {6, 24, 25, 26};
-  uint8_t num_waveforms = sizeof(waveforms) / sizeof(waveforms[0]);
-  
-  for (uint8_t i = 0; i < num_waveforms; i++) {
-      haptic_feedback_play_waveform(waveforms[i]);
-      HAL_Delay(2000); // Wait 2000ms between waveforms
-  }
   /* USER CODE END 2 */
 
   /* Infinite loop */

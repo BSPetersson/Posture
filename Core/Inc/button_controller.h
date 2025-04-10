@@ -12,8 +12,6 @@
 typedef enum {
     BUTTON_EVENT_NONE = 0,
     BUTTON_EVENT_SINGLE_PRESS,
-    BUTTON_EVENT_DOUBLE_PRESS,
-    BUTTON_EVENT_TRIPLE_PRESS,
     BUTTON_EVENT_LONG_PRESS
 } button_event_t;
 
@@ -38,7 +36,7 @@ bool button_is_pressed(void);
 void button_controller_update(void);
 
 /**
- * @brief Returns the most recent button event (single/double/triple/long).
+ * @brief Returns the most recent button event (single/long).
  *        Each call clears the stored event so it won't be reported again.
  *
  * @return The event that was detected since last call, or BUTTON_EVENT_NONE if none.
