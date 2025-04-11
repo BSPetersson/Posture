@@ -39,7 +39,7 @@
 
 #define LED_FADE_UPDATE_TIME_MS 10
 #define LED_FADE_MAX_BRIGHTNESS 100
-#define LED_FADE_DURATION_MS 3000  // Duration of fade in/out (5 seconds)
+#define LED_FADE_DURATION_MS 1500
 
 /* Button Controller Parameters */
 #define BUTTON_DEBOUNCE_TIME_MS    50U

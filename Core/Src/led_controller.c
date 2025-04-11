@@ -1,9 +1,16 @@
 #include "led_controller.h"
 #include "main.h"  // For external reference to htim16
 #include "parameters.h"
+#include <math.h>  // For pow function
 
 // External TIM handle from main.c
 extern TIM_HandleTypeDef htim16;
+
+// Gamma correction lookup table
+// Using negative gamma for inverse effect - making changes more pronounced at high brightness
+#define LED_GAMMA_VALUE 2.2     // Standard gamma value
+#define GAMMA_TABLE_SIZE 101    // 0-100%
+static uint16_t gamma_table[GAMMA_TABLE_SIZE];
 
 // Internal state structure for non-blocking LED sequences.
 typedef struct {
@@ -20,6 +27,22 @@ typedef struct {
 static led_state_t led_state;
 
 /**
+ * @brief Internal function to initialize the gamma correction table
+ */
+static void init_gamma_table(void)
+{
+    for (int i = 0; i < GAMMA_TABLE_SIZE; i++) {
+        // Normalize brightness to 0.0-1.0
+        float normalized = (float)i / (float)(GAMMA_TABLE_SIZE - 1);
+
+        float corrected = 1.0f - powf(1.0f - normalized, 1.0f / LED_GAMMA_VALUE);
+        
+        // Scale to uint16_t range (0-65535) for PWM
+        gamma_table[i] = (uint16_t)(corrected * 65535.0f);
+    }
+}
+
+/**
  * @brief Internal function: update PWM duty cycle from percentage.
  */
 static void update_pwm(uint8_t percent)
@@ -27,13 +50,17 @@ static void update_pwm(uint8_t percent)
     if (percent > 100) {
         percent = 100;
     }
-    // Map 0..100% to 0..65535.
-    uint16_t duty_cycle = (uint16_t)((65535UL * percent) / 100UL);
+    
+    // Use the gamma-corrected value from lookup table
+    uint16_t duty_cycle = gamma_table[percent];
     __HAL_TIM_SET_COMPARE(&htim16, TIM_CHANNEL_1, duty_cycle);
 }
 
 void led_controller_initialize(void)
 {
+    // Initialize gamma table
+    init_gamma_table();
+    
     // Start PWM on TIM16 Channel 1.
     HAL_TIM_PWM_Start(&htim16, TIM_CHANNEL_1);
 
