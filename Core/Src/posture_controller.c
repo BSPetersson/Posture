@@ -23,7 +23,7 @@ void react_to_initial_still_bad_posture(void);
 #define GOOD_POSTURE_VECTOR_RECALIBRATION_TIME_MS 5000
 #define GOOD_POSTURE_HISTORY_SIZE 10
 #define GOOD_POSTURE_VECTOR_RECALIBRATION_THRESHOLD_RADIANS 0.06
-#define BAD_POSTURE_RESET_TIME_MS 180000
+#define BAD_POSTURE_RESET_TIME_MS 60000
 #define INITIAL_BAD_POSTURE_THRESHOLD_RADIANS 0.1f
 #define INITIAL_BAD_POSTURE_TIME_MS 10000
 #define POSTURE_RESET_DELAY_MS 1000  // New constant for the delay before resetting posture
@@ -74,10 +74,24 @@ void posture_controller_update(void)
         react_to_device_on();
     }
 
+    // Check if bad posture has been maintained for BAD_POSTURE_RESET_TIME_MS
+    if (!is_posture_correct && (now - last_good_posture_time) > BAD_POSTURE_RESET_TIME_MS &&
+        !device_is_off && !device_is_shutting_down)
+    {
+        device_is_shutting_down = true;
+        react_to_device_off();
+        reset_good_posture_history(); // Reset history if bad posture for BAD_POSTURE_RESET_TIME_MS
+    }
+
     // Check if shutdown sequence is complete
     if (device_is_shutting_down && !led_is_sequence_running()) {
         device_is_shutting_down = false;  // Shutdown sequence complete
         device_is_off = true;             // Now officially off
+    }
+
+    // If the device is shutting down, do nothing
+    if (device_is_shutting_down) {
+        return;
     }
 
     if (accelerometer_mode == SUPER_STILL || device_is_off) {
@@ -119,7 +133,9 @@ void posture_controller_update(void)
     current_accelerometer_vector[1] = accelerometer_vector.y_mps2;
     current_accelerometer_vector[2] = accelerometer_vector.z_mps2;
 
-    if (!good_posture_history_full && good_posture_history_index == 0) {
+    // If we haven't filled our good posture history and we're at the start of a new cycle,
+    // check if the user has maintained a still posture long enough to use as reference
+    if (!good_posture_history_full && good_posture_history_index == 0 && !did_calibrate) {
         // Check if the user has remained still for 10 seconds
         if (accelerometer_controller_get_last_measurements_history_max_angle_from_mean() < INITIAL_BAD_POSTURE_THRESHOLD_RADIANS) {
             uint32_t current_time = HAL_GetTick();
@@ -182,12 +198,6 @@ void posture_controller_update(void)
         is_posture_correct)
     {
         is_posture_correct = false;
-        
-        // Check if bad posture has been maintained for 3 minutes (180000 ms)
-        if ((now - last_bad_posture_time) > BAD_POSTURE_RESET_TIME_MS) {
-            reset_good_posture_history(); // Reset history if bad posture for 3 minutes
-        }
-        return;
     }
 
     // If the posture is correct and the last good posture time is greater than the good posture vector recalibration time,
@@ -250,15 +260,18 @@ void reset_good_posture_vector(void)
 
 void update_good_posture_vector(void)
 {
+    if (!good_posture_history_full) {
+        return;
+    }
+
     float sum[3] = {0.0f, 0.0f, 0.0f};
-    int count = good_posture_history_full ? GOOD_POSTURE_HISTORY_SIZE : good_posture_history_index;
-    for (int i = 0; i < count; i++) {
+    for (int i = 0; i < GOOD_POSTURE_HISTORY_SIZE; i++) {
         for (int j = 0; j < 3; j++) {
             sum[j] += good_posture_history[i][j];
         }
     }
     for (int j = 0; j < 3; j++) {
-        good_posture_vector[j] = sum[j] / count;
+        good_posture_vector[j] = sum[j] / GOOD_POSTURE_HISTORY_SIZE;
     }
 }
 
