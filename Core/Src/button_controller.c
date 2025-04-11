@@ -1,6 +1,7 @@
 #include "button_controller.h"
 #include "parameters.h"
 #include "haptic_feedback_controller.h"
+#include "stm32f0xx_hal.h"  // Add HAL header for GPIO definitions
 
 // ------------------------------
 // Configuration Constants
@@ -113,6 +114,9 @@ static void update_button_state_machine(uint32_t now, bool raw_state)
             {
                 button_state = BUTTON_STATE_DEBOUNCE_DOWN;
                 state_change_time = now;
+                // Reset button press detection flags when a new press starts
+                single_press_detected = false;
+                long_press_reported = false;
             }
             break;
             
@@ -285,6 +289,10 @@ void button_handle_exti(uint16_t GPIO_Pin)
         // Only process if we're transitioning from not pressed to pressed
         if (button_state == BUTTON_STATE_IDLE || button_state == BUTTON_STATE_DEBOUNCE_UP)
         {
+            // Reset button press detection flags when a new press starts
+            single_press_detected = false;
+            long_press_reported = false;
+            
             // Cancel any pending release waveform if button is pressed again
             play_release_waveform_pending = false;
             release_waveform_played = false;
