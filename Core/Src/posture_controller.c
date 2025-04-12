@@ -100,6 +100,14 @@ void posture_controller_update(void)
         
         // Check if we were woken up by a button press
         if (sleep_controller_was_woken_by_button()) {
+
+            is_resetting_posture = true;
+            posture_reset_start_time = now;
+            did_calibrate = true;
+            react_to_calibration();
+
+            last_good_posture_time = HAL_GetTick();
+
             // We were woken by button, so react as if we received a button event
             device_is_off = false;
             react_to_device_on();
@@ -322,7 +330,7 @@ void react_to_device_off(void) {
 
 void react_to_device_on(void) {
     led_execute_sequence(LED_SEQ_FADE_IN);
-    haptic_feedback_play_waveform(58);
+    //haptic_feedback_play_waveform(58);
 }
 
 void react_to_calibration(void) {
