@@ -10,7 +10,7 @@
 #define BUTTON_LOCKOUT_PERIOD_MS 70         // Period to ignore new presses after a press/release cycle
 #define WAVEFORM_PLAY_TIME_MS 50             // Estimated time for a waveform to finish playing
 #define DEBOUNCE_TIME_MS 50                  // Time to wait for button to stabilize
-#define SINGLE_PRESS_MAX_DURATION_MS 500     // Maximum duration for a single press (not a long press)
+#define SINGLE_PRESS_MAX_DURATION_MS 1500     // Maximum duration for a single press (not a long press)
 
 // ------------------------------
 // Button State Machine

@@ -112,6 +112,12 @@ void posture_controller_update(void)
         return;
     }
 
+    // Get the latest accelerometer vector
+    accel_data_t accelerometer_vector = accelerometer_controller_get_latest_data();
+    current_accelerometer_vector[0] = accelerometer_vector.x_mps2;
+    current_accelerometer_vector[1] = accelerometer_vector.y_mps2;
+    current_accelerometer_vector[2] = accelerometer_vector.z_mps2;
+
     // Check if we're in the process of resetting posture
     if (is_resetting_posture) {
         // If the delay has passed, perform the reset
@@ -120,18 +126,9 @@ void posture_controller_update(void)
             is_posture_correct = false;  // Set posture to incorrect after reset
             is_resetting_posture = false;  // Reset the flag
             react_to_posture_correct();  // Play the correct posture waveform
-            return;
-        } else {
-            // During the delay, ignore bad posture detection
-            return;
         }
+        return;
     }
-
-    // Get the latest accelerometer vector
-    accel_data_t accelerometer_vector = accelerometer_controller_get_latest_data();
-    current_accelerometer_vector[0] = accelerometer_vector.x_mps2;
-    current_accelerometer_vector[1] = accelerometer_vector.y_mps2;
-    current_accelerometer_vector[2] = accelerometer_vector.z_mps2;
 
     // If we haven't filled our good posture history and we're at the start of a new cycle,
     // check if the user has maintained a still posture long enough to use as reference
